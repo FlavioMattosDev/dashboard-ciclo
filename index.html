@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WorkDash — Gerenciador de Atividades</title>
+<title>WorkDash — Gerenciador de Demandas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -161,6 +161,12 @@ a{text-decoration:none;color:inherit}button{font-family:var(--font)}
 .ap{font-size:11px;font-weight:700;width:32px;text-align:right;color:var(--t3)}
 .aacts{display:flex;gap:2px;margin-left:4px}
 .tag-chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;border:1px solid transparent}
+.last-act{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+.last-act.fresh{background:rgba(16,185,129,.12);color:var(--ok-t);border:1px solid rgba(16,185,129,.22)}
+.last-act.recent{background:rgba(34,211,238,.1);color:var(--cy);border:1px solid rgba(34,211,238,.2)}
+.last-act.stale{background:rgba(245,158,11,.12);color:var(--wn);border:1px solid rgba(245,158,11,.22)}
+.last-act.old{background:rgba(239,68,68,.1);color:var(--er-t);border:1px solid rgba(239,68,68,.2)}
+.last-act.none{background:rgba(255,255,255,.04);color:var(--t3);border:1px solid rgba(255,255,255,.08)}
 
 /* SUBTASKS */
 .sc{border-top:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.25)}
@@ -172,6 +178,12 @@ a{text-decoration:none;color:inherit}button{font-family:var(--font)}
 .ck.done::after{content:'';display:block;width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
 .stit{font-size:12px;flex:1;color:var(--t2)}.stit.done{color:var(--t3);text-decoration:line-through}
 .slc{font-size:11px;color:var(--t3);white-space:nowrap}
+/* Subtask estimated hours */
+.sub-est{font-size:11px;color:var(--t3);white-space:nowrap;font-family:var(--mono)}
+.sub-est.over{color:var(--er-t)}
+.sub-hbar{width:48px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;flex-shrink:0}
+.sub-hbar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--cy),var(--vi2));transition:width .3s}
+.sub-hbar-f.over{background:var(--er)}
 .slb{font-size:11px;color:var(--cy);background:none;border:1px solid rgba(34,211,238,.2);cursor:pointer;font-family:var(--font);font-weight:500;padding:3px 9px;border-radius:5px;transition:all .15s;white-space:nowrap}
 .slb:hover{background:var(--cy3);border-color:var(--cy)}
 .sub-add-row{padding:8px 16px 8px 38px;display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.05)}
@@ -192,6 +204,12 @@ a{text-decoration:none;color:inherit}button{font-family:var(--font)}
 .tag-filter-btn{padding:4px 10px;border-radius:10px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:all .15s;background:rgba(255,255,255,.04);color:var(--t3)}
 .tag-filter-btn:hover{opacity:.8}
 .tag-filter-btn.active{border-color:currentColor;opacity:1}
+/* Sort buttons */
+.sort-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:var(--t3);font-family:var(--font);transition:all .15s;white-space:nowrap}
+.sort-btn:hover{background:rgba(255,255,255,.08);color:var(--t2)}
+.sort-btn.active{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--cy)}
+.sort-btn .arrow{font-size:10px;opacity:.7}
+.sort-sep{width:1px;height:18px;background:rgba(255,255,255,.08);flex-shrink:0}
 select option{background:#12161E;color:var(--t)}
 
 /* TIMELINE */
@@ -237,6 +255,11 @@ select option{background:#12161E;color:var(--t)}
 .cc-badge.cur{background:rgba(34,211,238,.12);color:var(--cy);border:1px solid rgba(34,211,238,.28)}
 .cc-badge.done{background:var(--ok-s);color:var(--ok-t);border:1px solid rgba(16,185,129,.28)}
 .cc-badge.fut{background:rgba(255,255,255,.04);color:var(--t3);border:1px solid rgba(255,255,255,.09)}
+.cc-badge.sel{background:rgba(139,92,246,.18);color:#C4B5FD;border:1px solid rgba(139,92,246,.4)}
+.cc.sel-active{border-color:rgba(139,92,246,.45)!important;box-shadow:0 0 24px rgba(139,92,246,.12)!important}
+.cc.sel-active::after{background:linear-gradient(90deg,transparent,rgba(139,92,246,.35),transparent)!important;opacity:1!important}
+.sb-cycle-reset{font-size:10px;color:var(--vi2);background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);border-radius:4px;padding:2px 7px;cursor:pointer;font-family:var(--font);transition:all .15s;margin-left:auto}
+.sb-cycle-reset:hover{background:rgba(139,92,246,.22);border-color:rgba(139,92,246,.5)}
 
 /* REPORTS */
 .rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
@@ -283,6 +306,11 @@ select option{background:#12161E;color:var(--t)}
 .ad-log-desc{font-size:12px;color:var(--t2);line-height:1.55}
 .ad-log-hrs{float:right;font-size:11px;font-family:var(--mono);color:var(--cy);background:rgba(34,211,238,.1);padding:1px 7px;border-radius:4px;border:1px solid rgba(34,211,238,.18)}
 .ad-empty{font-size:12px;color:var(--t3);padding:10px 0;font-style:italic}
+/* Notes block in activity detail */
+.notes-block{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-radius:var(--r);padding:12px 14px;margin-bottom:4px}
+.notes-block pre{font-family:var(--font);font-size:12px;color:var(--t2);line-height:1.65;white-space:pre-wrap;word-break:break-word}
+/* Notes indicator badge on activity row */
+.notes-dot{width:7px;height:7px;border-radius:50%;background:var(--vi2);flex-shrink:0;box-shadow:0 0 5px rgba(139,92,246,.5);cursor:default}
 
 /* MODAL */
 #mo{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
@@ -370,13 +398,13 @@ select.fin{cursor:pointer}
   </div>
   <div class="sw">
     <svg class="sw-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="gs" type="text" placeholder="Buscar atividades, subtarefas, registros… (Ctrl+K)" autocomplete="off">
+    <input id="gs" type="text" placeholder="Buscar demandas, subtarefas, registros… (Ctrl+K)" autocomplete="off">
     <div id="sr"></div>
   </div>
   <div class="nb-acts">
     <button class="bn" onclick="triggerImport()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Importar</button>
     <button class="bn" onclick="openExportModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar</button>
-    <button class="bn prim" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova Atividade</button>
+    <button class="bn prim" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova Demanda</button>
   </div>
 </nav>
 
@@ -398,10 +426,10 @@ select.fin{cursor:pointer}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Ciclos
   </div>
   <div class="sb-item" data-view="activities" onclick="navigate('activities')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Atividades
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Demandas
   </div>
   <div class="sb-item" data-view="timeline" onclick="navigate('timeline')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Registros Diários
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Tarefas Diárias
   </div>
   <div class="sb-item" data-view="reports" onclick="navigate('reports')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Relatórios
@@ -411,12 +439,15 @@ select.fin{cursor:pointer}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags
   </div>
   <hr class="sb-hr">
-  <div class="sb-sec">Ciclo atual</div>
+  <div class="sb-sec" style="display:flex;align-items:center">
+    <span id="sb-cycle-label">Ciclo atual</span>
+    <button class="sb-cycle-reset" id="sb-cycle-reset" style="display:none" onclick="resetActiveCycle()" title="Voltar ao ciclo do mês atual">↺ resetar</button>
+  </div>
   <div class="sb-stats">
     <div class="sb-stat"><span class="sb-sl">Horas gastas</span><span class="sb-sv" id="ss-h">—</span></div>
     <div class="sb-stat"><span class="sb-sl">Estimado</span><span class="sb-sv" id="ss-e">—</span></div>
     <div class="sb-stat"><span class="sb-sl">Conclusão</span><span class="sb-sv" id="ss-c">—</span></div>
-    <div class="sb-stat"><span class="sb-sl">Atividades</span><span class="sb-sv" id="ss-a">—</span></div>
+    <div class="sb-stat"><span class="sb-sl">Demandas</span><span class="sb-sv" id="ss-a">—</span></div>
   </div>
 </aside>
 
@@ -456,6 +487,8 @@ select.fin{cursor:pointer}
 <script>
 'use strict';
 const SK='workdash_v1';
+const BK='workdash_backups_v1'; // chave dos backups automáticos
+const BK_MAX=3;                  // máximo de backups retidos
 const CYCLE_DEFS=[
   {id:'c1',n:1,name:'Ciclo 1',label:'Janeiro ~ Fevereiro',sm:1,em:2},
   {id:'c2',n:2,name:'Ciclo 2',label:'Março ~ Abril',sm:3,em:4},
@@ -473,8 +506,11 @@ const ACT_PALETTE=['#22D3EE','#8B5CF6','#10B981','#F59E0B','#EF4444','#EC4899','
 let S={
   activities:[],subtasks:[],logs:[],tags:[],
   currentView:'dashboard',
+  // selectedCycleId/Year: ciclo escolhido pelo usuário na tela de Ciclos (sobrescreve o auto-detectado)
+  selectedCycleId:'',selectedYear:'',
   filterCycleId:'',filterActivityId:'',filterSubtaskId:'',filterTagId:'',filterStatus:'',
-  filterDateFrom:'',filterDateTo:'',filterYear:String(new Date().getFullYear()),
+  filterDateFrom:'',filterDateTo:'',filterYear:'',
+  sortBy:'criacao',sortDir:'desc',     // ordenação da lista de demandas
   openActivities:new Set(),openDays:new Set(),
 };
 
@@ -482,24 +518,128 @@ let S={
 function load(){try{const d=JSON.parse(localStorage.getItem(SK)||'{}');S.activities=d.activities||[];S.subtasks=d.subtasks||[];S.logs=d.logs||[];S.tags=d.tags||[];S.openActivities=new Set();S.openDays=new Set();}catch(e){S.activities=[];S.subtasks=[];S.logs=[];S.tags=[];}}
 function save(){try{localStorage.setItem(SK,JSON.stringify({activities:S.activities,subtasks:S.subtasks,logs:S.logs,tags:S.tags}));}catch(e){toast('Erro ao salvar','er');}}
 
+// ── AUTO-BACKUP ──
+// Cria um snapshot diário automaticamente. Mantém os últimos BK_MAX backups.
+function autoBackup(){
+  try{
+    const today=todayStr();
+    const backups=listBackups();
+    // Só cria um backup por dia
+    if(backups.length&&backups[0].date===today) return;
+    // Só faz backup se há dados relevantes
+    if(!S.activities.length&&!S.logs.length) return;
+    const snapshot={
+      ts:Date.now(),
+      date:today,
+      label:fmtDateBackup(today),
+      activities:S.activities.length,
+      subtasks:S.subtasks.length,
+      logs:S.logs.length,
+      data:JSON.stringify({activities:S.activities,subtasks:S.subtasks,logs:S.logs,tags:S.tags}),
+    };
+    const updated=[snapshot,...backups].slice(0,BK_MAX);
+    localStorage.setItem(BK,JSON.stringify(updated));
+  }catch(e){/* backup silencioso — não bloqueia o fluxo */}
+}
+function listBackups(){
+  try{return JSON.parse(localStorage.getItem(BK)||'[]');}catch(e){return[];}
+}
+function fmtDateBackup(s){
+  if(!s)return'';
+  const[y,m,d]=s.split('-');
+  return`${d}/${m}/${y}`;
+}
+function storageUsageKB(){
+  try{
+    let total=0;
+    for(const k of[SK,BK]){const v=localStorage.getItem(k);if(v)total+=v.length*2;}// UTF-16
+    return(total/1024).toFixed(1);
+  }catch(e){return'?';}
+}
+function restoreBackup(ts){
+  const backups=listBackups();
+  const bk=backups.find(b=>b.ts===ts);
+  if(!bk)return;
+  confirmAction(
+    `Restaurar backup de ${bk.label}? Os dados atuais serão substituídos por este snapshot (${bk.activities} demandas, ${bk.logs} tarefas).`,
+    ()=>{
+      try{
+        const d=JSON.parse(bk.data);
+        S.activities=d.activities||[];S.subtasks=d.subtasks||[];
+        S.logs=d.logs||[];S.tags=d.tags||[];
+        save();rebuildSearch();updateSidebar();renderView(S.currentView);
+        toast('Backup restaurado com sucesso!','ok');
+        closeModal();
+      }catch(e){toast('Erro ao restaurar backup','er');}
+    },
+    'Restaurar backup'
+  );
+}
+
 // ── UTILS ──
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function todayStr(){return new Date().toISOString().slice(0,10);}
-function getCurrentCycle(){const m=new Date().getMonth()+1;return CYCLE_DEFS.find(c=>m>=c.sm&&m<=c.em)||CYCLE_DEFS[0];}
+// Datas sempre no fuso de Brasília (UTC-3)
+function nowBRT(){const now=new Date();return new Date(now.toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));}
+function todayStr(){const d=nowBRT();const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const dd=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${dd}`;}
+function getCurrentCycle(){const m=nowBRT().getMonth()+1;return CYCLE_DEFS.find(c=>m>=c.sm&&m<=c.em)||CYCLE_DEFS[0];}
+// Retorna o ciclo ativo: o selecionado pelo usuário, ou o do mês atual como fallback
+function getActiveCycle(){return(S.selectedCycleId&&getCycleById(S.selectedCycleId))||getCurrentCycle();}
+function getActiveYear(){return parseInt(S.selectedYear||nowBRT().getFullYear());}
+// Define o ciclo selecionado e propaga para os filtros relevantes
+function setActiveCycle(cycleId,year){
+  S.selectedCycleId=cycleId;S.selectedYear=String(year);
+  S.filterCycleId=cycleId;S.filterYear=String(year);
+  updateSidebar();
+}
 function getCycleById(id){return CYCLE_DEFS.find(c=>c.id===id);}
-function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');const today=todayStr();if(s===today)return'Hoje';const yest=new Date();yest.setDate(yest.getDate()-1);if(s===yest.toISOString().slice(0,10))return'Ontem';return`${d} ${MONTHS_PT[parseInt(m)-1]} ${y}`;}
+function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');const today=todayStr();if(s===today)return'Hoje';const yest=nowBRT();yest.setDate(yest.getDate()-1);const yy=yest.getFullYear(),ym=String(yest.getMonth()+1).padStart(2,'0'),yd=String(yest.getDate()).padStart(2,'0');if(s===`${yy}-${ym}-${yd}`)return'Ontem';return`${d} ${MONTHS_PT[parseInt(m)-1]} ${y}`;}
 function actById(id){return S.activities.find(a=>a.id===id);}
 function subById(id){return S.subtasks.find(s=>s.id===id);}
 function logById(id){return S.logs.find(l=>l.id===id);}
 function tagById(id){return S.tags.find(t=>t.id===id);}
 function getActSubtasks(actId){return S.subtasks.filter(s=>s.activityId===actId);}
 function getSubLogs(subId){return S.logs.filter(l=>l.subtaskId===subId);}
-function getActCompletion(actId){const subs=getActSubtasks(actId);if(!subs.length)return 0;return Math.round(subs.filter(s=>s.done).length/subs.length*100);}
+function getActCompletion(actId){
+  const subs=getActSubtasks(actId);
+  if(!subs.length) return 0;
+  // Se todas as subtarefas têm estimativa, usa % ponderada por horas
+  const subsWithEst=subs.filter(s=>s.estimatedHours>0);
+  if(subsWithEst.length===subs.length){
+    const totalEst=subs.reduce((sum,s)=>sum+(s.estimatedHours||0),0);
+    if(!totalEst) return 0;
+    const doneEst=subs.filter(s=>s.done).reduce((sum,s)=>sum+(s.estimatedHours||0),0);
+    return Math.round(doneEst/totalEst*100);
+  }
+  // Fallback: contagem simples de subtarefas concluídas
+  return Math.round(subs.filter(s=>s.done).length/subs.length*100);
+}
 function getActHoursSpent(actId){const ids=getActSubtasks(actId).map(s=>s.id);return S.logs.filter(l=>ids.includes(l.subtaskId)).reduce((sum,l)=>sum+(l.hrs||0),0);}
 function getSubHoursSpent(subId){return getSubLogs(subId).reduce((sum,l)=>sum+(l.hrs||0),0);}
 function getCycleActivities(cycleId,year){return S.activities.filter(a=>a.cycleId===cycleId&&String(a.year)===String(year));}
 function pctClass(p){return p>=75?'hi':p>=40?'md':p>=15?'lo':'nl';}
 function hrsDisplay(h){return h===0?'0h':h%1===0?`${h}h`:`${h.toFixed(1)}h`;}
+
+// Retorna o badge HTML de "última atividade" para uma demanda
+function getLastActivityBadge(actId){
+  // Demanda 100% concluída não precisa de alerta de inatividade
+  if(getActCompletion(actId)===100) return'';
+  const subIds=getActSubtasks(actId).map(s=>s.id);
+  if(!subIds.length) return`<span class="last-act none">sem subtarefas</span>`;
+  const actLogs=S.logs.filter(l=>subIds.includes(l.subtaskId));
+  if(!actLogs.length) return`<span class="last-act none" title="Nenhum registro encontrado">sem registro</span>`;
+  const lastDate=actLogs.reduce((max,l)=>l.date>max?l.date:max,'');
+  const todayMs=nowBRT().setHours(0,0,0,0);
+  const [y,m,d]=lastDate.split('-').map(Number);
+  const lastMs=new Date(y,m-1,d).setHours(0,0,0,0);
+  const diffDays=Math.round((todayMs-lastMs)/(1000*60*60*24));
+  let cls,label,icon;
+  if(diffDays===0){cls='fresh';label='hoje';icon='●';}
+  else if(diffDays===1){cls='fresh';label='ontem';icon='●';}
+  else if(diffDays<=3){cls='recent';label=`${diffDays}d atrás`;icon='●';}
+  else if(diffDays<=7){cls='stale';label=`${diffDays}d atrás`;icon='⚠';}
+  else{cls='old';label=`${diffDays}d atrás`;icon='⚠';}
+  return`<span class="last-act ${cls}" title="Último registro: ${fmtDate(lastDate)}">${icon} ${label}</span>`;
+}
 function renderTagBadges(tagIds=[]){return (tagIds||[]).map(id=>{const t=tagById(id);if(!t)return'';return`<span class="tag-chip" style="background:${t.color}18;color:${t.color};border-color:${t.color}45">${esc(t.name)}</span>`;}).join('');}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
@@ -521,9 +661,9 @@ function delTag(id){const rm=arr=>arr.map(x=>({...x,tags:(x.tags||[]).filter(t=>
 let fuseAll=null,fuseActs=null;
 function rebuildSearch(){
   const all=[
-    ...S.activities.map(a=>({...a,_type:'atividade',_text:a.title,_sub:getCycleById(a.cycleId)?.name})),
+    ...S.activities.map(a=>({...a,_type:'demanda',_text:a.title,_sub:getCycleById(a.cycleId)?.name})),
     ...S.subtasks.map(s=>{const a=actById(s.activityId);return{...s,_type:'subtarefa',_text:s.title,_sub:a?.title||''};}),
-    ...S.logs.map(l=>{const s=subById(l.subtaskId);return{...l,_type:'registro',_text:l.description,_sub:s?.title||'',_date:l.date};}),
+    ...S.logs.map(l=>{const s=subById(l.subtaskId);return{...l,_type:'tarefa',_text:l.description,_sub:s?.title||'',_date:l.date};}),
     ...S.tags.map(t=>({...t,_type:'tag',_text:t.name,_sub:''})),
   ];
   fuseAll=new Fuse(all,{keys:['_text'],threshold:0.4,includeMatches:true,minMatchCharLength:2});
@@ -570,84 +710,171 @@ function renderView(v){destroyCharts();if(v==='dashboard')renderDashboard();else
 
 // ── SIDEBAR ──
 function updateSidebar(){
-  const cc=getCurrentCycle();const year=new Date().getFullYear();
-  const acts=getCycleActivities(cc.id,year);
+  const ac=getActiveCycle();const year=getActiveYear();
+  const realCc=getCurrentCycle();const realYear=nowBRT().getFullYear();
+  const isOverride=ac.id!==realCc.id||year!==realYear;
+  const acts=getCycleActivities(ac.id,year);
   const totalEst=acts.reduce((s,a)=>s+(a.estimatedHours||0),0);
   const totalSpent=acts.reduce((s,a)=>s+getActHoursSpent(a.id),0);
   const avgComp=acts.length?Math.round(acts.reduce((s,a)=>s+getActCompletion(a.id),0)/acts.length):0;
   const pct=totalEst?Math.round(totalSpent/totalEst*100):avgComp;
-  document.getElementById('sb-cn').textContent=cc.name;
-  document.getElementById('sb-cl').textContent=cc.label+' '+year;
+  document.getElementById('sb-cn').textContent=ac.name;
+  document.getElementById('sb-cl').textContent=ac.label+' '+year;
   document.getElementById('sb-bar-f').style.width=Math.min(pct,100)+'%';
+  document.getElementById('sb-bar-f').style.background=isOverride?'linear-gradient(90deg,#8B5CF6,#C4B5FD)':'';
   document.getElementById('ss-h').textContent=hrsDisplay(totalSpent);
   document.getElementById('ss-e').textContent=hrsDisplay(totalEst);
   document.getElementById('ss-c').textContent=avgComp+'%';
-  document.getElementById('ss-a').textContent=acts.length+' ativ.';
+  document.getElementById('ss-a').textContent=acts.length+' dem.';
+  // Label and reset button
+  document.getElementById('sb-cycle-label').textContent=isOverride?'Ciclo selecionado':'Ciclo atual';
+  document.getElementById('sb-cycle-label').style.color=isOverride?'var(--vi2)':'';
+  document.getElementById('sb-cycle-reset').style.display=isOverride?'inline-block':'none';
+  // Badge border color hint
+  const badge=document.getElementById('sb-badge');
+  badge.style.borderColor=isOverride?'rgba(139,92,246,.45)':'';
+  badge.style.background=isOverride?'linear-gradient(135deg,rgba(139,92,246,.1),rgba(124,58,237,.08))':'';
+}
+function resetActiveCycle(){
+  const cc=getCurrentCycle();const year=nowBRT().getFullYear();
+  setActiveCycle(cc.id,String(year));
+  renderView(S.currentView);
 }
 
 // ── DASHBOARD ──
 function renderDashboard(){
-  const cc=getCurrentCycle();const year=new Date().getFullYear();
+  const cc=getActiveCycle();const year=getActiveYear();
   const acts=getCycleActivities(cc.id,year);
   const totalEst=acts.reduce((s,a)=>s+(a.estimatedHours||0),0);
   const totalSpent=acts.reduce((s,a)=>s+getActHoursSpent(a.id),0);
   const avgComp=acts.length?Math.round(acts.reduce((s,a)=>s+getActCompletion(a.id),0)/acts.length):0;
   const active=acts.filter(a=>getActCompletion(a.id)<100).length;
-  const since=new Date();since.setDate(since.getDate()-6);
-  const sinceStr=since.toISOString().slice(0,10);
-  const recentLogs=S.logs.filter(l=>l.date>=sinceStr).sort((a,b)=>b.date.localeCompare(a.date));
-  const byDate={};recentLogs.forEach(l=>{byDate[l.date]=(byDate[l.date]||[]).concat(l);});
+
+  // IDs de todas as subtarefas do ciclo ativo — usado para filtrar logs
+  const cycleSubIds=new Set(acts.flatMap(a=>getActSubtasks(a.id).map(s=>s.id)));
+  const cycleLogs=S.logs.filter(l=>cycleSubIds.has(l.subtaskId));
+
+  // Determina se o ciclo ativo É o ciclo real do mês corrente
+  const realCc=getCurrentCycle();const realYear=nowBRT().getFullYear();
+  const isCurrentCycle=cc.id===realCc.id&&year===realYear;
+
+  // Tarefas para exibir no dashboard:
+  // - Ciclo atual → últimos 7 dias
+  // - Outro ciclo → últimos N registros do ciclo (ordenados por data decrescente)
+  let displayLogs,sectionTitle;
+  if(isCurrentCycle){
+    const since=nowBRT();since.setDate(since.getDate()-6);
+    const sinceStr=`${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
+    displayLogs=cycleLogs.filter(l=>l.date>=sinceStr).sort((a,b)=>b.date.localeCompare(a.date));
+    sectionTitle='Tarefas recentes — últimos 7 dias';
+  }else{
+    displayLogs=cycleLogs.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,50);
+    sectionTitle='Últimas tarefas do ciclo';
+  }
+  const byDate={};displayLogs.forEach(l=>{byDate[l.date]=(byDate[l.date]||[]).concat(l);});
+
+  // Métrica "hoje" filtrada pelo ciclo
+  const todayLogsCount=cycleLogs.filter(l=>l.date===todayStr()).length;
+  const todayHrs=cycleLogs.filter(l=>l.date===todayStr()).reduce((s,l)=>s+(l.hrs||0),0);
+
   const progRows=acts.slice(0,8).map(a=>{const pct=getActCompletion(a.id);const spent=getActHoursSpent(a.id);
     return`<div class="ar" id="dash-ar-${a.id}"><div class="ah" onclick="openActivityDetail('${a.id}')">
       <div class="at">${esc(a.title)}</div>${a.devopsLink?`<a class="ad" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank" onclick="event.stopPropagation()">${esc(a.devopsLink)}</a>`:''}
       <div class="ahrs">${hrsDisplay(spent)} / ${hrsDisplay(a.estimatedHours||0)}</div>
       <div class="apb"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <div class="ap">${pct}%</div>
+      ${getLastActivityBadge(a.id)}
     </div></div>`;
-  }).join('')||'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><h3>Nenhuma atividade neste ciclo</h3><p>Adicione atividades com "+ Nova Atividade"</p></div>';
+  }).join('')||'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><h3>Nenhuma demanda neste ciclo</h3><p>Adicione demandas com "+ Nova Demanda"</p></div>';
   const timelineHtml=Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).slice(0,5).map(date=>{
     const dayLogs=byDate[date];const totalHrs=dayLogs.reduce((s,l)=>s+(l.hrs||0),0);const subs=new Set(dayLogs.map(l=>l.subtaskId)).size;const isOpen=S.openDays.has('dash-'+date);
     const logsHtml=dayLogs.map(l=>{const sub=subById(l.subtaskId),act=sub?actById(sub.activityId):null;return`<div class="tli"><div class="tlh"><span class="tlsub">${esc(sub?.title||'—')}</span><span class="tlact">/ ${esc(act?.title||'—')}</span>${l.hrs?`<span class="hr-badge" style="margin-left:auto">${hrsDisplay(l.hrs)}</span>`:''}</div><div class="tlt">${esc(l.description)}</div></div>`;}).join('');
     return`<div class="td ${isOpen?'open':''}" id="dd-${date}"><div class="tdh" onclick="toggleDay('dash-${date}','dd-${date}')"><div class="tdate ${date===todayStr()?'tod':''}">${fmtDate(date)}</div><div class="tmeta">${subs} subtarefa${subs!==1?'s':''} · ${hrsDisplay(totalHrs)}</div><svg class="tex" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>${isOpen?`<div class="tdc">${logsHtml}</div>`:''}</div>`;
-  }).join('')||'<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhum registro nos últimos 7 dias</h3><p>Registre seu progresso diário nas atividades</p></div>';
+  }).join('')||`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhuma tarefa neste ciclo</h3><p>${isCurrentCycle?'Registre seu progresso diário nas demandas':'Nenhuma tarefa encontrada para este ciclo'}</p></div>`;
   document.getElementById('view-dashboard').innerHTML=`
     <div class="ph"><div><div class="pt">Dashboard</div><div class="ps">${cc.name} — ${cc.label} ${year}</div></div>
       <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar hoje</button></div>
     <div class="mg">
       <div class="mc"><div class="ml">Horas gastas</div><div class="mv ac">${hrsDisplay(totalSpent)}</div><div class="ms">de ${hrsDisplay(totalEst)} estimadas</div></div>
-      <div class="mc"><div class="ml">Conclusão média</div><div class="mv ${avgComp>=75?'ok':avgComp>=40?'ac':'wn'}">${avgComp}%</div><div class="ms">${acts.length} atividade${acts.length!==1?'s':''} no ciclo</div></div>
+      <div class="mc"><div class="ml">Conclusão média</div><div class="mv ${avgComp>=75?'ok':avgComp>=40?'ac':'wn'}">${avgComp}%</div><div class="ms">${acts.length} demanda${acts.length!==1?'s':''} no ciclo</div></div>
       <div class="mc"><div class="ml">Em andamento</div><div class="mv">${active}</div><div class="ms">atividade${active!==1?'s':''} abertas</div></div>
-      <div class="mc"><div class="ml">Registros hoje</div><div class="mv">${S.logs.filter(l=>l.date===todayStr()).length}</div><div class="ms">${hrsDisplay(S.logs.filter(l=>l.date===todayStr()).reduce((s,l)=>s+(l.hrs||0),0))} registradas</div></div>
+      <div class="mc"><div class="ml">${isCurrentCycle?'Tarefas hoje':'Total de tarefas'}</div><div class="mv">${isCurrentCycle?todayLogsCount:cycleLogs.length}</div><div class="ms">${isCurrentCycle?hrsDisplay(todayHrs)+' registradas':hrsDisplay(cycleLogs.reduce((s,l)=>s+(l.hrs||0),0))+' no total'}</div></div>
     </div>
-    <div class="sec"><div class="sh"><span class="st">Progresso das atividades</span><button class="sa" onclick="navigate('activities')">Ver todas →</button></div>${progRows}</div>
-    <div class="sec"><div class="sh"><span class="st">Registros recentes</span><button class="sa" onclick="navigate('timeline')">Ver timeline →</button></div>${timelineHtml}</div>`;
+    <div class="sec"><div class="sh"><span class="st">Progresso das demandas</span><button class="sa" onclick="navigate('activities')">Ver todas →</button></div>${progRows}</div>
+    <div class="sec"><div class="sh"><span class="st">${sectionTitle}</span><button class="sa" onclick="navigate('timeline')">Ver timeline →</button></div>${timelineHtml}</div>`;
 }
 
 // ── CYCLES ──
 function renderCycles(){
-  const year=parseInt(S.filterYear||new Date().getFullYear());const cc=getCurrentCycle();const curMonth=new Date().getMonth()+1;const curYear=new Date().getFullYear();
-  const cards=CYCLE_DEFS.map(cd=>{const acts=getCycleActivities(cd.id,year);const totalEst=acts.reduce((s,a)=>s+(a.estimatedHours||0),0);const totalSpent=acts.reduce((s,a)=>s+getActHoursSpent(a.id),0);const avgComp=acts.length?Math.round(acts.reduce((s,a)=>s+getActCompletion(a.id),0)/acts.length):0;const isCur=cd.id===cc.id&&year===curYear;const isDone=year<curYear||(year===curYear&&cd.em<curMonth);const badgeClass=isCur?'cur':isDone?'done':'fut';const badgeText=isCur?'Ciclo atual':isDone?'Concluído':'Futuro';const pct=totalEst?Math.round(totalSpent/totalEst*100):avgComp;
-    return`<div class="cc ${isCur?'cur':''}" onclick="filterCycleActs('${cd.id}','${year}')"><div class="ccn">Nº ${cd.n}</div><div class="ccname">${esc(cd.name)}</div><div class="ccd">${esc(cd.label)} ${year}</div><div class="ccst"><div class="ccs"><div class="ccsv">${acts.length}</div><div class="ccsl">Atividades</div></div><div class="ccs"><div class="ccsv">${hrsDisplay(totalSpent)}</div><div class="ccsl">Gastas</div></div><div class="ccs"><div class="ccsv">${hrsDisplay(totalEst)}</div><div class="ccsl">Estimadas</div></div></div><div class="ccpb"><div class="ccpf" style="width:${Math.min(pct,100)}%"></div></div><span class="cc-badge ${badgeClass}">${badgeText} · ${avgComp}% concluído</span></div>`;
+  const year=parseInt(S.filterYear||getActiveYear());const cc=getCurrentCycle();const ac=getActiveCycle();const activeYear=getActiveYear();const curMonth=nowBRT().getMonth()+1;const curYear=nowBRT().getFullYear();
+  const cards=CYCLE_DEFS.map(cd=>{const acts=getCycleActivities(cd.id,year);const totalEst=acts.reduce((s,a)=>s+(a.estimatedHours||0),0);const totalSpent=acts.reduce((s,a)=>s+getActHoursSpent(a.id),0);const avgComp=acts.length?Math.round(acts.reduce((s,a)=>s+getActCompletion(a.id),0)/acts.length):0;const isCur=cd.id===cc.id&&year===curYear;const isSelActive=cd.id===ac.id&&year===activeYear;const isDone=year<curYear||(year===curYear&&cd.em<curMonth);
+    // Badge: if this card is the selected-active cycle (and differs from real current), show "Selecionado"
+    let badgeClass,badgeText;
+    if(isSelActive&&!isCur){badgeClass='sel';badgeText='Selecionado';}
+    else if(isCur){badgeClass='cur';badgeText='Ciclo atual';}
+    else if(isDone){badgeClass='done';badgeText='Concluído';}
+    else{badgeClass='fut';badgeText='Futuro';}
+    const pct=totalEst?Math.round(totalSpent/totalEst*100):avgComp;
+    const extraClass=(isSelActive&&!isCur)?'sel-active':'';
+    return`<div class="cc ${isCur?'cur':''} ${extraClass}" onclick="selectCycleAndNavigate('${cd.id}','${year}')">
+      <div class="ccn">Nº ${cd.n}</div><div class="ccname">${esc(cd.name)}</div><div class="ccd">${esc(cd.label)} ${year}</div>
+      <div class="ccst"><div class="ccs"><div class="ccsv">${acts.length}</div><div class="ccsl">Demandas</div></div><div class="ccs"><div class="ccsv">${hrsDisplay(totalSpent)}</div><div class="ccsl">Gastas</div></div><div class="ccs"><div class="ccsv">${hrsDisplay(totalEst)}</div><div class="ccsl">Estimadas</div></div></div>
+      <div class="ccpb"><div class="ccpf" style="width:${Math.min(pct,100)}%;${isSelActive&&!isCur?'background:linear-gradient(90deg,#8B5CF6,#C4B5FD);':''}" ></div></div>
+      <span class="cc-badge ${badgeClass}">${badgeText} · ${avgComp}% concluído</span>
+    </div>`;
   }).join('');
-  document.getElementById('view-cycles').innerHTML=`<div class="ph"><div><div class="pt">Ciclos</div><div class="ps">Visão geral de todos os ciclos do ano</div></div><div style="display:flex;gap:8px;align-items:center"><label style="font-size:12px;color:var(--t3)">Ano:</label><select class="fs" onchange="S.filterYear=this.value;renderCycles()" style="width:80px">${[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('')}</select><button class="btn bp" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova atividade</button></div></div><div class="ccg">${cards}</div>`;
+  document.getElementById('view-cycles').innerHTML=`<div class="ph"><div><div class="pt">Ciclos</div><div class="ps">Clique em um ciclo para selecioná-lo como contexto ativo</div></div><div style="display:flex;gap:8px;align-items:center"><label style="font-size:12px;color:var(--t3)">Ano:</label><select class="fs" onchange="S.filterYear=this.value;renderCycles()" style="width:80px">${[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('')}</select><button class="btn bp" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova demanda</button></div></div><div class="ccg">${cards}</div>`;
 }
-function filterCycleActs(cycleId,year){S.filterCycleId=cycleId;S.filterYear=String(year);navigate('activities');}
+function selectCycleAndNavigate(cycleId,year){
+  setActiveCycle(cycleId,year);
+  toast(`${getCycleById(cycleId)?.name||cycleId} selecionado como contexto ativo`,'ok');
+  navigate('dashboard');
+}
 
 // ── ACTIVITIES ──
 function renderActivities(){
-  const year=parseInt(S.filterYear||new Date().getFullYear());
+  const year=parseInt(S.filterYear||getActiveYear());
+  // Default filter to active cycle when none explicitly set
+  if(!S.filterCycleId&&S.selectedCycleId) S.filterCycleId=S.selectedCycleId;
   let acts=S.activities.filter(a=>String(a.year)===String(year));
   if(S.filterCycleId) acts=acts.filter(a=>a.cycleId===S.filterCycleId);
   if(S.filterStatus==='active') acts=acts.filter(a=>getActCompletion(a.id)<100);
   else if(S.filterStatus==='done') acts=acts.filter(a=>getActCompletion(a.id)===100);
   if(S.filterTagId) acts=acts.filter(a=>(a.tags||[]).includes(S.filterTagId));
+
+  // ── SORT ──
+  const sd=S.sortDir==='asc'?1:-1;
+  acts=acts.slice().sort((a,b)=>{
+    switch(S.sortBy){
+      case 'titulo':     return sd*(a.title.localeCompare(b.title,'pt-BR'));
+      case 'conclusao':  return sd*(getActCompletion(a.id)-getActCompletion(b.id));
+      case 'horas_gast': return sd*(getActHoursSpent(a.id)-getActHoursSpent(b.id));
+      case 'horas_rest': return sd*((a.estimatedHours||0)-getActHoursSpent(a.id)-((b.estimatedHours||0)-getActHoursSpent(b.id)));
+      case 'ultima_ativ':{
+        const getLastDate=id=>{const sIds=getActSubtasks(id).map(s=>s.id);const lg=S.logs.filter(l=>sIds.includes(l.subtaskId));return lg.length?lg.reduce((mx,l)=>l.date>mx?l.date:mx,''):''};
+        const da=getLastDate(a.id),db=getLastDate(b.id);
+        if(!da&&!db)return 0;if(!da)return sd;if(!db)return-sd;
+        return sd*(da.localeCompare(db));
+      }
+      default: // 'criacao'
+        return sd*((a.createdAt||'').localeCompare(b.createdAt||''));
+    }
+  });
+
+  // sort bar helper
+  function sortBtn(key,label){
+    const active=S.sortBy===key;
+    const arrow=active?(S.sortDir==='asc'?'↑':'↓'):'';
+    return`<button class="sort-btn ${active?'active':''}" onclick="setSortActivities('${key}')">${label}${active?` <span class="arrow">${arrow}</span>`:''}  </button>`;
+  }
+
   const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${S.filterCycleId===cd.id?'selected':''}>${esc(cd.name)}</option>`).join('');
   const yearOpts=[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('');
   const tagFilterBtns=S.tags.map(t=>`<button class="tag-filter-btn ${S.filterTagId===t.id?'active':''}" style="background:${t.color}18;color:${t.color};border-color:${S.filterTagId===t.id?t.color:'transparent'}" onclick="S.filterTagId=S.filterTagId==='${t.id}'?'':'${t.id}';renderActivities()">${esc(t.name)}</button>`).join('');
-  const rows=acts.map(a=>renderActivityRow(a)).join('')||`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><h3>Nenhuma atividade encontrada</h3><p>Adicione uma nova atividade ou ajuste os filtros</p></div>`;
+  const rows=acts.map(a=>renderActivityRow(a)).join('')||`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg><h3>Nenhuma demanda encontrada</h3><p>Adicione uma nova demanda ou ajuste os filtros</p></div>`;
   document.getElementById('view-activities').innerHTML=`
-    <div class="ph"><div><div class="pt">Atividades</div><div class="ps">${acts.length} atividade${acts.length!==1?'s':''} encontrada${acts.length!==1?'s':''}</div></div>
-      <button class="btn bp" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova atividade</button></div>
+    <div class="ph"><div><div class="pt">Demandas</div><div class="ps">${acts.length} demanda${acts.length!==1?'s':''} encontrada${acts.length!==1?'s':''}</div></div>
+      <button class="btn bp" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova demanda</button></div>
     <div class="fb">
       <span class="fl">Filtros</span>
       <select class="fs" onchange="S.filterCycleId=this.value;renderActivities()"><option value="">Todos os ciclos</option>${cycleOpts}</select>
@@ -660,7 +887,22 @@ function renderActivities(){
       ${tagFilterBtns}
       <button class="fc" onclick="S.filterCycleId='';S.filterStatus='';S.filterTagId='';renderActivities()">Limpar</button>
     </div>
+    <div class="fb" style="gap:6px;padding:8px 14px">
+      <span class="fl">Ordenar</span>
+      <div class="sort-sep"></div>
+      ${sortBtn('criacao','Criação')}
+      ${sortBtn('titulo','A–Z')}
+      ${sortBtn('conclusao','Conclusão')}
+      ${sortBtn('horas_gast','H. gastas')}
+      ${sortBtn('horas_rest','H. restantes')}
+      ${sortBtn('ultima_ativ','Últ. tarefa')}
+    </div>
     <div id="acts-list">${rows}</div>`;
+}
+function setSortActivities(key){
+  if(S.sortBy===key) S.sortDir=S.sortDir==='asc'?'desc':'asc'; // toggle direction
+  else{S.sortBy=key;S.sortDir=key==='titulo'?'asc':'desc';}     // sensible defaults per column
+  renderActivities();
 }
 function renderActivityRow(a){
   const pct=getActCompletion(a.id);const spent=getActHoursSpent(a.id);const subs=getActSubtasks(a.id);const isOpen=S.openActivities.has(a.id);const cd=getCycleById(a.cycleId);
@@ -677,11 +919,13 @@ function renderActivityRow(a){
       <div class="ai" onclick="toggleActivity('${a.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
       <div class="at" onclick="openActivityDetail('${a.id}')" style="cursor:pointer" title="Ver detalhes">${esc(a.title)}</div>
       ${renderTagBadges(a.tags)}
+      ${a.notes?`<div class="notes-dot" title="Esta demanda tem notas"></div>`:''}
       <span class="badge nt" style="font-size:10px">${cd?cd.name:''}</span>
       ${a.devopsLink?`<a class="ad" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank" title="Azure DevOps">${esc(a.devopsLink)}</a>`:''}
       <div class="ahrs">${hrsDisplay(spent)}<span style="color:var(--t3)"> / ${hrsDisplay(a.estimatedHours||0)}</span></div>
       <div class="apb"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <div class="ap">${pct}%</div>
+      ${getLastActivityBadge(a.id)}
       <div class="aacts">
         <button class="bi" onclick="openAddSubtaskModal('${a.id}')" title="Nova subtarefa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
         <button class="bi" onclick="openActivityDetail('${a.id}')" title="Ver detalhes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
@@ -693,14 +937,21 @@ function renderActivityRow(a){
   </div>`;
 }
 function renderSubtaskRow(s){
-  const logs=getSubLogs(s.id);const hrs=getSubHoursSpent(s.id);
+  const logs=getSubLogs(s.id);const hrs=getSubHoursSpent(s.id);const est=s.estimatedHours||0;
+  const pct=est?Math.min(Math.round(hrs/est*100),100):0;
+  const over=est&&hrs>est;
+  const estHtml=est?`
+    <div class="sub-hbar" title="${hrsDisplay(hrs)} de ${hrsDisplay(est)} estimadas"><div class="sub-hbar-f ${over?'over':''}" style="width:${pct}%"></div></div>
+    <span class="sub-est ${over?'over':''}">${hrsDisplay(hrs)}/${hrsDisplay(est)}</span>`
+    :`${hrs?`<span class="hr-badge">${hrsDisplay(hrs)}</span>`:''}`;
   return`<div class="si" id="si-${s.id}">
     <div class="ck ${s.done?'done':''}" onclick="toggleSubDone('${s.id}')" title="${s.done?'Marcar pendente':'Marcar concluída'}"></div>
-    <span class="stit ${s.done?'done':''}">${esc(s.title)}</span>
+    <span class="stit ${s.done?'done':''}" onclick="openSubtaskDetail('${s.id}')" style="cursor:pointer" title="Ver tarefas da subtarefa">${esc(s.title)}</span>
     ${renderTagBadges(s.tags)}
-    ${hrs?`<span class="hr-badge">${hrsDisplay(hrs)}</span>`:''}
-    <span class="slc">${logs.length} reg.</span>
+    ${estHtml}
+    <span class="slc">${logs.length} tar.</span>
     <button class="slb" onclick="openAddLogModal('${s.id}',null)">+ Reg.</button>
+    <button class="bi" onclick="openSubtaskDetail('${s.id}')" title="Ver tarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
     <button class="bi" onclick="openEditSubtaskModal('${s.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
     <button class="bi er" onclick="confirmDeleteSubtask('${s.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
   </div>`;
@@ -731,13 +982,13 @@ function openActivityDetail(id){
   const allLogs=S.logs.filter(l=>allSubIds.includes(l.subtaskId)).sort((a,b)=>b.date.localeCompare(a.date));
   const byDate={};allLogs.forEach(l=>{byDate[l.date]=(byDate[l.date]||[]).concat(l);});
   const totalLogs=allLogs.length;
-  const subsHtml=subs.map(s=>{const slogs=getSubLogs(s.id);const shrs=getSubHoursSpent(s.id);
-    return`<div class="ad-sub-item" onclick="openAddLogModal('${s.id}',null)">
+  const subsHtml=subs.map(s=>{const slogs=getSubLogs(s.id);const shrs=getSubHoursSpent(s.id);const sest=s.estimatedHours||0;const sover=sest&&shrs>sest;
+    return`<div class="ad-sub-item" onclick="openSubtaskDetail('${s.id}')">
       <div class="ck ${s.done?'done':''}" onclick="event.stopPropagation();toggleSubDoneDetail('${s.id}','${id}')"></div>
       <span class="ad-sub-name ${s.done?'done':''}">${esc(s.title)}</span>
       ${renderTagBadges(s.tags)}
-      ${shrs?`<span class="hr-badge">${hrsDisplay(shrs)}</span>`:''}
-      <span style="font-size:11px;color:var(--t3)">${slogs.length} reg.</span>
+      ${sest?`<span class="sub-est ${sover?'over':''}" style="margin-left:auto">${hrsDisplay(shrs)}/${hrsDisplay(sest)}</span>`:`${shrs?`<span class="hr-badge" style="margin-left:auto">${hrsDisplay(shrs)}</span>`:''}`}
+      <span style="font-size:11px;color:var(--t3)">${slogs.length} tar.</span>
     </div>`;
   }).join('')||'<div class="ad-empty">Nenhuma subtarefa cadastrada.</div>';
   const logsHtml=Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date=>{
@@ -754,7 +1005,7 @@ function openActivityDetail(id){
       </div>`;
     }).join('');
     return`<div class="ad-log-day"><div class="ad-log-date">${fmtDate(date)} — ${hrsDisplay(dayHrs)}</div>${entries}</div>`;
-  }).join('')||'<div class="ad-empty">Nenhum registro encontrado.</div>';
+  }).join('')||'<div class="ad-empty">Nenhuma tarefa encontrada.</div>';
   document.getElementById('modal-box').classList.add('wide');
   openModal(`${esc(a.title)}`,`
     <div class="ad-meta">
@@ -765,20 +1016,115 @@ function openActivityDetail(id){
     </div>
     ${renderTagBadges(a.tags)}
     <div class="apb" style="width:100%;margin:12px 0 16px;height:6px"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
+    ${a.notes?`<div class="ad-sub-section" style="margin-bottom:16px">
+      <div class="ad-sub-title" style="display:flex;align-items:center;gap:7px">
+        <span>Notas</span>
+        <button class="bi" onclick="openEditActivityModal('${id}')" title="Editar notas" style="width:22px;height:22px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      </div>
+      <div class="notes-block"><pre>${esc(a.notes)}</pre></div>
+    </div>`:''}
     <div class="ad-sub-section">
       <div class="ad-sub-title">Subtarefas (${subs.length}) — clique para registrar</div>
       ${subsHtml}
     </div>
     <div class="ad-sub-section" style="margin-top:20px">
-      <div class="ad-sub-title">Histórico completo (${totalLogs} registros)</div>
+      <div class="ad-sub-title">Histórico completo (${totalLogs} tarefas)</div>
       ${logsHtml}
     </div>`,
-    `<button class="btn bs" onclick="openEditActivityModal('${id}')">Editar atividade</button>
+    `<button class="btn bs" onclick="openEditActivityModal('${id}')">Editar demanda</button>
      <button class="btn bp" onclick="closeModal();openAddLogModal(null,null,'${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo registro</button>`);
 }
 function toggleSubDoneDetail(subId,actId){
   const s=subById(subId);if(!s)return;updSubtask(subId,{done:!s.done});
   closeModal();openActivityDetail(actId);updateSidebar();
+}
+
+// ── SUBTASK DETAIL MODAL ──
+function openSubtaskDetail(id){
+  const s=subById(id);if(!s)return;
+  const act=actById(s.activityId);
+  const logs=getSubLogs(id).slice().sort((a,b)=>b.date.localeCompare(a.date));
+  const totalHrs=getSubHoursSpent(id);
+  const est=s.estimatedHours||0;
+  const totalLogs=logs.length;
+
+  // Group logs by date
+  const byDate={};
+  logs.forEach(l=>{byDate[l.date]=(byDate[l.date]||[]).concat(l);});
+
+  // Summary stats
+  const daysWorked=Object.keys(byDate).length;
+  const avgHrsPerDay=daysWorked?+(totalHrs/daysWorked).toFixed(1):0;
+  const firstDate=logs.length?logs[logs.length-1].date:'';
+  const lastDate=logs.length?logs[0].date:'';
+
+  const logsHtml=Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date=>{
+    const dayLogs=byDate[date];
+    const dayHrs=dayLogs.reduce((sum,l)=>sum+(l.hrs||0),0);
+    const entries=dayLogs.map(l=>`
+      <div class="ad-log-entry">
+        ${l.hrs?`<span class="ad-log-hrs">${hrsDisplay(l.hrs)}</span>`:''}
+        <div class="ad-log-desc">${esc(l.description)}</div>
+        <div style="display:flex;gap:5px;margin-top:7px">
+          <button class="bi" onclick="openEditLogModal('${l.id}')" title="Editar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="bi er" onclick="confirmDeleteLog('${l.id}')" title="Excluir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+      </div>`).join('');
+    return`<div class="ad-log-day">
+      <div class="ad-log-date">${fmtDate(date)} — ${hrsDisplay(dayHrs)}</div>
+      ${entries}
+    </div>`;
+  }).join('')||'<div class="ad-empty">Nenhuma tarefa registrada nesta subtarefa ainda.</div>';
+
+  document.getElementById('modal-box').classList.add('wide');
+  openModal(esc(s.title),`
+    <div class="ad-meta">
+      <span class="ad-meta-item" style="color:var(--t3)">Subtarefa de:</span>
+      <span class="ad-meta-item" style="cursor:pointer;color:var(--cy)" onclick="closeModal();openActivityDetail('${act?.id||''}')">
+        <strong>${esc(act?.title||'—')}</strong>
+      </span>
+    </div>
+    <div class="ad-meta" style="margin-top:8px">
+      <span class="ad-meta-item">📋 <strong>${totalLogs}</strong> tarefa${totalLogs!==1?'s':''} registrada${totalLogs!==1?'s':''}</span>
+      <span class="ad-meta-item">⏱ <strong style="color:${est&&totalHrs>est?'var(--er-t)':'var(--cy)'}">${hrsDisplay(totalHrs)}</strong>${est?` / ${hrsDisplay(est)} estimadas`:' no total'}</span>
+      ${est?`<span class="ad-meta-item" style="color:${totalHrs>est?'var(--er-t)':'var(--t3)'}">${totalHrs>est?`+${hrsDisplay(+(totalHrs-est).toFixed(1))} acima`:`${hrsDisplay(+(est-totalHrs).toFixed(1))} restantes`}</span>`:''}
+      <span class="ad-meta-item">📅 <strong>${daysWorked}</strong> dia${daysWorked!==1?'s':''} trabalhado${daysWorked!==1?'s':''}</span>
+      ${daysWorked>1?`<span class="ad-meta-item">~<strong>${avgHrsPerDay}h</strong>/dia em média</span>`:''}
+    </div>
+    ${est?`<div style="margin:10px 0 2px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(Math.round(totalHrs/est*100),100)}%;background:${totalHrs>est?'var(--er)':'linear-gradient(90deg,var(--cy),var(--vi2))'};border-radius:2px;transition:width .3s"></div></div>
+    <div style="font-size:10px;color:var(--t3);margin-bottom:2px;text-align:right">${Math.min(Math.round(totalHrs/est*100),100)}% das horas estimadas</div>`:''}
+    ${firstDate?`<div class="ad-meta" style="margin-top:4px">
+      <span class="ad-meta-item" style="font-size:11px;color:var(--t3)">Primeiro: ${fmtDate(firstDate)}</span>
+      ${firstDate!==lastDate?`<span class="ad-meta-item" style="font-size:11px;color:var(--t3)">Último: ${fmtDate(lastDate)}</span>`:''}
+    </div>`:''}
+    ${renderTagBadges(s.tags)}
+    <div style="display:flex;align-items:center;gap:10px;margin:14px 0 0;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:var(--r);border:1px solid rgba(255,255,255,.06)">
+      <div class="ck ${s.done?'done':''}" onclick="toggleSubDoneAndRefresh('${id}')" title="${s.done?'Marcar como pendente':'Marcar como concluída'}" style="cursor:pointer"></div>
+      <span style="font-size:13px;font-weight:500;color:${s.done?'var(--ok-t)':'var(--t2)'}">${s.done?'Subtarefa concluída':'Subtarefa em andamento'}</span>
+    </div>
+    <div class="ad-sub-section" style="margin-top:20px">
+      <div class="ad-sub-title">Histórico de tarefas (${totalLogs})</div>
+      ${logsHtml}
+    </div>`,
+    `<button class="btn bs" onclick="openEditSubtaskModal('${id}')">Editar subtarefa</button>
+     <button class="btn bp" onclick="closeModal();openAddLogModal('${id}',null)">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+       Nova tarefa
+     </button>`);
+}
+function toggleSubDoneAndRefresh(id){
+  const s=subById(id);if(!s)return;
+  updSubtask(id,{done:!s.done});
+  openSubtaskDetail(id);
+  updateSidebar();
+  // also refresh activity row if visible
+  const row=document.getElementById('ar-'+s.activityId);
+  const a=actById(s.activityId);
+  if(row&&a) row.outerHTML=renderActivityRow(a);
 }
 
 // ── TIMELINE ──
@@ -812,14 +1158,14 @@ function renderTimeline(){
       <button class="day-quick" onclick="event.stopPropagation();openAddLogModal(null,'${date}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar</button>
       <svg class="tex" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>${isOpen?`<div class="tdc">${logsHtml}</div>`:''}</div>`;
-  }).join('')||`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhum registro encontrado</h3><p>Ajuste os filtros ou registre suas atividades</p></div>`;
+  }).join('')||`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhuma tarefa encontrada</h3><p>Ajuste os filtros ou registre suas demandas</p></div>`;
   document.getElementById('view-timeline').innerHTML=`
-    <div class="ph"><div><div class="pt">Registros Diários</div><div class="ps">${dates.length} dia${dates.length!==1?'s':''} com registros</div></div>
+    <div class="ph"><div><div class="pt">Tarefas Diárias</div><div class="ps">${dates.length} dia${dates.length!==1?'s':''} com tarefas</div></div>
       <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar hoje</button></div>
     <div class="fb">
       <span class="fl">Filtros</span>
       <select class="fs" onchange="S.filterCycleId=this.value;S.filterActivityId='';S.filterSubtaskId='';renderTimeline()"><option value="">Todos os ciclos</option>${cycleOpts}</select>
-      <select class="fs" onchange="S.filterActivityId=this.value;S.filterSubtaskId='';renderTimeline()" style="max-width:190px"><option value="">Todas as atividades</option>${actOpts}</select>
+      <select class="fs" onchange="S.filterActivityId=this.value;S.filterSubtaskId='';renderTimeline()" style="max-width:190px"><option value="">Todas as demandas</option>${actOpts}</select>
       ${selAct?`<select class="fs" onchange="S.filterSubtaskId=this.value;renderTimeline()" style="max-width:190px"><option value="">Todas as subtarefas</option>${subOpts}</select>`:''}
       <input class="fi" type="date" value="${S.filterDateFrom||''}" onchange="S.filterDateFrom=this.value;renderTimeline()">
       <input class="fi" type="date" value="${S.filterDateTo||''}" onchange="S.filterDateTo=this.value;renderTimeline()">
@@ -838,15 +1184,15 @@ function toggleDay(stateKey,elId){
 const charts={};
 function destroyCharts(){Object.keys(charts).forEach(k=>{try{charts[k].destroy();}catch(e){}delete charts[k];});}
 function renderReports(){
-  const year=parseInt(S.filterYear||new Date().getFullYear());
-  const cc=getCurrentCycle();
-  // Default to current cycle if none selected
-  if(!S.filterCycleId) S.filterCycleId=cc.id;
+  const year=parseInt(S.filterYear||getActiveYear());
+  const ac=getActiveCycle();
+  // Default to active cycle if none selected
+  if(!S.filterCycleId) S.filterCycleId=ac.id;
   const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${S.filterCycleId===cd.id?'selected':''}>${cd.name}</option>`).join('');
   const acts=getCycleActivities(S.filterCycleId,year);
   const tableRows=acts.map(a=>{const pct=getActCompletion(a.id);const spent=getActHoursSpent(a.id);const est=a.estimatedHours||0;
     return`<tr><td>${esc(a.title)}</td><td>${hrsDisplay(spent)}</td><td>${hrsDisplay(est)}</td><td><div class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>${pct}%</div></td><td>${getActSubtasks(a.id).length}</td><td>${getActSubtasks(a.id).reduce((s,sub)=>s+getSubLogs(sub.id).length,0)}</td></tr>`;
-  }).join('')||`<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">Nenhuma atividade neste ciclo</td></tr>`;
+  }).join('')||`<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">Nenhuma demanda neste ciclo</td></tr>`;
   const days30=[];for(let i=29;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days30.push(d.toISOString().slice(0,10));}
   document.getElementById('view-reports').innerHTML=`
     <div class="ph"><div><div class="pt">Relatórios</div><div class="ps">Análise detalhada de horas e progresso</div></div>
@@ -855,14 +1201,14 @@ function renderReports(){
         <select class="fs" style="width:80px" onchange="S.filterYear=this.value;renderReports()">${[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('')}</select>
       </div></div>
     <div class="rg" style="margin-bottom:16px">
-      <div class="chc"><div class="cht">Horas por atividade</div><div class="chw"><canvas id="ch-bar"></canvas></div></div>
-      <div class="chc"><div class="cht">Conclusão por atividade</div><div class="chw"><canvas id="ch-doughnut"></canvas></div></div>
+      <div class="chc"><div class="cht">Horas por demanda</div><div class="chw"><canvas id="ch-bar"></canvas></div></div>
+      <div class="chc"><div class="cht">Conclusão por demanda</div><div class="chw"><canvas id="ch-doughnut"></canvas></div></div>
     </div>
     <div class="rg" style="margin-bottom:16px">
-      <div class="chc" style="grid-column:1/-1"><div class="cht">Horas por atividade — últimos 30 dias</div><div class="chw" style="height:200px"><canvas id="ch-stacked"></canvas></div></div>
+      <div class="chc" style="grid-column:1/-1"><div class="cht">Horas por demanda — últimos 30 dias</div><div class="chw" style="height:200px"><canvas id="ch-stacked"></canvas></div></div>
     </div>
-    <div class="rf"><div class="cht">Detalhamento por atividade</div>
-      <table class="rtbl"><thead><tr><th>Atividade</th><th>Gastas</th><th>Estimadas</th><th>Conclusão</th><th>Subtarefas</th><th>Registros</th></tr></thead>
+    <div class="rf"><div class="cht">Detalhamento por demanda</div>
+      <table class="rtbl"><thead><tr><th>Demanda</th><th>Gastas</th><th>Estimadas</th><th>Conclusão</th><th>Subtarefas</th><th>Tarefas</th></tr></thead>
       <tbody>${tableRows}</tbody></table>
     </div>`;
   setTimeout(()=>{
@@ -900,10 +1246,10 @@ function renderTags(){
     <button class="bi er" onclick="confirmDeleteTag('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
   </div>`).join('')||`<p style="color:var(--t3);font-size:13px">Nenhuma tag criada ainda.</p>`;
   document.getElementById('view-tags').innerHTML=`
-    <div class="ph"><div><div class="pt">Tags</div><div class="ps">Organize atividades e subtarefas com etiquetas</div></div>
+    <div class="ph"><div><div class="pt">Tags</div><div class="ps">Organize demandas e subtarefas com etiquetas</div></div>
       <button class="btn bp" onclick="openTagModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova tag</button></div>
     <div class="tc">${cards}</div>
-    ${S.tags.length?`<div class="rf"><div class="cht">Tags por atividade</div><table class="rtbl"><thead><tr><th>Atividade</th><th>Ciclo</th><th>Tags</th></tr></thead><tbody>${S.activities.map(a=>`<tr><td>${esc(a.title)}</td><td>${getCycleById(a.cycleId)?.name||'—'}</td><td>${renderTagBadges(a.tags)}</td></tr>`).join('')}</tbody></table></div>`:''}`;
+    ${S.tags.length?`<div class="rf"><div class="cht">Tags por demanda</div><table class="rtbl"><thead><tr><th>Demanda</th><th>Ciclo</th><th>Tags</th></tr></thead><tbody>${S.activities.map(a=>`<tr><td>${esc(a.title)}</td><td>${getCycleById(a.cycleId)?.name||'—'}</td><td>${renderTagBadges(a.tags)}</td></tr>`).join('')}</tbody></table></div>`:''}`;
 }
 
 // ── MODAL HELPERS ──
@@ -912,51 +1258,51 @@ function getSelectedTags(sel){return[...document.querySelectorAll(`${sel} .tsel.
 
 // ── MODAL ACTIVITY ──
 function openAddActivityModal(cycleId){
-  const cc=getCurrentCycle();const selectedCycle=cycleId||cc.id;const year=new Date().getFullYear();
+  const ac=getActiveCycle();const selectedCycle=cycleId||ac.id;const year=getActiveYear();
   const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${cd.id===selectedCycle?'selected':''}>${esc(cd.name+' — '+cd.label)}</option>`).join('');
   const yearOpts=[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('');
   document.getElementById('modal-box').classList.remove('wide');
-  openModal('Nova Atividade',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" placeholder="Ex: Implantação de microserviços B2B" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="frow"><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" max="9999" placeholder="Ex: 80"></div><div class="fg"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" placeholder="Ex: #289712"></div></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
-  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddActivity()">Criar atividade</button>`);
+  openModal('Nova Demanda',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" placeholder="Ex: Implantação de microserviços B2B" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="frow"><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" max="9999" placeholder="Ex: 80"></div><div class="fg"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" placeholder="Ex: #289712"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px"></textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
+  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddActivity()">Criar demanda</button>`);
 }
-function saveAddActivity(){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');addActivity({title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,tags});closeModal();toast('Atividade criada!','ok');if(S.currentView==='activities')renderActivities();else if(S.currentView==='dashboard')renderDashboard();updateSidebar();}
+function saveAddActivity(){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');addActivity({title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,notes,tags});closeModal();toast('Demanda criada!','ok');if(S.currentView==='activities')renderActivities();else if(S.currentView==='dashboard')renderDashboard();updateSidebar();}
 function openEditActivityModal(id){
   const a=actById(id);if(!a)return;closeModal();
   const year=a.year||new Date().getFullYear();
   const yearOpts=[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('');
   const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${cd.id===a.cycleId?'selected':''}>${esc(cd.name+' — '+cd.label)}</option>`).join('');
   document.getElementById('modal-box').classList.remove('wide');
-  openModal('Editar Atividade',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" value="${esc(a.title)}" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="frow"><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" value="${a.estimatedHours||0}"></div><div class="fg"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" value="${esc(a.devopsLink||'')}"></div></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(a.tags||[])}</div>`,
+  openModal('Editar Demanda',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" value="${esc(a.title)}" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="frow"><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" value="${a.estimatedHours||0}"></div><div class="fg"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" value="${esc(a.devopsLink||'')}"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px">${esc(a.notes||'')}</textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(a.tags||[])}</div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditActivity('${id}')">Salvar</button>`);
 }
-function saveEditActivity(id){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');updActivity(id,{title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,tags});closeModal();toast('Atividade atualizada!','ok');renderView(S.currentView);updateSidebar();}
-function confirmDeleteActivity(id){const a=actById(id);if(!a)return;confirmAction(`Excluir "${a.title}" e todas as suas subtarefas e registros? Esta ação não pode ser desfeita.`,()=>{delActivity(id);toast('Atividade excluída');renderView(S.currentView);updateSidebar();});}
+function saveEditActivity(id){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');updActivity(id,{title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,notes,tags});closeModal();toast('Demanda atualizada!','ok');renderView(S.currentView);updateSidebar();}
+function confirmDeleteActivity(id){const a=actById(id);if(!a)return;confirmAction(`Excluir "${a.title}" e todas as suas subtarefas e tarefas? Esta ação não pode ser desfeita.`,()=>{delActivity(id);toast('Demanda excluída');renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL SUBTASK ──
 function openAddSubtaskModal(activityId){
   document.getElementById('modal-box').classList.remove('wide');
   const actOpts=S.activities.map(a=>{const cd=getCycleById(a.cycleId);return`<option value="${a.id}" ${a.id===activityId?'selected':''}>${esc(a.title)} (${cd?cd.name:''})</option>`;}).join('');
-  openModal('Nova Subtarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" placeholder="Ex: Desenvolvimento do argoCD" autofocus oninput="suggestAct(this.value)"><div class="sug" id="m-sug">💡 Sugestão: <strong id="m-sug-name"></strong> — <a href="#" onclick="event.preventDefault();acceptSug()">usar esta atividade</a></div></div><div class="fg"><label class="fl2">Atividade *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
+  openModal('Nova Subtarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" placeholder="Ex: Desenvolvimento do argoCD" autofocus oninput="suggestAct(this.value)"><div class="sug" id="m-sug">💡 Sugestão: <strong id="m-sug-name"></strong> — <a href="#" onclick="event.preventDefault();acceptSug()">usar esta atividade</a></div></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddSubtask()">Criar subtarefa</button>`);
 }
 let _sugActId=null;
 function suggestAct(title){const s=suggestActivity(title);const box=document.getElementById('m-sug');const nm=document.getElementById('m-sug-name');if(s&&title.length>2){_sugActId=s.id;nm.textContent=s.title;box.classList.add('on');}else{box.classList.remove('on');_sugActId=null;}}
 function acceptSug(){if(!_sugActId)return;const sel=document.getElementById('m-act');if(sel)sel.value=_sugActId;document.getElementById('m-sug')?.classList.remove('on');}
-function saveAddSubtask(){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}if(!actId){toast('Selecione a atividade','er');return;}const tags=getSelectedTags('.mb');addSubtask({title,activityId:actId,tags});closeModal();toast('Subtarefa criada!','ok');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();}
+function saveAddSubtask(){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}if(!actId){toast('Selecione a atividade','er');return;}const estimatedHours=parseFloat(document.getElementById('m-shrs')?.value)||0;const tags=getSelectedTags('.mb');addSubtask({title,activityId:actId,estimatedHours,tags});closeModal();toast('Subtarefa criada!','ok');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();}
 function openEditSubtaskModal(id){
   document.getElementById('modal-box').classList.remove('wide');
   const s=subById(id);if(!s)return;const actOpts=S.activities.map(a=>`<option value="${a.id}" ${a.id===s.activityId?'selected':''}>${esc(a.title)}</option>`).join('');
-  openModal('Editar Subtarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" value="${esc(s.title)}" autofocus></div><div class="fg"><label class="fl2">Atividade *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(s.tags||[])}</div>`,
+  openModal('Editar Subtarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" value="${esc(s.title)}" autofocus></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" value="${s.estimatedHours||''}" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(s.tags||[])}</div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditSubtask('${id}')">Salvar</button>`);
 }
-function saveEditSubtask(id){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}const tags=getSelectedTags('.mb');updSubtask(id,{title,activityId:actId,tags});closeModal();toast('Subtarefa atualizada!','ok');renderView(S.currentView);}
-function confirmDeleteSubtask(id){const s=subById(id);if(!s)return;confirmAction(`Excluir subtarefa "${s.title}" e todos os seus registros?`,()=>{const actId=s.activityId;delSubtask(id);toast('Subtarefa excluída');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();});}
+function saveEditSubtask(id){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}const estimatedHours=parseFloat(document.getElementById('m-shrs')?.value)||0;const tags=getSelectedTags('.mb');updSubtask(id,{title,activityId:actId,estimatedHours,tags});closeModal();toast('Subtarefa atualizada!','ok');renderView(S.currentView);}
+function confirmDeleteSubtask(id){const s=subById(id);if(!s)return;confirmAction(`Excluir subtarefa "${s.title}" e todos os seus tarefas?`,()=>{const actId=s.activityId;delSubtask(id);toast('Subtarefa excluída');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL LOG ──
-// Filter subtasks to current cycle's activities (sidebar badge cycle)
+// Filter subtasks to active cycle's activities (sidebar badge cycle)
 function getSubOptsForCurrentCycle(selectedSubId){
-  const cc=getCurrentCycle();const year=new Date().getFullYear();
-  const cycleActIds=S.activities.filter(a=>a.cycleId===cc.id&&String(a.year)===String(year)).map(a=>a.id);
+  const ac=getActiveCycle();const year=getActiveYear();
+  const cycleActIds=S.activities.filter(a=>a.cycleId===ac.id&&String(a.year)===String(year)).map(a=>a.id);
   let subs=S.subtasks.filter(s=>cycleActIds.includes(s.activityId));
   if(!subs.length) subs=S.subtasks; // fallback to all if cycle has none
   return subs.map(s=>{const a=actById(s.activityId);return`<option value="${s.id}" ${s.id===selectedSubId?'selected':''}>${esc(s.title)} — ${esc(a?.title||'')}</option>`;}).join('');
@@ -968,18 +1314,18 @@ function openAddLogModal(subtaskId,date,activityIdHint){
   let subOpts;
   if(activityIdHint){const a=actById(activityIdHint);const subs=a?getActSubtasks(a.id):[];subOpts=subs.map(s=>`<option value="${s.id}" ${s.id===subtaskId?'selected':''}>${esc(s.title)}</option>`).join('')||'<option value="">Nenhuma subtarefa</option>';}
   else subOpts=getSubOptsForCurrentCycle(subtaskId)||'<option value="">Crie subtarefas primeiro</option>';
-  openModal('Novo Registro Diário',`<div class="fg"><label class="fl2">Subtarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${date||today}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" placeholder="Ex: 2.5"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" placeholder="Descreva o que foi feito…" autofocus></textarea></div>`,
-  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddLog()">Salvar registro</button>`);
+  openModal('Nova Tarefa Diária',`<div class="fg"><label class="fl2">Subtarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${date||today}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" placeholder="Ex: 2.5"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" placeholder="Descreva o que foi feito…" autofocus></textarea></div>`,
+  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddLog()">Salvar tarefa</button>`);
 }
-function saveAddLog(){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId){toast('Selecione a subtarefa','er');return;}if(!date){toast('Informe a data','er');return;}if(!desc){toast('Informe a descrição','er');return;}addLog({subtaskId:subId,date,description:desc,hrs});closeModal();toast('Registro salvo!','ok');S.openDays.add('tl-'+date);renderView(S.currentView);updateSidebar();}
+function saveAddLog(){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId){toast('Selecione a subtarefa','er');return;}if(!date){toast('Informe a data','er');return;}if(!desc){toast('Informe a descrição','er');return;}addLog({subtaskId:subId,date,description:desc,hrs});closeModal();toast('Tarefa salva!','ok');S.openDays.add('tl-'+date);renderView(S.currentView);updateSidebar();}
 function openEditLogModal(id){
   document.getElementById('modal-box').classList.remove('wide');
   const l=logById(id);if(!l)return;const subOpts=S.subtasks.map(s=>{const a=actById(s.activityId);return`<option value="${s.id}" ${s.id===l.subtaskId?'selected':''}>${esc(s.title)} — ${esc(a?.title||'')}</option>`;}).join('');
-  openModal('Editar Registro',`<div class="fg"><label class="fl2">Subtarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${l.date}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" value="${l.hrs||''}"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" autofocus>${esc(l.description)}</textarea></div>`,
+  openModal('Editar Tarefa',`<div class="fg"><label class="fl2">Subtarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${l.date}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" value="${l.hrs||''}"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" autofocus>${esc(l.description)}</textarea></div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditLog('${id}')">Salvar</button>`);
 }
-function saveEditLog(id){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId||!date||!desc){toast('Preencha os campos obrigatórios','er');return;}updLog(id,{subtaskId:subId,date,description:desc,hrs});closeModal();toast('Registro atualizado!','ok');renderView(S.currentView);updateSidebar();}
-function confirmDeleteLog(id){const l=logById(id);if(!l)return;confirmAction('Excluir este registro? Esta ação não pode ser desfeita.',()=>{delLog(id);toast('Registro excluído');renderView(S.currentView);updateSidebar();});}
+function saveEditLog(id){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId||!date||!desc){toast('Preencha os campos obrigatórios','er');return;}updLog(id,{subtaskId:subId,date,description:desc,hrs});closeModal();toast('Tarefa atualizada!','ok');renderView(S.currentView);updateSidebar();}
+function confirmDeleteLog(id){const l=logById(id);if(!l)return;confirmAction('Excluir esta tarefa? Esta ação não pode ser desfeita.',()=>{delLog(id);toast('Tarefa excluída');renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL TAG ──
 function openTagModal(id){
@@ -993,20 +1339,58 @@ function openTagModal(id){
 let _selColor=TAG_COLORS[0];
 function selectColor(c,el){_selColor=c;document.querySelectorAll('.csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}
 function saveTag(id){const name=document.getElementById('m-tname')?.value.trim();if(!name){toast('Informe o nome da tag','er');return;}if(id){updTag(id,{name,color:_selColor});toast('Tag atualizada!','ok');}else{addTag({name,color:_selColor});toast('Tag criada!','ok');}closeModal();renderView(S.currentView);}
-function confirmDeleteTag(id){const t=tagById(id);if(!t)return;confirmAction(`Excluir tag "${t.name}"? Ela será removida de todas as atividades e subtarefas.`,()=>{closeModal();delTag(id);toast('Tag excluída');renderView(S.currentView);});}
+function confirmDeleteTag(id){const t=tagById(id);if(!t)return;confirmAction(`Excluir tag "${t.name}"? Ela será removida de todas as demandas e subtarefas.`,()=>{closeModal();delTag(id);toast('Tag excluída');renderView(S.currentView);});}
 
 // ── MODAL CORE ──
 function openModal(title,body,footer){document.getElementById('mti').textContent=title;document.getElementById('mb').innerHTML=body;document.getElementById('mf').innerHTML=footer;document.getElementById('mo').classList.add('on');setTimeout(()=>document.querySelector('#mb .fin')?.focus(),80);}
 function closeModal(){document.getElementById('mo').classList.remove('on');document.getElementById('modal-box').classList.remove('wide');_sugActId=null;}
 
 // ── EXPORT/IMPORT ──
-function openExportModal(){document.getElementById('modal-box').classList.remove('wide');openModal('Exportar dados',`<p style="font-size:13px;color:var(--t2);margin-bottom:16px">Escolha o formato:</p><div style="display:flex;flex-direction:column;gap:8px"><button class="btn bp" onclick="exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar JSON completo</button><button class="btn bs" onclick="exportCSV('activities')">Exportar Atividades (CSV)</button><button class="btn bs" onclick="exportCSV('subtasks')">Exportar Subtarefas (CSV)</button><button class="btn bs" onclick="exportCSV('logs')">Exportar Registros (CSV)</button></div>`,`<button class="btn bs" onclick="closeModal()">Fechar</button>`);}
+function openExportModal(){
+  document.getElementById('modal-box').classList.remove('wide');
+  const backups=listBackups();
+  const usageKB=storageUsageKB();
+  const usageNum=parseFloat(usageKB);
+  const usagePct=Math.min(Math.round(usageNum/5120*100),100); // 5MB = 5120KB
+  const usageCls=usagePct>=80?'color:var(--er-t)':usagePct>=50?'color:var(--wn)':'color:var(--ok-t)';
+  const bkHtml=backups.length?backups.map(b=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);margin-bottom:6px">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500;color:var(--t)">${b.label}</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">${b.activities} demandas · ${b.subtasks} subtarefas · ${b.logs} tarefas</div>
+      </div>
+      <button class="btn bs" style="padding:4px 10px;font-size:11px" onclick="restoreBackup(${b.ts})">Restaurar</button>
+    </div>`).join('')
+  :`<p style="font-size:12px;color:var(--t3);padding:8px 0">Nenhum backup disponível ainda.<br>O primeiro será criado automaticamente ao abrir o app amanhã.</p>`;
+  openModal('Exportar & Backups',`
+    <div style="margin-bottom:18px">
+      <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Exportar dados</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <button class="btn bp" onclick="exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar JSON completo</button>
+        <button class="btn bs" onclick="exportCSV('activities')">Exportar Demandas (CSV)</button>
+        <button class="btn bs" onclick="exportCSV('subtasks')">Exportar Subtarefas (CSV)</button>
+        <button class="btn bs" onclick="exportCSV('logs')">Exportar Tarefas (CSV)</button>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.07em">Backups automáticos</div>
+        <span style="font-size:11px;${usageCls}">Armazenamento: ${usageKB} KB / 5 MB</span>
+      </div>
+      <div style="height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;margin-bottom:12px">
+        <div style="height:100%;width:${usagePct}%;border-radius:2px;background:${usagePct>=80?'var(--er)':usagePct>=50?'var(--wn)':'var(--ok)'};transition:width .3s"></div>
+      </div>
+      ${bkHtml}
+      <p style="font-size:11px;color:var(--t3);margin-top:8px">Backups são criados automaticamente 1× por dia ao abrir o app. Os últimos ${BK_MAX} são mantidos.</p>
+    </div>`,
+  `<button class="btn bs" onclick="closeModal()">Fechar</button>`);
+}
 function exportJSON(){const data=JSON.stringify({activities:S.activities,subtasks:S.subtasks,logs:S.logs,tags:S.tags},null,2);download('workdash-export.json','application/json',data);toast('JSON exportado!','ok');closeModal();}
-function exportCSV(type){let csv='',fn='';if(type==='activities'){csv='id,titulo,ciclo,ano,horas_estimadas,horas_gastas,conclusao_pct,devops_link,tags\n';S.activities.forEach(a=>{const cd=getCycleById(a.cycleId);csv+=`"${a.id}","${esc2(a.title)}","${cd?cd.name:''}","${a.year||''}","${a.estimatedHours||0}","${getActHoursSpent(a.id).toFixed(1)}","${getActCompletion(a.id)}","${esc2(a.devopsLink||'')}","${(a.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='atividades.csv';}else if(type==='subtasks'){csv='id,titulo,atividade,concluida,horas_gastas,registros,tags\n';S.subtasks.forEach(s=>{const a=actById(s.activityId);csv+=`"${s.id}","${esc2(s.title)}","${esc2(a?.title||'')}","${s.done?'sim':'nao'}","${getSubHoursSpent(s.id).toFixed(1)}","${getSubLogs(s.id).length}","${(s.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='subtarefas.csv';}else{csv='id,data,subtarefa,atividade,horas,descricao\n';S.logs.sort((a,b)=>b.date.localeCompare(a.date)).forEach(l=>{const s=subById(l.subtaskId),a=s?actById(s.activityId):null;csv+=`"${l.id}","${l.date}","${esc2(s?.title||'')}","${esc2(a?.title||'')}","${l.hrs||0}","${esc2(l.description)}"\n`;});fn='registros.csv';}download(fn,'text/csv;charset=utf-8','\uFEFF'+csv);toast(`${fn} exportado!`,'ok');closeModal();}
+function exportCSV(type){let csv='',fn='';if(type==='activities'){csv='id,titulo,ciclo,ano,horas_est,horas_gastas,conclusao_pct,devops_link,tags\n';S.activities.forEach(a=>{const cd=getCycleById(a.cycleId);csv+=`"${a.id}","${esc2(a.title)}","${cd?cd.name:''}","${a.year||''}","${a.estimatedHours||0}","${getActHoursSpent(a.id).toFixed(1)}","${getActCompletion(a.id)}","${esc2(a.devopsLink||'')}","${(a.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='demandas.csv';}else if(type==='subtasks'){csv='id,titulo,atividade,concluida,horas_gastas,registros,tags\n';S.subtasks.forEach(s=>{const a=actById(s.activityId);csv+=`"${s.id}","${esc2(s.title)}","${esc2(a?.title||'')}","${s.done?'sim':'nao'}","${getSubHoursSpent(s.id).toFixed(1)}","${getSubLogs(s.id).length}","${(s.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='subtarefas.csv';}else{csv='id,data,subtarefa,atividade,horas,descricao\n';S.logs.sort((a,b)=>b.date.localeCompare(a.date)).forEach(l=>{const s=subById(l.subtaskId),a=s?actById(s.activityId):null;csv+=`"${l.id}","${l.date}","${esc2(s?.title||'')}","${esc2(a?.title||'')}","${l.hrs||0}","${esc2(l.description)}"\n`;});fn='tarefas.csv';}download(fn,'text/csv;charset=utf-8','\uFEFF'+csv);toast(`${fn} exportado!`,'ok');closeModal();}
 function esc2(s){return String(s||'').replace(/"/g,'""');}
 function download(fname,mime,data){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:mime}));a.download=fname;a.click();URL.revokeObjectURL(a.href);}
 function triggerImport(){document.getElementById('file-input').click();}
-function handleFileImport(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{if(file.name.endsWith('.json')){const d=JSON.parse(e.target.result);if(!d.activities||!d.subtasks||!d.logs)throw new Error('Formato inválido');confirmAction(`Importar ${d.activities.length} atividades, ${d.subtasks.length} subtarefas e ${d.logs.length} registros? Os dados atuais serão substituídos.`,()=>{S.activities=d.activities;S.subtasks=d.subtasks;S.logs=d.logs;S.tags=d.tags||[];save();rebuildSearch();updateSidebar();renderView(S.currentView);toast('Dados importados!','ok');},'Confirmar importação');}else{toast('Use um arquivo JSON completo','er');}}catch(err){toast('Erro ao importar: '+err.message,'er');}};reader.readAsText(file);input.value='';}
+function handleFileImport(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{if(file.name.endsWith('.json')){const d=JSON.parse(e.target.result);if(!d.activities||!d.subtasks||!d.logs)throw new Error('Formato inválido');confirmAction(`Importar ${d.activities.length} demandas, ${d.subtasks.length} subtarefas e ${d.logs.length} tarefas? Os dados atuais serão substituídos.`,()=>{S.activities=d.activities;S.subtasks=d.subtasks;S.logs=d.logs;S.tags=d.tags||[];save();rebuildSearch();updateSidebar();renderView(S.currentView);toast('Dados importados!','ok');},'Confirmar importação');}else{toast('Use um arquivo JSON completo','er');}}catch(err){toast('Erro ao importar: '+err.message,'er');}};reader.readAsText(file);input.value='';}
 
 // ── GLOBAL SEARCH ──
 let searchTimeout=null;
@@ -1017,8 +1401,8 @@ document.getElementById('gs').addEventListener('input',function(){
     if(!fuseAll){box.innerHTML='<div style="padding:10px 14px;font-size:12px;color:var(--t3)">Indexando…</div>';box.classList.add('on');return;}
     const results=fuseAll.search(q,{limit:12});
     if(!results.length){box.innerHTML='<div style="padding:10px 14px;font-size:12px;color:var(--t3)">Nenhum resultado</div>';box.classList.add('on');return;}
-    const groups={atividade:[],subtarefa:[],registro:[],tag:[]};results.forEach(r=>{if(groups[r.item._type])groups[r.item._type].push(r.item);});
-    let html='';Object.entries(groups).forEach(([type,items])=>{if(!items.length)return;const label={atividade:'Atividades',subtarefa:'Subtarefas',registro:'Registros',tag:'Tags'}[type];html+=`<div class="sr-group">${label}</div>`;items.slice(0,4).forEach(item=>{html+=`<div class="sr-item" onclick="srClick('${type}','${item.id}')"><span style="flex:1">${esc(item._text?.slice(0,60))}</span><small>${esc(item._sub?.slice(0,30)||item._date||'')}</small></div>`;});});
+    const groups={demanda:[],subtarefa:[],tarefa:[],tag:[]};results.forEach(r=>{if(groups[r.item._type])groups[r.item._type].push(r.item);});
+    let html='';Object.entries(groups).forEach(([type,items])=>{if(!items.length)return;const label={demanda:'Demandas',subtarefa:'Subtarefas',tarefa:'Tarefas',tag:'Tags'}[type];html+=`<div class="sr-group">${label}</div>`;items.slice(0,4).forEach(item=>{html+=`<div class="sr-item" onclick="srClick('${type}','${item.id}')"><span style="flex:1">${esc(item._text?.slice(0,60))}</span><small>${esc(item._sub?.slice(0,30)||item._date||'')}</small></div>`;});});
     box.innerHTML=html;box.classList.add('on');
   },180);
 });
@@ -1028,9 +1412,9 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeModal();closeConfirm();document.getElementById('sr').classList.remove('on');}
 });
 function srClick(type,id){document.getElementById('sr').classList.remove('on');document.getElementById('gs').value='';
-  if(type==='atividade'){S.filterCycleId='';navigate('activities');setTimeout(()=>{S.openActivities.add(id);const el=document.getElementById('ar-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});const a=actById(id);if(a)el.outerHTML=renderActivityRow(a);}},200);}
+  if(type==='demanda'){S.filterCycleId='';navigate('activities');setTimeout(()=>{S.openActivities.add(id);const el=document.getElementById('ar-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});const a=actById(id);if(a)el.outerHTML=renderActivityRow(a);}},200);}
   else if(type==='subtarefa'){const s=subById(id);if(s){S.filterCycleId='';navigate('activities');setTimeout(()=>{S.openActivities.add(s.activityId);renderActivities();},100);}}
-  else if(type==='registro'){const l=logById(id);if(l){S.openDays.add('tl-'+l.date);navigate('timeline');}}
+  else if(type==='tarefa'){const l=logById(id);if(l){S.openDays.add('tl-'+l.date);navigate('timeline');}}
   else if(type==='tag'){navigate('tags');}
 }
 
@@ -1048,7 +1432,7 @@ function seedIfEmpty(){
   save();
 }
 
-function init(){load();seedIfEmpty();rebuildSearch();updateSidebar();navigate('dashboard');}
+function init(){load();seedIfEmpty();autoBackup();rebuildSearch();updateSidebar();navigate('dashboard');}
 window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
