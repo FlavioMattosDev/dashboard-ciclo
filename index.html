@@ -759,6 +759,16 @@ function getLastActivityBadge(actId){
 }
 function renderTagBadges(tagIds=[]){return (tagIds||[]).map(id=>{const t=tagById(id);if(!t)return'';return`<span class="tag-chip" style="background:${t.color}18;color:${t.color};border-color:${t.color}45">${esc(t.name)}</span>`;}).join('');}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function renderDevopsLink(a,extraClass='ad'){
+  if(!a.devopsLink) return'';
+  const href=a.devopsLink.startsWith('http')?a.devopsLink:'#';
+  const name=a.devopsLinkName&&a.devopsLinkName.trim()
+    ? a.devopsLinkName.trim()
+    : (a.devopsLink.startsWith('#')
+        ? a.devopsLink          // keep #ID as-is
+        : a.devopsLink.replace(/^https?:\/\//,'').slice(0,22)+(a.devopsLink.length>30?'…':''));
+  return`<a class="${extraClass}" href="${esc(href)}" target="_blank" title="${esc(a.devopsLink)}" onclick="event.stopPropagation()">${esc(name)}</a>`;
+}
 
 // ── CRUD ──
 function addActivity(d){S.activities.push({id:uid(),createdAt:new Date().toISOString(),...d});save();rebuildSearch();}
@@ -896,7 +906,7 @@ function renderDashboard(){
 
   const progRows=acts.slice(0,8).map(a=>{const pct=getActCompletion(a.id);const spent=getActHoursSpent(a.id);
     return`<div class="ar" id="dash-ar-${a.id}"><div class="ah" onclick="openActivityDetail('${a.id}')">
-      <div class="at">${esc(a.title)}</div>${a.devopsLink?`<a class="ad" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank" onclick="event.stopPropagation()">${esc(a.devopsLink)}</a>`:''}
+      <div class="at">${esc(a.title)}</div>${renderDevopsLink(a)}
       <div class="ahrs">${hrsDisplay(spent)} / ${hrsDisplay(a.estimatedHours||0)}</div>
       <div class="apb"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <div class="ap">${pct}%</div>
@@ -992,7 +1002,7 @@ function renderKanbanCard(a){
     </div>
     <div class="kb-card-footer">
       <span class="kb-card-subs">${doneSubs}/${subs.length} tarefas</span>
-      ${a.devopsLink?`<a class="kb-card-devops" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank" onclick="event.stopPropagation()">${esc(a.devopsLink)}</a>`:''}
+      ${renderDevopsLink(a,'kb-card-devops')}
       ${lastBadge}
     </div>
   </div>`;
@@ -1187,7 +1197,7 @@ function renderActivityRow(a){
       ${renderTagBadges(a.tags)}
       ${a.notes?`<div class="notes-dot" title="Esta demanda tem notas"></div>`:''}
       <span class="badge nt" style="font-size:10px">${cd?cd.name:''}</span>
-      ${a.devopsLink?`<a class="ad" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank" title="Azure DevOps">${esc(a.devopsLink)}</a>`:''}
+      ${a.devopsLink?renderDevopsLink(a,'ad'):''}
       <div class="ahrs">${hrsDisplay(spent)}<span style="color:var(--t3)"> / ${hrsDisplay(a.estimatedHours||0)}</span></div>
       <div class="apb"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <div class="ap">${pct}%</div>
@@ -1285,7 +1295,7 @@ function openActivityDetail(id){
       <span class="ad-meta-item">📁 <strong>${cd?cd.name:'—'}</strong> ${a.year||''}</span>
       <span class="ad-meta-item">⏱ <strong>${hrsDisplay(spent)}</strong> / ${hrsDisplay(a.estimatedHours||0)} estimadas</span>
       <span class="ad-meta-item">✅ <strong style="color:${pct>=75?'var(--ok-t)':pct>=40?'var(--cy)':'var(--wn)'}">${pct}%</strong> concluído</span>
-      ${a.devopsLink?`<a class="ad" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank">${esc(a.devopsLink)}</a>`:''}
+      ${a.devopsLink?renderDevopsLink(a,'ad'):''}
     </div>
     ${renderTagBadges(a.tags)}
     <div class="apb" style="width:100%;margin:12px 0 16px;height:6px"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
@@ -1546,20 +1556,20 @@ function openAddActivityModal(cycleId){
   const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${cd.id===selectedCycle?'selected':''}>${esc(cd.name+' — '+cd.label)}</option>`).join('');
   const yearOpts=[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('');
   document.getElementById('modal-box').classList.remove('wide');
-  openModal('Nova Demanda',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" placeholder="Ex: Implantação de microserviços B2B" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="frow"><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" max="9999" placeholder="Ex: 80"></div><div class="fg"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" placeholder="Ex: #289712"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px"></textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
+  openModal('Nova Demanda',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" placeholder="Ex: Implantação de microserviços B2B" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" max="9999" placeholder="Ex: 80"></div><div class="frow"><div class="fg" style="flex:2"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" placeholder="https://dev.azure.com/… ou #289712"></div><div class="fg"><label class="fl2">Nome de exibição</label><input class="fin" id="m-devops-name" placeholder="Ex: AB#289712"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px"></textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddActivity()">Criar demanda</button>`);
 }
-function saveAddActivity(){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');addActivity({title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,notes,tags});closeModal();toast('Demanda criada!','ok');if(S.currentView==='activities')renderActivities();else if(S.currentView==='dashboard')renderDashboard();updateSidebar();}
+function saveAddActivity(){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const devopsName=document.getElementById('m-devops-name')?.value.trim()||'';const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');addActivity({title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,devopsLinkName:devopsName,notes,tags});closeModal();toast('Demanda criada!','ok');if(S.currentView==='activities')renderActivities();else if(S.currentView==='dashboard')renderDashboard();updateSidebar();}
 function openEditActivityModal(id){
   const a=actById(id);if(!a)return;closeModal();
   const year=a.year||new Date().getFullYear();
   const yearOpts=[year-1,year,year+1].map(y=>`<option value="${y}" ${y===year?'selected':''}>${y}</option>`).join('');
   const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${cd.id===a.cycleId?'selected':''}>${esc(cd.name+' — '+cd.label)}</option>`).join('');
   document.getElementById('modal-box').classList.remove('wide');
-  openModal('Editar Demanda',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" value="${esc(a.title)}" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="frow"><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" value="${a.estimatedHours||0}"></div><div class="fg"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" value="${esc(a.devopsLink||'')}"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px">${esc(a.notes||'')}</textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(a.tags||[])}</div>`,
+  openModal('Editar Demanda',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" value="${esc(a.title)}" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" value="${a.estimatedHours||0}"></div><div class="frow"><div class="fg" style="flex:2"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" value="${esc(a.devopsLink||'')}" placeholder="https://dev.azure.com/… ou #289712"></div><div class="fg"><label class="fl2">Nome de exibição</label><input class="fin" id="m-devops-name" value="${esc(a.devopsLinkName||'')}" placeholder="Ex: AB#289712"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px">${esc(a.notes||'')}</textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(a.tags||[])}</div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditActivity('${id}')">Salvar</button>`);
 }
-function saveEditActivity(id){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');updActivity(id,{title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,notes,tags});closeModal();toast('Demanda atualizada!','ok');renderView(S.currentView);updateSidebar();}
+function saveEditActivity(id){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const devopsName=document.getElementById('m-devops-name')?.value.trim()||'';const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');updActivity(id,{title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,devopsLinkName:devopsName,notes,tags});closeModal();toast('Demanda atualizada!','ok');renderView(S.currentView);updateSidebar();}
 function confirmDeleteActivity(id){const a=actById(id);if(!a)return;confirmAction(`Excluir "${a.title}" e todas as suas tarefas e subtarefas? Esta ação não pode ser desfeita.`,()=>{delActivity(id);toast('Demanda excluída');renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL SUBTASK ──
