@@ -39,7 +39,7 @@ a{text-decoration:none;color:inherit}button{font-family:var(--font)}
 @keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,30px) scale(1.08)}100%{transform:translate(-20px,50px) scale(.95)}}
 #noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035}
 #noise::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:200px 200px}
-#grid{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(34,211,238,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.03) 1px,transparent 1px);background-size:60px 60px}
+#grid{display:none}
 
 /* LAYOUT */
 #navbar{position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:200;display:flex;align-items:center;gap:10px;padding:0 16px;
@@ -210,6 +210,43 @@ a{text-decoration:none;color:inherit}button{font-family:var(--font)}
 .sort-btn.active{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--cy)}
 .sort-btn .arrow{font-size:10px;opacity:.7}
 .sort-sep{width:1px;height:18px;background:rgba(255,255,255,.08);flex-shrink:0}
+
+/* ══ KANBAN ══ */
+.kb-wrap{display:flex;gap:14px;overflow-x:auto;align-items:flex-start;padding-bottom:20px;min-height:calc(100vh - 200px)}
+.kb-wrap::-webkit-scrollbar{height:5px}
+.kb-col{flex-shrink:0;width:290px;display:flex;flex-direction:column;gap:0}
+.kb-col-hd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--rl) var(--rl) 0 0;border:1px solid var(--card-border);border-bottom:none;background:rgba(255,255,255,.04)}
+.kb-col-title{font-size:12px;font-weight:600;letter-spacing:.04em;flex:1}
+.kb-col-count{font-size:11px;font-weight:600;padding:1px 7px;border-radius:10px;background:rgba(255,255,255,.08);color:var(--t3)}
+.kb-col-body{flex:1;min-height:120px;border:1px solid var(--card-border);border-radius:0 0 var(--rl) var(--rl);padding:8px;display:flex;flex-direction:column;gap:7px;background:rgba(0,0,0,.15);transition:background .15s}
+.kb-col-body.drag-over{background:rgba(34,211,238,.06);border-color:rgba(34,211,238,.3)}
+.kb-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--r);padding:12px 13px;cursor:grab;transition:all .18s;position:relative;overflow:hidden}
+.kb-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--cy),var(--vi2));opacity:0;transition:opacity .18s}
+.kb-card:hover{border-color:rgba(34,211,238,.25);box-shadow:0 0 18px rgba(34,211,238,.07);transform:translateY(-1px)}
+.kb-card:hover::before{opacity:1}
+.kb-card.dragging{opacity:.4;cursor:grabbing;transform:rotate(1.5deg) scale(.97)}
+.kb-card-title{font-size:13px;font-weight:500;color:var(--t);margin-bottom:8px;line-height:1.35}
+.kb-card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.kb-card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.kb-card-hrs{font-size:10px;font-family:var(--mono);color:var(--t3)}
+.kb-card-hrs.over{color:var(--er-t)}
+.kb-card-pbar{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;min-width:40px}
+.kb-card-pbar-f{height:100%;border-radius:2px;transition:width .3s}
+.kb-card-pct{font-size:10px;font-weight:700;color:var(--t3);width:28px;text-align:right}
+.kb-card-devops{font-size:10px;font-family:var(--mono);color:var(--cy2);background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.15);padding:1px 6px;border-radius:3px;text-decoration:none;white-space:nowrap}
+.kb-card-devops:hover{border-color:rgba(34,211,238,.4)}
+.kb-card-footer{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05)}
+.kb-card-subs{font-size:10px;color:var(--t3)}
+.kb-empty{text-align:center;padding:20px 10px;color:var(--t3);font-size:12px;border:1px dashed rgba(255,255,255,.07);border-radius:var(--r)}
+/* Column accent colors */
+.kb-col[data-col="backlog"] .kb-col-hd{border-top:2px solid #4B5563}
+.kb-col[data-col="doing"]   .kb-col-hd{border-top:2px solid var(--cy)}
+.kb-col[data-col="review"]  .kb-col-hd{border-top:2px solid var(--vi2)}
+.kb-col[data-col="done"]    .kb-col-hd{border-top:2px solid var(--ok)}
+.kb-col[data-col="backlog"] .kb-col-count{background:rgba(75,85,99,.2);color:#9CA3AF}
+.kb-col[data-col="doing"]   .kb-col-count{background:rgba(34,211,238,.12);color:var(--cy)}
+.kb-col[data-col="review"]  .kb-col-count{background:rgba(139,92,246,.15);color:var(--vi2)}
+.kb-col[data-col="done"]    .kb-col-count{background:rgba(16,185,129,.12);color:var(--ok-t)}
 select option{background:#12161E;color:var(--t)}
 
 /* TIMELINE */
@@ -381,6 +418,24 @@ select.fin{cursor:pointer}
   .nb-hamburger{display:flex}
   .nb-acts .bn:not(.prim){display:none}
 }
+/* ══ SHORTCUTS MODAL ══ */
+#shortcuts-mo{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+#shortcuts-mo.on{display:flex}
+.sc-modal{background:rgba(11,15,22,.97);border:1px solid var(--bc);border-radius:var(--rxl);box-shadow:var(--glow-cy),0 30px 80px rgba(0,0,0,.6);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;backdrop-filter:blur(30px)}
+.sc-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sc-title{font-size:14px;font-weight:600}
+.sc-body{padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+.sc-section{margin-bottom:18px}
+.sc-section-title{font-size:10px;font-weight:700;color:var(--cy);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(34,211,238,.12)}
+.sc-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.sc-row:last-child{border-bottom:none}
+.sc-desc{font-size:12px;color:var(--t2)}
+.sc-keys{display:flex;align-items:center;gap:4px;flex-shrink:0}
+kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-bottom:2px solid rgba(255,255,255,.22);border-radius:5px;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--t2);min-width:24px;line-height:1.6}
+.sc-plus{font-size:11px;color:var(--t3)}
+.sc-footer{padding:12px 22px;border-top:1px solid rgba(255,255,255,.07);text-align:center;font-size:11px;color:var(--t3)}
+.bn-help{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:var(--t3);cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font);transition:all .18s;flex-shrink:0}
+.bn-help:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--cy)}
 </style>
 </head>
 <body>
@@ -398,15 +453,72 @@ select.fin{cursor:pointer}
   </div>
   <div class="sw">
     <svg class="sw-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="gs" type="text" placeholder="Buscar demandas, subtarefas, registros… (Ctrl+K)" autocomplete="off">
+    <input id="gs" type="text" placeholder="Buscar demandas, tarefas, registros… (Ctrl+K)" autocomplete="off">
     <div id="sr"></div>
   </div>
   <div class="nb-acts">
     <button class="bn" onclick="triggerImport()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Importar</button>
     <button class="bn" onclick="openExportModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar</button>
     <button class="bn prim" onclick="openAddActivityModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova Demanda</button>
+    <button class="bn-help" onclick="openShortcuts()" title="Atalhos de teclado (Ctrl+/)">?</button>
   </div>
 </nav>
+
+<!-- SHORTCUTS MODAL -->
+<div id="shortcuts-mo" onclick="if(event.target===this)closeShortcuts()">
+  <div class="sc-modal">
+    <div class="sc-hd">
+      <span class="sc-title">Atalhos de teclado</span>
+      <button class="bi" onclick="closeShortcuts()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="sc-body">
+
+      <!-- Coluna esquerda -->
+      <div>
+        <div class="sc-section">
+          <div class="sc-section-title">Navegação</div>
+          <div class="sc-row"><span class="sc-desc">Dashboard</span><span class="sc-keys"><kbd>1</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Ciclos</span><span class="sc-keys"><kbd>2</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Demandas</span><span class="sc-keys"><kbd>3</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Kanban</span><span class="sc-keys"><kbd>4</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Subtarefas Diárias</span><span class="sc-keys"><kbd>5</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Relatórios</span><span class="sc-keys"><kbd>6</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Tags</span><span class="sc-keys"><kbd>7</kbd></span></div>
+        </div>
+
+        <div class="sc-section">
+          <div class="sc-section-title">Busca</div>
+          <div class="sc-row"><span class="sc-desc">Abrir busca global</span><span class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>K</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Fechar busca / modal</span><span class="sc-keys"><kbd>Esc</kbd></span></div>
+        </div>
+
+        <div class="sc-section">
+          <div class="sc-section-title">Geral</div>
+          <div class="sc-row"><span class="sc-desc">Atalhos de teclado</span><span class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>/</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Exportar dados</span><span class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>E</kbd></span></div>
+        </div>
+      </div>
+
+      <!-- Coluna direita -->
+      <div>
+        <div class="sc-section">
+          <div class="sc-section-title">Criação rápida</div>
+          <div class="sc-row"><span class="sc-desc">Nova demanda</span><span class="sc-keys"><kbd>N</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Nova subtarefa diária</span><span class="sc-keys"><kbd>S</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Confirmar formulário</span><span class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>Enter</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Cancelar / fechar modal</span><span class="sc-keys"><kbd>Esc</kbd></span></div>
+        </div>
+
+        <div class="sc-section">
+          <div class="sc-section-title">Observações</div>
+          <div class="sc-row" style="align-items:flex-start"><span class="sc-desc" style="color:var(--t3);line-height:1.6">Os atalhos de navegação e criação rápida (<kbd style="font-size:10px">1</kbd>–<kbd style="font-size:10px">7</kbd>, <kbd style="font-size:10px">N</kbd>, <kbd style="font-size:10px">S</kbd>) funcionam apenas fora de campos de texto.</span></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sc-footer">Pressione <kbd>Esc</kbd> ou clique fora para fechar &nbsp;·&nbsp; <kbd>Ctrl</kbd>+<kbd>/</kbd> para reabrir</div>
+  </div>
+</div>
 
 <!-- SIDEBAR OVERLAY (mobile) -->
 <div id="sb-overlay" onclick="toggleMobileSidebar()"></div>
@@ -428,8 +540,11 @@ select.fin{cursor:pointer}
   <div class="sb-item" data-view="activities" onclick="navigate('activities')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>Demandas
   </div>
+  <div class="sb-item" data-view="kanban" onclick="navigate('kanban')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="11" rx="1"/><rect x="17" y="3" width="4" height="15" rx="1"/></svg>Kanban
+  </div>
   <div class="sb-item" data-view="timeline" onclick="navigate('timeline')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Tarefas Diárias
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Subtarefas Diárias
   </div>
   <div class="sb-item" data-view="reports" onclick="navigate('reports')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Relatórios
@@ -455,6 +570,7 @@ select.fin{cursor:pointer}
   <div id="view-dashboard" class="view on"></div>
   <div id="view-cycles" class="view"></div>
   <div id="view-activities" class="view"></div>
+  <div id="view-kanban" class="view"></div>
   <div id="view-timeline" class="view"></div>
   <div id="view-reports" class="view"></div>
   <div id="view-tags" class="view"></div>
@@ -511,12 +627,13 @@ let S={
   filterCycleId:'',filterActivityId:'',filterSubtaskId:'',filterTagId:'',filterStatus:'',
   filterDateFrom:'',filterDateTo:'',filterYear:'',
   sortBy:'criacao',sortDir:'desc',     // ordenação da lista de demandas
+  kanbanStatus:{},                      // { activityId: 'backlog'|'doing'|'review'|'done' }
   openActivities:new Set(),openDays:new Set(),
 };
 
 // ── STORAGE ──
-function load(){try{const d=JSON.parse(localStorage.getItem(SK)||'{}');S.activities=d.activities||[];S.subtasks=d.subtasks||[];S.logs=d.logs||[];S.tags=d.tags||[];S.openActivities=new Set();S.openDays=new Set();}catch(e){S.activities=[];S.subtasks=[];S.logs=[];S.tags=[];}}
-function save(){try{localStorage.setItem(SK,JSON.stringify({activities:S.activities,subtasks:S.subtasks,logs:S.logs,tags:S.tags}));}catch(e){toast('Erro ao salvar','er');}}
+function load(){try{const d=JSON.parse(localStorage.getItem(SK)||'{}');S.activities=d.activities||[];S.subtasks=d.subtasks||[];S.logs=d.logs||[];S.tags=d.tags||[];S.kanbanStatus=d.kanbanStatus||{};S.openActivities=new Set();S.openDays=new Set();}catch(e){S.activities=[];S.subtasks=[];S.logs=[];S.tags=[];S.kanbanStatus={}}}
+function save(){try{localStorage.setItem(SK,JSON.stringify({activities:S.activities,subtasks:S.subtasks,logs:S.logs,tags:S.tags,kanbanStatus:S.kanbanStatus}));}catch(e){toast('Erro ao salvar','er');}}
 
 // ── AUTO-BACKUP ──
 // Cria um snapshot diário automaticamente. Mantém os últimos BK_MAX backups.
@@ -602,7 +719,7 @@ function getSubLogs(subId){return S.logs.filter(l=>l.subtaskId===subId);}
 function getActCompletion(actId){
   const subs=getActSubtasks(actId);
   if(!subs.length) return 0;
-  // Se todas as subtarefas têm estimativa, usa % ponderada por horas
+  // Se todas as tarefas têm estimativa, usa % ponderada por horas
   const subsWithEst=subs.filter(s=>s.estimatedHours>0);
   if(subsWithEst.length===subs.length){
     const totalEst=subs.reduce((sum,s)=>sum+(s.estimatedHours||0),0);
@@ -610,7 +727,7 @@ function getActCompletion(actId){
     const doneEst=subs.filter(s=>s.done).reduce((sum,s)=>sum+(s.estimatedHours||0),0);
     return Math.round(doneEst/totalEst*100);
   }
-  // Fallback: contagem simples de subtarefas concluídas
+  // Fallback: contagem simples de tarefas concluídas
   return Math.round(subs.filter(s=>s.done).length/subs.length*100);
 }
 function getActHoursSpent(actId){const ids=getActSubtasks(actId).map(s=>s.id);return S.logs.filter(l=>ids.includes(l.subtaskId)).reduce((sum,l)=>sum+(l.hrs||0),0);}
@@ -624,7 +741,7 @@ function getLastActivityBadge(actId){
   // Demanda 100% concluída não precisa de alerta de inatividade
   if(getActCompletion(actId)===100) return'';
   const subIds=getActSubtasks(actId).map(s=>s.id);
-  if(!subIds.length) return`<span class="last-act none">sem subtarefas</span>`;
+  if(!subIds.length) return`<span class="last-act none">sem tarefas</span>`;
   const actLogs=S.logs.filter(l=>subIds.includes(l.subtaskId));
   if(!actLogs.length) return`<span class="last-act none" title="Nenhum registro encontrado">sem registro</span>`;
   const lastDate=actLogs.reduce((max,l)=>l.date>max?l.date:max,'');
@@ -662,8 +779,8 @@ let fuseAll=null,fuseActs=null;
 function rebuildSearch(){
   const all=[
     ...S.activities.map(a=>({...a,_type:'demanda',_text:a.title,_sub:getCycleById(a.cycleId)?.name})),
-    ...S.subtasks.map(s=>{const a=actById(s.activityId);return{...s,_type:'subtarefa',_text:s.title,_sub:a?.title||''};}),
-    ...S.logs.map(l=>{const s=subById(l.subtaskId);return{...l,_type:'tarefa',_text:l.description,_sub:s?.title||'',_date:l.date};}),
+    ...S.subtasks.map(s=>{const a=actById(s.activityId);return{...s,_type:'tarefa',_text:s.title,_sub:a?.title||''};}),
+    ...S.logs.map(l=>{const s=subById(l.subtaskId);return{...l,_type:'subtarefa',_text:l.description,_sub:s?.title||'',_date:l.date};}),
     ...S.tags.map(t=>({...t,_type:'tag',_text:t.name,_sub:''})),
   ];
   fuseAll=new Fuse(all,{keys:['_text'],threshold:0.4,includeMatches:true,minMatchCharLength:2});
@@ -706,7 +823,7 @@ function navigate(view){
   updateSidebar();renderView(view);
   closeMobileSidebar();
 }
-function renderView(v){destroyCharts();if(v==='dashboard')renderDashboard();else if(v==='cycles')renderCycles();else if(v==='activities')renderActivities();else if(v==='timeline')renderTimeline();else if(v==='reports')renderReports();else if(v==='tags')renderTags();}
+function renderView(v){destroyCharts();if(v==='dashboard')renderDashboard();else if(v==='cycles')renderCycles();else if(v==='activities')renderActivities();else if(v==='kanban')renderKanban();else if(v==='timeline')renderTimeline();else if(v==='reports')renderReports();else if(v==='tags')renderTags();}
 
 // ── SIDEBAR ──
 function updateSidebar(){
@@ -750,7 +867,7 @@ function renderDashboard(){
   const avgComp=acts.length?Math.round(acts.reduce((s,a)=>s+getActCompletion(a.id),0)/acts.length):0;
   const active=acts.filter(a=>getActCompletion(a.id)<100).length;
 
-  // IDs de todas as subtarefas do ciclo ativo — usado para filtrar logs
+  // IDs de todas as tarefas do ciclo ativo — usado para filtrar logs
   const cycleSubIds=new Set(acts.flatMap(a=>getActSubtasks(a.id).map(s=>s.id)));
   const cycleLogs=S.logs.filter(l=>cycleSubIds.has(l.subtaskId));
 
@@ -758,7 +875,7 @@ function renderDashboard(){
   const realCc=getCurrentCycle();const realYear=nowBRT().getFullYear();
   const isCurrentCycle=cc.id===realCc.id&&year===realYear;
 
-  // Tarefas para exibir no dashboard:
+  // Subtarefas para exibir no dashboard:
   // - Ciclo atual → últimos 7 dias
   // - Outro ciclo → últimos N registros do ciclo (ordenados por data decrescente)
   let displayLogs,sectionTitle;
@@ -766,10 +883,10 @@ function renderDashboard(){
     const since=nowBRT();since.setDate(since.getDate()-6);
     const sinceStr=`${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
     displayLogs=cycleLogs.filter(l=>l.date>=sinceStr).sort((a,b)=>b.date.localeCompare(a.date));
-    sectionTitle='Tarefas recentes — últimos 7 dias';
+    sectionTitle='Subtarefas recentes — últimos 7 dias';
   }else{
     displayLogs=cycleLogs.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,50);
-    sectionTitle='Últimas tarefas do ciclo';
+    sectionTitle='Últimas subtarefas do ciclo';
   }
   const byDate={};displayLogs.forEach(l=>{byDate[l.date]=(byDate[l.date]||[]).concat(l);});
 
@@ -798,7 +915,7 @@ function renderDashboard(){
       <div class="mc"><div class="ml">Horas gastas</div><div class="mv ac">${hrsDisplay(totalSpent)}</div><div class="ms">de ${hrsDisplay(totalEst)} estimadas</div></div>
       <div class="mc"><div class="ml">Conclusão média</div><div class="mv ${avgComp>=75?'ok':avgComp>=40?'ac':'wn'}">${avgComp}%</div><div class="ms">${acts.length} demanda${acts.length!==1?'s':''} no ciclo</div></div>
       <div class="mc"><div class="ml">Em andamento</div><div class="mv">${active}</div><div class="ms">atividade${active!==1?'s':''} abertas</div></div>
-      <div class="mc"><div class="ml">${isCurrentCycle?'Tarefas hoje':'Total de tarefas'}</div><div class="mv">${isCurrentCycle?todayLogsCount:cycleLogs.length}</div><div class="ms">${isCurrentCycle?hrsDisplay(todayHrs)+' registradas':hrsDisplay(cycleLogs.reduce((s,l)=>s+(l.hrs||0),0))+' no total'}</div></div>
+      <div class="mc"><div class="ml">${isCurrentCycle?'Subtarefas hoje':'Total de subtarefas'}</div><div class="mv">${isCurrentCycle?todayLogsCount:cycleLogs.length}</div><div class="ms">${isCurrentCycle?hrsDisplay(todayHrs)+' registradas':hrsDisplay(cycleLogs.reduce((s,l)=>s+(l.hrs||0),0))+' no total'}</div></div>
     </div>
     <div class="sec"><div class="sh"><span class="st">Progresso das demandas</span><button class="sa" onclick="navigate('activities')">Ver todas →</button></div>${progRows}</div>
     <div class="sec"><div class="sh"><span class="st">${sectionTitle}</span><button class="sa" onclick="navigate('timeline')">Ver timeline →</button></div>${timelineHtml}</div>`;
@@ -829,6 +946,155 @@ function selectCycleAndNavigate(cycleId,year){
   setActiveCycle(cycleId,year);
   toast(`${getCycleById(cycleId)?.name||cycleId} selecionado como contexto ativo`,'ok');
   navigate('dashboard');
+}
+
+// ── KANBAN ──
+const KB_COLS=[
+  {id:'backlog', label:'Backlog',    desc:'Não iniciado'},
+  {id:'doing',   label:'Em andamento', desc:'Progresso parcial'},
+  {id:'review',  label:'Em revisão', desc:'Aguardando aprovação'},
+  {id:'done',    label:'Concluído',  desc:'100% finalizado'},
+];
+
+function getKanbanStatus(actId){
+  // Status manual tem prioridade; se não definido, deriva do % de conclusão
+  if(S.kanbanStatus[actId]) return S.kanbanStatus[actId];
+  const pct=getActCompletion(actId);
+  if(pct===0) return'backlog';
+  if(pct===100) return'done';
+  return'doing';
+}
+function setKanbanStatus(actId,col){
+  S.kanbanStatus[actId]=col;
+  // Sincroniza tarefas se mover para "done" ou de volta
+  if(col==='done'){
+    getActSubtasks(actId).forEach(s=>updSubtask(s.id,{done:true}));
+  } else if(col==='backlog'){
+    getActSubtasks(actId).forEach(s=>updSubtask(s.id,{done:false}));
+  }
+  save();updateSidebar();renderKanban();
+}
+
+function renderKanbanCard(a){
+  const pct=getActCompletion(a.id);const spent=getActHoursSpent(a.id);const est=a.estimatedHours||0;
+  const over=est&&spent>est;const subs=getActSubtasks(a.id);const doneSubs=subs.filter(s=>s.done).length;
+  const lastBadge=getLastActivityBadge(a.id);
+  return`<div class="kb-card" id="kbc-${a.id}" draggable="true"
+    ondragstart="kbDragStart(event,'${a.id}')"
+    ondragend="kbDragEnd(event)"
+    onclick="openActivityDetail('${a.id}')">
+    <div class="kb-card-title">${esc(a.title)}</div>
+    ${(a.tags||[]).length?`<div class="kb-card-tags">${renderTagBadges(a.tags)}</div>`:''}
+    <div class="kb-card-meta">
+      <div class="kb-card-pbar"><div class="kb-card-pbar-f ${pctClass(pct)}" style="width:${pct}%"></div></div>
+      <span class="kb-card-pct">${pct}%</span>
+      <span class="kb-card-hrs ${over?'over':''}">${hrsDisplay(spent)}${est?'/'+hrsDisplay(est):''}</span>
+    </div>
+    <div class="kb-card-footer">
+      <span class="kb-card-subs">${doneSubs}/${subs.length} tarefas</span>
+      ${a.devopsLink?`<a class="kb-card-devops" href="${a.devopsLink.startsWith('http')?a.devopsLink:'#'}" target="_blank" onclick="event.stopPropagation()">${esc(a.devopsLink)}</a>`:''}
+      ${lastBadge}
+    </div>
+  </div>`;
+}
+
+function renderKanban(){
+  const ac=getActiveCycle();const year=getActiveYear();
+  // Resolve year for filter (use filterYear if set, else active year)
+  const filterYear=parseInt(S.filterYear||year);
+
+  // Build pool of activities — all years if filterYear differs, else active cycle+year
+  let acts=S.activities.filter(a=>String(a.year)===String(filterYear));
+  if(S.filterCycleId) acts=acts.filter(a=>a.cycleId===S.filterCycleId);
+  else acts=acts.filter(a=>a.cycleId===ac.id);
+  if(S.filterStatus==='active') acts=acts.filter(a=>getActCompletion(a.id)<100);
+  else if(S.filterStatus==='done') acts=acts.filter(a=>getActCompletion(a.id)===100);
+  if(S.filterTagId) acts=acts.filter(a=>(a.tags||[]).includes(S.filterTagId));
+
+  // Group by kanban column
+  const groups={backlog:[],doing:[],review:[],done:[]};
+  acts.forEach(a=>{const col=getKanbanStatus(a.id);if(groups[col])groups[col].push(a);else groups.doing.push(a);});
+
+  const cycleOpts=CYCLE_DEFS.map(cd=>`<option value="${cd.id}" ${(S.filterCycleId||ac.id)===cd.id?'selected':''}>${esc(cd.name)}</option>`).join('');
+  const yearOpts=[filterYear-1,filterYear,filterYear+1].map(y=>`<option value="${y}" ${y===filterYear?'selected':''}>${y}</option>`).join('');
+  const tagFilterBtns=S.tags.map(t=>`<button class="tag-filter-btn ${S.filterTagId===t.id?'active':''}" style="background:${t.color}18;color:${t.color};border-color:${S.filterTagId===t.id?t.color:'transparent'}" onclick="S.filterTagId=S.filterTagId==='${t.id}'?'':'${t.id}';renderKanban()">${esc(t.name)}</button>`).join('');
+
+  const colsHtml=KB_COLS.map(col=>{
+    const cards=groups[col.id]||[];
+    const cardsHtml=cards.map(a=>renderKanbanCard(a)).join('')
+      ||`<div class="kb-empty">Arraste demandas para cá</div>`;
+    return`<div class="kb-col" data-col="${col.id}">
+      <div class="kb-col-hd">
+        <span class="kb-col-title">${col.label}</span>
+        <span class="kb-col-count">${cards.length}</span>
+      </div>
+      <div class="kb-col-body"
+        ondragover="kbDragOver(event)"
+        ondragleave="kbDragLeave(event)"
+        ondrop="kbDrop(event,'${col.id}')">
+        ${cardsHtml}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('view-kanban').innerHTML=`
+    <div class="ph">
+      <div>
+        <div class="pt">Kanban</div>
+        <div class="ps">${acts.length} demanda${acts.length!==1?'s':''} · ${getCycleById(S.filterCycleId||ac.id)?.name||ac.name} ${filterYear}</div>
+      </div>
+      <button class="btn bp" onclick="openAddActivityModal(null)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova demanda
+      </button>
+    </div>
+    <div class="fb">
+      <span class="fl">Filtros</span>
+      <select class="fs" onchange="S.filterCycleId=this.value;renderKanban()">
+        ${cycleOpts}
+      </select>
+      <select class="fs" style="width:80px" onchange="S.filterYear=this.value;renderKanban()">${yearOpts}</select>
+      <select class="fs" onchange="S.filterStatus=this.value;renderKanban()">
+        <option value="" ${!S.filterStatus?'selected':''}>Todos os status</option>
+        <option value="active" ${S.filterStatus==='active'?'selected':''}>Em andamento</option>
+        <option value="done" ${S.filterStatus==='done'?'selected':''}>Concluídas</option>
+      </select>
+      ${tagFilterBtns}
+      <button class="fc" onclick="S.filterCycleId='';S.filterStatus='';S.filterTagId='';S.filterYear='';renderKanban()">Limpar</button>
+    </div>
+    <div class="kb-wrap">${colsHtml}</div>`;
+}
+
+// ── DRAG AND DROP ──
+let _kbDragging=null;
+function kbDragStart(e,actId){
+  _kbDragging=actId;
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',actId);
+  setTimeout(()=>document.getElementById('kbc-'+actId)?.classList.add('dragging'),0);
+}
+function kbDragEnd(e){
+  if(_kbDragging) document.getElementById('kbc-'+_kbDragging)?.classList.remove('dragging');
+  document.querySelectorAll('.kb-col-body').forEach(b=>b.classList.remove('drag-over'));
+  _kbDragging=null;
+}
+function kbDragOver(e){
+  e.preventDefault();e.dataTransfer.dropEffect='move';
+  e.currentTarget.classList.add('drag-over');
+}
+function kbDragLeave(e){
+  e.currentTarget.classList.remove('drag-over');
+}
+function kbDrop(e,colId){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const actId=e.dataTransfer.getData('text/plain')||_kbDragging;
+  if(!actId) return;
+  const prev=getKanbanStatus(actId);
+  if(prev===colId) return;
+  setKanbanStatus(actId,colId);
+  const colLabel=KB_COLS.find(c=>c.id===colId)?.label||colId;
+  toast(`Movido para "${colLabel}"`,'ok');
 }
 
 // ── ACTIVITIES ──
@@ -895,7 +1161,7 @@ function renderActivities(){
       ${sortBtn('conclusao','Conclusão')}
       ${sortBtn('horas_gast','H. gastas')}
       ${sortBtn('horas_rest','H. restantes')}
-      ${sortBtn('ultima_ativ','Últ. tarefa')}
+      ${sortBtn('ultima_ativ','Últ. subtarefa')}
     </div>
     <div id="acts-list">${rows}</div>`;
 }
@@ -909,7 +1175,7 @@ function renderActivityRow(a){
   const subsHtml=isOpen?`<div class="sc" id="sc-${a.id}">
     ${subs.map(s=>renderSubtaskRow(s)).join('')}
     <div class="sub-add-row">
-      <input class="sub-add-inp" type="text" placeholder="+ Nova subtarefa…" id="sub-inp-${a.id}" onkeydown="if(event.key==='Enter')quickAddSubtask('${a.id}')">
+      <input class="sub-add-inp" type="text" placeholder="+ Nova tarefa…" id="sub-inp-${a.id}" onkeydown="if(event.key==='Enter')quickAddSubtask('${a.id}')">
       <button class="btn bp" style="padding:5px 10px;font-size:12px" onclick="quickAddSubtask('${a.id}')">Adicionar</button>
       <button class="btn bs" style="padding:5px 10px;font-size:12px" onclick="openAddSubtaskModal('${a.id}')">Detalhado</button>
     </div>
@@ -927,7 +1193,7 @@ function renderActivityRow(a){
       <div class="ap">${pct}%</div>
       ${getLastActivityBadge(a.id)}
       <div class="aacts">
-        <button class="bi" onclick="openAddSubtaskModal('${a.id}')" title="Nova subtarefa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <button class="bi" onclick="openAddSubtaskModal('${a.id}')" title="Nova tarefa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
         <button class="bi" onclick="openActivityDetail('${a.id}')" title="Ver detalhes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
         <button class="bi" onclick="openEditActivityModal('${a.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
         <button class="bi er" onclick="confirmDeleteActivity('${a.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
@@ -946,12 +1212,12 @@ function renderSubtaskRow(s){
     :`${hrs?`<span class="hr-badge">${hrsDisplay(hrs)}</span>`:''}`;
   return`<div class="si" id="si-${s.id}">
     <div class="ck ${s.done?'done':''}" onclick="toggleSubDone('${s.id}')" title="${s.done?'Marcar pendente':'Marcar concluída'}"></div>
-    <span class="stit ${s.done?'done':''}" onclick="openSubtaskDetail('${s.id}')" style="cursor:pointer" title="Ver tarefas da subtarefa">${esc(s.title)}</span>
+    <span class="stit ${s.done?'done':''}" onclick="openSubtaskDetail('${s.id}')" style="cursor:pointer" title="Ver subtarefas da tarefa">${esc(s.title)}</span>
     ${renderTagBadges(s.tags)}
     ${estHtml}
-    <span class="slc">${logs.length} tar.</span>
+    <span class="slc">${logs.length} sub.</span>
     <button class="slb" onclick="openAddLogModal('${s.id}',null)">+ Reg.</button>
-    <button class="bi" onclick="openSubtaskDetail('${s.id}')" title="Ver tarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
+    <button class="bi" onclick="openSubtaskDetail('${s.id}')" title="Ver subtarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
     <button class="bi" onclick="openEditSubtaskModal('${s.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
     <button class="bi er" onclick="confirmDeleteSubtask('${s.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
   </div>`;
@@ -962,7 +1228,14 @@ function toggleActivity(id){
 }
 function toggleSubDone(id){
   const s=subById(id);if(!s)return;updSubtask(id,{done:!s.done});
-  const row=document.getElementById('ar-'+s.activityId);const a=actById(s.activityId);if(row&&a)row.outerHTML=renderActivityRow(a);
+  // Refresh activity row if in activities view
+  const row=document.getElementById('ar-'+s.activityId);const a=actById(s.activityId);
+  if(row&&a) row.outerHTML=renderActivityRow(a);
+  // Refresh kanban card if in kanban view (or if modal is open from kanban)
+  if(S.currentView==='kanban'){
+    const card=document.getElementById('kbc-'+s.activityId);
+    if(card&&a) card.outerHTML=renderKanbanCard(a);
+  }
   updateSidebar();
 }
 function quickAddSubtask(actId){
@@ -970,7 +1243,7 @@ function quickAddSubtask(actId){
   addSubtask({activityId:actId,title:inp.value.trim(),tags:[]});inp.value='';
   const a=actById(actId);const row=document.getElementById('ar-'+actId);
   if(row&&a){S.openActivities.add(actId);row.outerHTML=renderActivityRow(a);}
-  toast('Subtarefa adicionada','ok');
+  toast('Tarefa adicionada','ok');
 }
 
 // ── ACTIVITY DETAIL MODAL ──
@@ -988,9 +1261,9 @@ function openActivityDetail(id){
       <span class="ad-sub-name ${s.done?'done':''}">${esc(s.title)}</span>
       ${renderTagBadges(s.tags)}
       ${sest?`<span class="sub-est ${sover?'over':''}" style="margin-left:auto">${hrsDisplay(shrs)}/${hrsDisplay(sest)}</span>`:`${shrs?`<span class="hr-badge" style="margin-left:auto">${hrsDisplay(shrs)}</span>`:''}`}
-      <span style="font-size:11px;color:var(--t3)">${slogs.length} tar.</span>
+      <span style="font-size:11px;color:var(--t3)">${slogs.length} sub.</span>
     </div>`;
-  }).join('')||'<div class="ad-empty">Nenhuma subtarefa cadastrada.</div>';
+  }).join('')||'<div class="ad-empty">Nenhuma tarefa cadastrada.</div>';
   const logsHtml=Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).map(date=>{
     const dayLogs=byDate[date];const dayHrs=dayLogs.reduce((s,l)=>s+(l.hrs||0),0);
     const entries=dayLogs.map(l=>{const sub=subById(l.subtaskId);
@@ -1005,7 +1278,7 @@ function openActivityDetail(id){
       </div>`;
     }).join('');
     return`<div class="ad-log-day"><div class="ad-log-date">${fmtDate(date)} — ${hrsDisplay(dayHrs)}</div>${entries}</div>`;
-  }).join('')||'<div class="ad-empty">Nenhuma tarefa encontrada.</div>';
+  }).join('')||'<div class="ad-empty">Nenhuma subtarefa encontrada.</div>';
   document.getElementById('modal-box').classList.add('wide');
   openModal(`${esc(a.title)}`,`
     <div class="ad-meta">
@@ -1024,11 +1297,11 @@ function openActivityDetail(id){
       <div class="notes-block"><pre>${esc(a.notes)}</pre></div>
     </div>`:''}
     <div class="ad-sub-section">
-      <div class="ad-sub-title">Subtarefas (${subs.length}) — clique para registrar</div>
+      <div class="ad-sub-title">Tarefas (${subs.length}) — clique para registrar</div>
       ${subsHtml}
     </div>
     <div class="ad-sub-section" style="margin-top:20px">
-      <div class="ad-sub-title">Histórico completo (${totalLogs} tarefas)</div>
+      <div class="ad-sub-title">Histórico completo (${totalLogs} subtarefas)</div>
       ${logsHtml}
     </div>`,
     `<button class="btn bs" onclick="openEditActivityModal('${id}')">Editar demanda</button>
@@ -1036,7 +1309,13 @@ function openActivityDetail(id){
 }
 function toggleSubDoneDetail(subId,actId){
   const s=subById(subId);if(!s)return;updSubtask(subId,{done:!s.done});
-  closeModal();openActivityDetail(actId);updateSidebar();
+  closeModal();openActivityDetail(actId);
+  // Also refresh kanban card if kanban is the underlying view
+  if(S.currentView==='kanban'){
+    const a=actById(actId);const card=document.getElementById('kbc-'+actId);
+    if(card&&a) card.outerHTML=renderKanbanCard(a);
+  }
+  updateSidebar();
 }
 
 // ── SUBTASK DETAIL MODAL ──
@@ -1078,12 +1357,12 @@ function openSubtaskDetail(id){
       <div class="ad-log-date">${fmtDate(date)} — ${hrsDisplay(dayHrs)}</div>
       ${entries}
     </div>`;
-  }).join('')||'<div class="ad-empty">Nenhuma tarefa registrada nesta subtarefa ainda.</div>';
+  }).join('')||'<div class="ad-empty">Nenhuma subtarefa registrada nesta tarefa ainda.</div>';
 
   document.getElementById('modal-box').classList.add('wide');
   openModal(esc(s.title),`
     <div class="ad-meta">
-      <span class="ad-meta-item" style="color:var(--t3)">Subtarefa de:</span>
+      <span class="ad-meta-item" style="color:var(--t3)">Tarefa de:</span>
       <span class="ad-meta-item" style="cursor:pointer;color:var(--cy)" onclick="closeModal();openActivityDetail('${act?.id||''}')">
         <strong>${esc(act?.title||'—')}</strong>
       </span>
@@ -1104,16 +1383,16 @@ function openSubtaskDetail(id){
     ${renderTagBadges(s.tags)}
     <div style="display:flex;align-items:center;gap:10px;margin:14px 0 0;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:var(--r);border:1px solid rgba(255,255,255,.06)">
       <div class="ck ${s.done?'done':''}" onclick="toggleSubDoneAndRefresh('${id}')" title="${s.done?'Marcar como pendente':'Marcar como concluída'}" style="cursor:pointer"></div>
-      <span style="font-size:13px;font-weight:500;color:${s.done?'var(--ok-t)':'var(--t2)'}">${s.done?'Subtarefa concluída':'Subtarefa em andamento'}</span>
+      <span style="font-size:13px;font-weight:500;color:${s.done?'var(--ok-t)':'var(--t2)'}">${s.done?'Tarefa concluída':'Tarefa em andamento'}</span>
     </div>
     <div class="ad-sub-section" style="margin-top:20px">
-      <div class="ad-sub-title">Histórico de tarefas (${totalLogs})</div>
+      <div class="ad-sub-title">Histórico de subtarefas (${totalLogs})</div>
       ${logsHtml}
     </div>`,
-    `<button class="btn bs" onclick="openEditSubtaskModal('${id}')">Editar subtarefa</button>
+    `<button class="btn bs" onclick="openEditSubtaskModal('${id}')">Editar tarefa</button>
      <button class="btn bp" onclick="closeModal();openAddLogModal('${id}',null)">
        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-       Nova tarefa
+       Nova subtarefa
      </button>`);
 }
 function toggleSubDoneAndRefresh(id){
@@ -1121,10 +1400,15 @@ function toggleSubDoneAndRefresh(id){
   updSubtask(id,{done:!s.done});
   openSubtaskDetail(id);
   updateSidebar();
-  // also refresh activity row if visible
+  // refresh activity row if in activities view
   const row=document.getElementById('ar-'+s.activityId);
   const a=actById(s.activityId);
   if(row&&a) row.outerHTML=renderActivityRow(a);
+  // refresh kanban card if visible
+  if(S.currentView==='kanban'){
+    const card=document.getElementById('kbc-'+s.activityId);
+    if(card&&a) card.outerHTML=renderKanbanCard(a);
+  }
 }
 
 // ── TIMELINE ──
@@ -1154,13 +1438,13 @@ function renderTimeline(){
         <button class="bi er" onclick="confirmDeleteLog('${l.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div>
       </div>`;
     }).join('');
-    return`<div class="td ${isOpen?'open':''}" id="tl-day-${date}"><div class="tdh" onclick="toggleDay('tl-${date}','tl-day-${date}')"><div class="tdate ${date===todayStr()?'tod':''}">${fmtDate(date)}</div><div class="tmeta">${uniqueSubs} sub${uniqueSubs!==1?'s':''}${totalHrs?` · ${hrsDisplay(totalHrs)}`:''}</div>
+    return`<div class="td ${isOpen?'open':''}" id="tl-day-${date}"><div class="tdh" onclick="toggleDay('tl-${date}','tl-day-${date}')"><div class="tdate ${date===todayStr()?'tod':''}">${fmtDate(date)}</div><div class="tmeta">${uniqueSubs} tar${uniqueSubs!==1?'s':''}${totalHrs?` · ${hrsDisplay(totalHrs)}`:''}</div>
       <button class="day-quick" onclick="event.stopPropagation();openAddLogModal(null,'${date}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar</button>
       <svg class="tex" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>${isOpen?`<div class="tdc">${logsHtml}</div>`:''}</div>`;
   }).join('')||`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhuma tarefa encontrada</h3><p>Ajuste os filtros ou registre suas demandas</p></div>`;
   document.getElementById('view-timeline').innerHTML=`
-    <div class="ph"><div><div class="pt">Tarefas Diárias</div><div class="ps">${dates.length} dia${dates.length!==1?'s':''} com tarefas</div></div>
+    <div class="ph"><div><div class="pt">Subtarefas Diárias</div><div class="ps">${dates.length} dia${dates.length!==1?'s':''} com tarefas</div></div>
       <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar hoje</button></div>
     <div class="fb">
       <span class="fl">Filtros</span>
@@ -1208,7 +1492,7 @@ function renderReports(){
       <div class="chc" style="grid-column:1/-1"><div class="cht">Horas por demanda — últimos 30 dias</div><div class="chw" style="height:200px"><canvas id="ch-stacked"></canvas></div></div>
     </div>
     <div class="rf"><div class="cht">Detalhamento por demanda</div>
-      <table class="rtbl"><thead><tr><th>Demanda</th><th>Gastas</th><th>Estimadas</th><th>Conclusão</th><th>Subtarefas</th><th>Tarefas</th></tr></thead>
+      <table class="rtbl"><thead><tr><th>Demanda</th><th>Gastas</th><th>Estimadas</th><th>Conclusão</th><th>Tarefas</th><th>Tarefas</th></tr></thead>
       <tbody>${tableRows}</tbody></table>
     </div>`;
   setTimeout(()=>{
@@ -1246,7 +1530,7 @@ function renderTags(){
     <button class="bi er" onclick="confirmDeleteTag('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
   </div>`).join('')||`<p style="color:var(--t3);font-size:13px">Nenhuma tag criada ainda.</p>`;
   document.getElementById('view-tags').innerHTML=`
-    <div class="ph"><div><div class="pt">Tags</div><div class="ps">Organize demandas e subtarefas com etiquetas</div></div>
+    <div class="ph"><div><div class="pt">Tags</div><div class="ps">Organize demandas e tarefas com etiquetas</div></div>
       <button class="btn bp" onclick="openTagModal(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova tag</button></div>
     <div class="tc">${cards}</div>
     ${S.tags.length?`<div class="rf"><div class="cht">Tags por demanda</div><table class="rtbl"><thead><tr><th>Demanda</th><th>Ciclo</th><th>Tags</th></tr></thead><tbody>${S.activities.map(a=>`<tr><td>${esc(a.title)}</td><td>${getCycleById(a.cycleId)?.name||'—'}</td><td>${renderTagBadges(a.tags)}</td></tr>`).join('')}</tbody></table></div>`:''}`;
@@ -1276,27 +1560,27 @@ function openEditActivityModal(id){
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditActivity('${id}')">Salvar</button>`);
 }
 function saveEditActivity(id){const title=document.getElementById('m-title')?.value.trim();const cycleId=document.getElementById('m-cycle')?.value;const year=document.getElementById('m-year')?.value;const hrs=parseFloat(document.getElementById('m-hrs')?.value);const devops=document.getElementById('m-devops')?.value.trim();const notes=document.getElementById('m-notes')?.value.trim()||'';if(!title){toast('Informe o título','er');return;}if(!hrs||hrs<=0){toast('Informe as horas estimadas','er');return;}const tags=getSelectedTags('.mb');updActivity(id,{title,cycleId,year:parseInt(year),estimatedHours:hrs,devopsLink:devops,notes,tags});closeModal();toast('Demanda atualizada!','ok');renderView(S.currentView);updateSidebar();}
-function confirmDeleteActivity(id){const a=actById(id);if(!a)return;confirmAction(`Excluir "${a.title}" e todas as suas subtarefas e tarefas? Esta ação não pode ser desfeita.`,()=>{delActivity(id);toast('Demanda excluída');renderView(S.currentView);updateSidebar();});}
+function confirmDeleteActivity(id){const a=actById(id);if(!a)return;confirmAction(`Excluir "${a.title}" e todas as suas tarefas e subtarefas? Esta ação não pode ser desfeita.`,()=>{delActivity(id);toast('Demanda excluída');renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL SUBTASK ──
 function openAddSubtaskModal(activityId){
   document.getElementById('modal-box').classList.remove('wide');
   const actOpts=S.activities.map(a=>{const cd=getCycleById(a.cycleId);return`<option value="${a.id}" ${a.id===activityId?'selected':''}>${esc(a.title)} (${cd?cd.name:''})</option>`;}).join('');
-  openModal('Nova Subtarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" placeholder="Ex: Desenvolvimento do argoCD" autofocus oninput="suggestAct(this.value)"><div class="sug" id="m-sug">💡 Sugestão: <strong id="m-sug-name"></strong> — <a href="#" onclick="event.preventDefault();acceptSug()">usar esta atividade</a></div></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
-  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddSubtask()">Criar subtarefa</button>`);
+  openModal('Nova Tarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" placeholder="Ex: Desenvolvimento do argoCD" autofocus oninput="suggestAct(this.value)"><div class="sug" id="m-sug">💡 Sugestão: <strong id="m-sug-name"></strong> — <a href="#" onclick="event.preventDefault();acceptSug()">usar esta atividade</a></div></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
+  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddSubtask()">Criar tarefa</button>`);
 }
 let _sugActId=null;
 function suggestAct(title){const s=suggestActivity(title);const box=document.getElementById('m-sug');const nm=document.getElementById('m-sug-name');if(s&&title.length>2){_sugActId=s.id;nm.textContent=s.title;box.classList.add('on');}else{box.classList.remove('on');_sugActId=null;}}
 function acceptSug(){if(!_sugActId)return;const sel=document.getElementById('m-act');if(sel)sel.value=_sugActId;document.getElementById('m-sug')?.classList.remove('on');}
-function saveAddSubtask(){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}if(!actId){toast('Selecione a atividade','er');return;}const estimatedHours=parseFloat(document.getElementById('m-shrs')?.value)||0;const tags=getSelectedTags('.mb');addSubtask({title,activityId:actId,estimatedHours,tags});closeModal();toast('Subtarefa criada!','ok');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();}
+function saveAddSubtask(){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}if(!actId){toast('Selecione a atividade','er');return;}const estimatedHours=parseFloat(document.getElementById('m-shrs')?.value)||0;const tags=getSelectedTags('.mb');addSubtask({title,activityId:actId,estimatedHours,tags});closeModal();toast('Tarefa criada!','ok');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();}
 function openEditSubtaskModal(id){
   document.getElementById('modal-box').classList.remove('wide');
   const s=subById(id);if(!s)return;const actOpts=S.activities.map(a=>`<option value="${a.id}" ${a.id===s.activityId?'selected':''}>${esc(a.title)}</option>`).join('');
-  openModal('Editar Subtarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" value="${esc(s.title)}" autofocus></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" value="${s.estimatedHours||''}" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(s.tags||[])}</div>`,
+  openModal('Editar Tarefa',`<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" value="${esc(s.title)}" autofocus></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" value="${s.estimatedHours||''}" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(s.tags||[])}</div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditSubtask('${id}')">Salvar</button>`);
 }
 function saveEditSubtask(id){const title=document.getElementById('m-stitle')?.value.trim();const actId=document.getElementById('m-act')?.value;if(!title){toast('Informe o título','er');return;}const estimatedHours=parseFloat(document.getElementById('m-shrs')?.value)||0;const tags=getSelectedTags('.mb');updSubtask(id,{title,activityId:actId,estimatedHours,tags});closeModal();toast('Subtarefa atualizada!','ok');renderView(S.currentView);}
-function confirmDeleteSubtask(id){const s=subById(id);if(!s)return;confirmAction(`Excluir subtarefa "${s.title}" e todos os seus tarefas?`,()=>{const actId=s.activityId;delSubtask(id);toast('Subtarefa excluída');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();});}
+function confirmDeleteSubtask(id){const s=subById(id);if(!s)return;confirmAction(`Excluir tarefa "${s.title}" e todas as suas subtarefas?`,()=>{const actId=s.activityId;delSubtask(id);toast('Subtarefa excluída');S.openActivities.add(actId);renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL LOG ──
 // Filter subtasks to active cycle's activities (sidebar badge cycle)
@@ -1305,27 +1589,35 @@ function getSubOptsForCurrentCycle(selectedSubId){
   const cycleActIds=S.activities.filter(a=>a.cycleId===ac.id&&String(a.year)===String(year)).map(a=>a.id);
   let subs=S.subtasks.filter(s=>cycleActIds.includes(s.activityId));
   if(!subs.length) subs=S.subtasks; // fallback to all if cycle has none
-  return subs.map(s=>{const a=actById(s.activityId);return`<option value="${s.id}" ${s.id===selectedSubId?'selected':''}>${esc(s.title)} — ${esc(a?.title||'')}</option>`;}).join('');
+  // Exclui tarefas concluídas, exceto a atualmente selecionada (para não quebrar edições)
+  subs=subs.filter(s=>!s.done||s.id===selectedSubId);
+  if(!subs.length) return'';
+  return subs.map(s=>{const a=actById(s.activityId);return`<option value="${s.id}" ${s.id===selectedSubId?'selected':''}>${esc(a?.title||'?')} — ${esc(s.title)}</option>`;}).join('');
 }
 function openAddLogModal(subtaskId,date,activityIdHint){
   document.getElementById('modal-box').classList.remove('wide');
   const today=todayStr();
   // If activityIdHint given, pre-filter to that activity's subtasks
   let subOpts;
-  if(activityIdHint){const a=actById(activityIdHint);const subs=a?getActSubtasks(a.id):[];subOpts=subs.map(s=>`<option value="${s.id}" ${s.id===subtaskId?'selected':''}>${esc(s.title)}</option>`).join('')||'<option value="">Nenhuma subtarefa</option>';}
+  if(activityIdHint){
+    const a=actById(activityIdHint);
+    const subs=a?getActSubtasks(a.id).filter(s=>!s.done||s.id===subtaskId):[];
+    subOpts=subs.map(s=>`<option value="${s.id}" ${s.id===subtaskId?'selected':''}>${esc(a?.title||'?')} — ${esc(s.title)}</option>`).join('')
+      ||'<option value="">Todas as subtarefas estão concluídas</option>';
+  }
   else subOpts=getSubOptsForCurrentCycle(subtaskId)||'<option value="">Crie subtarefas primeiro</option>';
-  openModal('Nova Tarefa Diária',`<div class="fg"><label class="fl2">Subtarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${date||today}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" placeholder="Ex: 2.5"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" placeholder="Descreva o que foi feito…" autofocus></textarea></div>`,
-  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddLog()">Salvar tarefa</button>`);
+  openModal('Nova Subtarefa Diária',`<div class="fg"><label class="fl2">Tarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${date||today}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" placeholder="Ex: 2.5"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" placeholder="Descreva o que foi feito…" autofocus></textarea></div>`,
+  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddLog()">Salvar subtarefa</button>`);
 }
-function saveAddLog(){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId){toast('Selecione a subtarefa','er');return;}if(!date){toast('Informe a data','er');return;}if(!desc){toast('Informe a descrição','er');return;}addLog({subtaskId:subId,date,description:desc,hrs});closeModal();toast('Tarefa salva!','ok');S.openDays.add('tl-'+date);renderView(S.currentView);updateSidebar();}
+function saveAddLog(){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId){toast('Selecione a subtarefa','er');return;}if(!date){toast('Informe a data','er');return;}if(!desc){toast('Informe a descrição','er');return;}addLog({subtaskId:subId,date,description:desc,hrs});closeModal();toast('Subtarefa salva!','ok');S.openDays.add('tl-'+date);renderView(S.currentView);updateSidebar();}
 function openEditLogModal(id){
   document.getElementById('modal-box').classList.remove('wide');
-  const l=logById(id);if(!l)return;const subOpts=S.subtasks.map(s=>{const a=actById(s.activityId);return`<option value="${s.id}" ${s.id===l.subtaskId?'selected':''}>${esc(s.title)} — ${esc(a?.title||'')}</option>`;}).join('');
-  openModal('Editar Tarefa',`<div class="fg"><label class="fl2">Subtarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${l.date}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" value="${l.hrs||''}"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" autofocus>${esc(l.description)}</textarea></div>`,
+  const l=logById(id);if(!l)return;const subOpts=S.subtasks.map(s=>{const a=actById(s.activityId);return`<option value="${s.id}" ${s.id===l.subtaskId?'selected':''}>${esc(a?.title||'?')} — ${esc(s.title)}</option>`;}).join('');
+  openModal('Editar Subtarefa',`<div class="fg"><label class="fl2">Tarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${l.date}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" value="${l.hrs||''}"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" autofocus>${esc(l.description)}</textarea></div>`,
   `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditLog('${id}')">Salvar</button>`);
 }
-function saveEditLog(id){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId||!date||!desc){toast('Preencha os campos obrigatórios','er');return;}updLog(id,{subtaskId:subId,date,description:desc,hrs});closeModal();toast('Tarefa atualizada!','ok');renderView(S.currentView);updateSidebar();}
-function confirmDeleteLog(id){const l=logById(id);if(!l)return;confirmAction('Excluir esta tarefa? Esta ação não pode ser desfeita.',()=>{delLog(id);toast('Tarefa excluída');renderView(S.currentView);updateSidebar();});}
+function saveEditLog(id){const subId=document.getElementById('m-sub')?.value;const date=document.getElementById('m-date')?.value;const desc=document.getElementById('m-desc')?.value.trim();const hrs=parseFloat(document.getElementById('m-lhrs')?.value)||0;if(!subId||!date||!desc){toast('Preencha os campos obrigatórios','er');return;}updLog(id,{subtaskId:subId,date,description:desc,hrs});closeModal();toast('Subtarefa atualizada!','ok');renderView(S.currentView);updateSidebar();}
+function confirmDeleteLog(id){const l=logById(id);if(!l)return;confirmAction('Excluir esta subtarefa? Esta ação não pode ser desfeita.',()=>{delLog(id);toast('Subtarefa excluída');renderView(S.currentView);updateSidebar();});}
 
 // ── MODAL TAG ──
 function openTagModal(id){
@@ -1339,7 +1631,7 @@ function openTagModal(id){
 let _selColor=TAG_COLORS[0];
 function selectColor(c,el){_selColor=c;document.querySelectorAll('.csw').forEach(s=>s.classList.remove('sel'));el.classList.add('sel');}
 function saveTag(id){const name=document.getElementById('m-tname')?.value.trim();if(!name){toast('Informe o nome da tag','er');return;}if(id){updTag(id,{name,color:_selColor});toast('Tag atualizada!','ok');}else{addTag({name,color:_selColor});toast('Tag criada!','ok');}closeModal();renderView(S.currentView);}
-function confirmDeleteTag(id){const t=tagById(id);if(!t)return;confirmAction(`Excluir tag "${t.name}"? Ela será removida de todas as demandas e subtarefas.`,()=>{closeModal();delTag(id);toast('Tag excluída');renderView(S.currentView);});}
+function confirmDeleteTag(id){const t=tagById(id);if(!t)return;confirmAction(`Excluir tag "${t.name}"? Ela será removida de todas as demandas e tarefas.`,()=>{closeModal();delTag(id);toast('Tag excluída');renderView(S.currentView);});}
 
 // ── MODAL CORE ──
 function openModal(title,body,footer){document.getElementById('mti').textContent=title;document.getElementById('mb').innerHTML=body;document.getElementById('mf').innerHTML=footer;document.getElementById('mo').classList.add('on');setTimeout(()=>document.querySelector('#mb .fin')?.focus(),80);}
@@ -1357,7 +1649,7 @@ function openExportModal(){
     <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);margin-bottom:6px">
       <div style="flex:1">
         <div style="font-size:12px;font-weight:500;color:var(--t)">${b.label}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:2px">${b.activities} demandas · ${b.subtasks} subtarefas · ${b.logs} tarefas</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">${b.activities} demandas · ${b.subtasks} tarefas · ${b.logs} tarefas</div>
       </div>
       <button class="btn bs" style="padding:4px 10px;font-size:11px" onclick="restoreBackup(${b.ts})">Restaurar</button>
     </div>`).join('')
@@ -1369,7 +1661,7 @@ function openExportModal(){
         <button class="btn bp" onclick="exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar JSON completo</button>
         <button class="btn bs" onclick="exportCSV('activities')">Exportar Demandas (CSV)</button>
         <button class="btn bs" onclick="exportCSV('subtasks')">Exportar Subtarefas (CSV)</button>
-        <button class="btn bs" onclick="exportCSV('logs')">Exportar Tarefas (CSV)</button>
+        <button class="btn bs" onclick="exportCSV('logs')">Exportar Subtarefas (CSV)</button>
       </div>
     </div>
     <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:16px;margin-bottom:16px">
@@ -1386,11 +1678,11 @@ function openExportModal(){
   `<button class="btn bs" onclick="closeModal()">Fechar</button>`);
 }
 function exportJSON(){const data=JSON.stringify({activities:S.activities,subtasks:S.subtasks,logs:S.logs,tags:S.tags},null,2);download('workdash-export.json','application/json',data);toast('JSON exportado!','ok');closeModal();}
-function exportCSV(type){let csv='',fn='';if(type==='activities'){csv='id,titulo,ciclo,ano,horas_est,horas_gastas,conclusao_pct,devops_link,tags\n';S.activities.forEach(a=>{const cd=getCycleById(a.cycleId);csv+=`"${a.id}","${esc2(a.title)}","${cd?cd.name:''}","${a.year||''}","${a.estimatedHours||0}","${getActHoursSpent(a.id).toFixed(1)}","${getActCompletion(a.id)}","${esc2(a.devopsLink||'')}","${(a.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='demandas.csv';}else if(type==='subtasks'){csv='id,titulo,atividade,concluida,horas_gastas,registros,tags\n';S.subtasks.forEach(s=>{const a=actById(s.activityId);csv+=`"${s.id}","${esc2(s.title)}","${esc2(a?.title||'')}","${s.done?'sim':'nao'}","${getSubHoursSpent(s.id).toFixed(1)}","${getSubLogs(s.id).length}","${(s.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='subtarefas.csv';}else{csv='id,data,subtarefa,atividade,horas,descricao\n';S.logs.sort((a,b)=>b.date.localeCompare(a.date)).forEach(l=>{const s=subById(l.subtaskId),a=s?actById(s.activityId):null;csv+=`"${l.id}","${l.date}","${esc2(s?.title||'')}","${esc2(a?.title||'')}","${l.hrs||0}","${esc2(l.description)}"\n`;});fn='tarefas.csv';}download(fn,'text/csv;charset=utf-8','\uFEFF'+csv);toast(`${fn} exportado!`,'ok');closeModal();}
+function exportCSV(type){let csv='',fn='';if(type==='activities'){csv='id,titulo,ciclo,ano,horas_est,horas_gastas,conclusao_pct,devops_link,tags\n';S.activities.forEach(a=>{const cd=getCycleById(a.cycleId);csv+=`"${a.id}","${esc2(a.title)}","${cd?cd.name:''}","${a.year||''}","${a.estimatedHours||0}","${getActHoursSpent(a.id).toFixed(1)}","${getActCompletion(a.id)}","${esc2(a.devopsLink||'')}","${(a.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='demandas.csv';}else if(type==='subtasks'){csv='id,titulo,demanda,concluida,horas_gastas,subtarefas,tags\n';S.subtasks.forEach(s=>{const a=actById(s.activityId);csv+=`"${s.id}","${esc2(s.title)}","${esc2(a?.title||'')}","${s.done?'sim':'nao'}","${getSubHoursSpent(s.id).toFixed(1)}","${getSubLogs(s.id).length}","${(s.tags||[]).map(t=>tagById(t)?.name||'').join(';')}"\n`;});fn='tarefas.csv';}else{csv='id,data,subtarefa,atividade,horas,descricao\n';S.logs.sort((a,b)=>b.date.localeCompare(a.date)).forEach(l=>{const s=subById(l.subtaskId),a=s?actById(s.activityId):null;csv+=`"${l.id}","${l.date}","${esc2(s?.title||'')}","${esc2(a?.title||'')}","${l.hrs||0}","${esc2(l.description)}"\n`;});fn='subtarefas.csv';}download(fn,'text/csv;charset=utf-8','\uFEFF'+csv);toast(`${fn} exportado!`,'ok');closeModal();}
 function esc2(s){return String(s||'').replace(/"/g,'""');}
 function download(fname,mime,data){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:mime}));a.download=fname;a.click();URL.revokeObjectURL(a.href);}
 function triggerImport(){document.getElementById('file-input').click();}
-function handleFileImport(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{if(file.name.endsWith('.json')){const d=JSON.parse(e.target.result);if(!d.activities||!d.subtasks||!d.logs)throw new Error('Formato inválido');confirmAction(`Importar ${d.activities.length} demandas, ${d.subtasks.length} subtarefas e ${d.logs.length} tarefas? Os dados atuais serão substituídos.`,()=>{S.activities=d.activities;S.subtasks=d.subtasks;S.logs=d.logs;S.tags=d.tags||[];save();rebuildSearch();updateSidebar();renderView(S.currentView);toast('Dados importados!','ok');},'Confirmar importação');}else{toast('Use um arquivo JSON completo','er');}}catch(err){toast('Erro ao importar: '+err.message,'er');}};reader.readAsText(file);input.value='';}
+function handleFileImport(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{if(file.name.endsWith('.json')){const d=JSON.parse(e.target.result);if(!d.activities||!d.subtasks||!d.logs)throw new Error('Formato inválido');confirmAction(`Importar ${d.activities.length} demandas, ${d.subtasks.length} tarefas e ${d.logs.length} subtarefas? Os dados atuais serão substituídos.`,()=>{S.activities=d.activities;S.subtasks=d.subtasks;S.logs=d.logs;S.tags=d.tags||[];save();rebuildSearch();updateSidebar();renderView(S.currentView);toast('Dados importados!','ok');},'Confirmar importação');}else{toast('Use um arquivo JSON completo','er');}}catch(err){toast('Erro ao importar: '+err.message,'er');}};reader.readAsText(file);input.value='';}
 
 // ── GLOBAL SEARCH ──
 let searchTimeout=null;
@@ -1401,20 +1693,52 @@ document.getElementById('gs').addEventListener('input',function(){
     if(!fuseAll){box.innerHTML='<div style="padding:10px 14px;font-size:12px;color:var(--t3)">Indexando…</div>';box.classList.add('on');return;}
     const results=fuseAll.search(q,{limit:12});
     if(!results.length){box.innerHTML='<div style="padding:10px 14px;font-size:12px;color:var(--t3)">Nenhum resultado</div>';box.classList.add('on');return;}
-    const groups={demanda:[],subtarefa:[],tarefa:[],tag:[]};results.forEach(r=>{if(groups[r.item._type])groups[r.item._type].push(r.item);});
-    let html='';Object.entries(groups).forEach(([type,items])=>{if(!items.length)return;const label={demanda:'Demandas',subtarefa:'Subtarefas',tarefa:'Tarefas',tag:'Tags'}[type];html+=`<div class="sr-group">${label}</div>`;items.slice(0,4).forEach(item=>{html+=`<div class="sr-item" onclick="srClick('${type}','${item.id}')"><span style="flex:1">${esc(item._text?.slice(0,60))}</span><small>${esc(item._sub?.slice(0,30)||item._date||'')}</small></div>`;});});
+    const groups={demanda:[],tarefa:[],subtarefa:[],tag:[]};results.forEach(r=>{if(groups[r.item._type])groups[r.item._type].push(r.item);});
+    let html='';Object.entries(groups).forEach(([type,items])=>{if(!items.length)return;const label={demanda:'Demandas',tarefa:'Tarefas',subtarefa:'Subtarefas',tag:'Tags'}[type];html+=`<div class="sr-group">${label}</div>`;items.slice(0,4).forEach(item=>{html+=`<div class="sr-item" onclick="srClick('${type}','${item.id}')"><span style="flex:1">${esc(item._text?.slice(0,60))}</span><small>${esc(item._sub?.slice(0,30)||item._date||'')}</small></div>`;});});
     box.innerHTML=html;box.classList.add('on');
   },180);
 });
 document.getElementById('gs').addEventListener('blur',()=>setTimeout(()=>document.getElementById('sr').classList.remove('on'),200));
+// ── SHORTCUTS MODAL ──
+function openShortcuts(){document.getElementById('shortcuts-mo').classList.add('on');}
+function closeShortcuts(){document.getElementById('shortcuts-mo').classList.remove('on');}
+
+// ── GLOBAL KEYBOARD SHORTCUTS ──
 document.addEventListener('keydown',e=>{
-  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();document.getElementById('gs').focus();}
-  if(e.key==='Escape'){closeModal();closeConfirm();document.getElementById('sr').classList.remove('on');}
+  const tag=document.activeElement?.tagName?.toLowerCase();
+  const inInput=tag==='input'||tag==='textarea'||tag==='select';
+
+  // Always-active (work even in inputs)
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();document.getElementById('gs').focus();return;}
+  if((e.ctrlKey||e.metaKey)&&e.key==='/'){e.preventDefault();document.getElementById('shortcuts-mo').classList.contains('on')?closeShortcuts():openShortcuts();return;}
+  if((e.ctrlKey||e.metaKey)&&e.key==='e'&&!inInput){e.preventDefault();openExportModal();return;}
+  if(e.key==='Escape'){closeModal();closeConfirm();closeShortcuts();document.getElementById('sr').classList.remove('on');return;}
+
+  // Ctrl+Enter → submit open modal
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    const btn=document.querySelector('#mf .btn.bp');
+    if(btn){e.preventDefault();btn.click();}
+    return;
+  }
+
+  // Block single-key shortcuts when modal open or in input
+  if(document.getElementById('mo').classList.contains('on')) return;
+  if(document.getElementById('shortcuts-mo').classList.contains('on')) return;
+  if(inInput) return;
+  if(e.ctrlKey||e.metaKey||e.altKey) return;
+
+  // Number keys 1–7 → navigate to view
+  const navMap={'1':'dashboard','2':'cycles','3':'activities','4':'kanban','5':'timeline','6':'reports','7':'tags'};
+  if(navMap[e.key]){e.preventDefault();navigate(navMap[e.key]);return;}
+
+  // Letter shortcuts
+  if(e.key==='n'){e.preventDefault();openAddActivityModal(null);return;}
+  if(e.key==='s'){e.preventDefault();openAddLogModal(null,null);return;}
 });
 function srClick(type,id){document.getElementById('sr').classList.remove('on');document.getElementById('gs').value='';
   if(type==='demanda'){S.filterCycleId='';navigate('activities');setTimeout(()=>{S.openActivities.add(id);const el=document.getElementById('ar-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});const a=actById(id);if(a)el.outerHTML=renderActivityRow(a);}},200);}
-  else if(type==='subtarefa'){const s=subById(id);if(s){S.filterCycleId='';navigate('activities');setTimeout(()=>{S.openActivities.add(s.activityId);renderActivities();},100);}}
-  else if(type==='tarefa'){const l=logById(id);if(l){S.openDays.add('tl-'+l.date);navigate('timeline');}}
+  else if(type==='tarefa'){const s=subById(id);if(s){S.filterCycleId='';navigate('activities');setTimeout(()=>{S.openActivities.add(s.activityId);renderActivities();},100);}}
+  else if(type==='subtarefa'){const l=logById(id);if(l){S.openDays.add('tl-'+l.date);navigate('timeline');}}
   else if(type==='tag'){navigate('tags');}
 }
 
