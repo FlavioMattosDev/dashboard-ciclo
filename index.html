@@ -436,6 +436,42 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7p
 .sc-footer{padding:12px 22px;border-top:1px solid rgba(255,255,255,.07);text-align:center;font-size:11px;color:var(--t3)}
 .bn-help{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:var(--t3);cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font);transition:all .18s;flex-shrink:0}
 .bn-help:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.3);color:var(--cy)}
+
+/* ══ VAULT ══ */
+.vault-lock{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;text-align:center}
+.vault-lock-icon{width:64px;height:64px;border-radius:50%;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);display:flex;align-items:center;justify-content:center;color:var(--vi2)}
+.vault-lock-title{font-size:18px;font-weight:700;color:var(--t)}
+.vault-lock-sub{font-size:13px;color:var(--t3);max-width:320px;line-height:1.6}
+.vault-pin-row{display:flex;gap:10px;align-items:center}
+.vault-pin-inp{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(139,92,246,.3);border-radius:var(--r);padding:10px 14px;font-family:var(--font);font-size:14px;color:var(--t);outline:none;text-align:center;letter-spacing:.1em;box-sizing:border-box}
+.vault-pin-inp:focus{border-color:rgba(139,92,246,.6);box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+.vault-pin-inp::placeholder{letter-spacing:0;color:var(--t3)}
+.cred-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.cred-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--rl);padding:16px 18px;transition:all .18s;position:relative;overflow:hidden}
+.cred-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;transition:background .18s}
+.cred-card.personal::before{background:var(--cy)}
+.cred-card.corporate::before{background:var(--vi2)}
+.cred-card:hover{border-color:rgba(255,255,255,.15);box-shadow:0 4px 24px rgba(0,0,0,.2);transform:translateY(-1px)}
+.cred-card-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.cred-card-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cred-card-name{font-size:14px;font-weight:600;color:var(--t);line-height:1.2}
+.cred-card-url{font-size:11px;color:var(--cy2);font-family:var(--mono);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.cred-card-url:hover{color:var(--cy)}
+.cred-type-badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.cred-type-badge.personal{background:rgba(34,211,238,.12);color:var(--cy);border:1px solid rgba(34,211,238,.2)}
+.cred-type-badge.corporate{background:rgba(139,92,246,.12);color:var(--vi2);border:1px solid rgba(139,92,246,.2)}
+.cred-field{margin-bottom:8px}
+.cred-field-label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.cred-field-val{display:flex;align-items:center;gap:6px}
+.cred-field-text{font-size:12px;color:var(--t2);font-family:var(--mono);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cred-field-text.masked{letter-spacing:.2em;color:var(--t3)}
+.cred-copy{width:24px;height:24px;border-radius:4px;background:none;border:1px solid rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t3);transition:all .15s;flex-shrink:0}
+.cred-copy:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.25);color:var(--cy)}
+.cred-reveal{width:24px;height:24px;border-radius:4px;background:none;border:1px solid rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t3);transition:all .15s;flex-shrink:0}
+.cred-reveal:hover{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.25);color:var(--vi2)}
+.cred-card-footer{display:flex;gap:5px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
+.vault-lock-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ok-t);background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);border-radius:20px;padding:3px 10px;cursor:pointer;transition:all .15s}
+.vault-lock-badge:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:var(--er-t)}
 </style>
 </head>
 <body>
@@ -484,6 +520,7 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7p
           <div class="sc-row"><span class="sc-desc">Subtarefas Diárias</span><span class="sc-keys"><kbd>5</kbd></span></div>
           <div class="sc-row"><span class="sc-desc">Relatórios</span><span class="sc-keys"><kbd>6</kbd></span></div>
           <div class="sc-row"><span class="sc-desc">Tags</span><span class="sc-keys"><kbd>7</kbd></span></div>
+          <div class="sc-row"><span class="sc-desc">Cofre</span><span class="sc-keys"><kbd>8</kbd></span></div>
         </div>
 
         <div class="sc-section">
@@ -553,6 +590,9 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7p
   <div class="sb-item" data-view="tags" onclick="navigate('tags')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags
   </div>
+  <div class="sb-item" data-view="vault" onclick="navigate('vault')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>Cofre
+  </div>
   <hr class="sb-hr">
   <div class="sb-sec" style="display:flex;align-items:center">
     <span id="sb-cycle-label">Ciclo atual</span>
@@ -574,6 +614,7 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 7p
   <div id="view-timeline" class="view"></div>
   <div id="view-reports" class="view"></div>
   <div id="view-tags" class="view"></div>
+  <div id="view-vault" class="view"></div>
 </main>
 
 <!-- MAIN MODAL -->
@@ -833,7 +874,7 @@ function navigate(view){
   updateSidebar();renderView(view);
   closeMobileSidebar();
 }
-function renderView(v){destroyCharts();if(v==='dashboard')renderDashboard();else if(v==='cycles')renderCycles();else if(v==='activities')renderActivities();else if(v==='kanban')renderKanban();else if(v==='timeline')renderTimeline();else if(v==='reports')renderReports();else if(v==='tags')renderTags();}
+function renderView(v){destroyCharts();if(v==='dashboard')renderDashboard();else if(v==='cycles')renderCycles();else if(v==='activities')renderActivities();else if(v==='kanban')renderKanban();else if(v==='timeline')renderTimeline();else if(v==='reports')renderReports();else if(v==='tags')renderTags();else if(v==='vault')renderVault();}
 
 // ── SIDEBAR ──
 function updateSidebar(){
@@ -1738,7 +1779,7 @@ document.addEventListener('keydown',e=>{
   if(e.ctrlKey||e.metaKey||e.altKey) return;
 
   // Number keys 1–7 → navigate to view
-  const navMap={'1':'dashboard','2':'cycles','3':'activities','4':'kanban','5':'timeline','6':'reports','7':'tags'};
+  const navMap={'1':'dashboard','2':'cycles','3':'activities','4':'kanban','5':'timeline','6':'reports','7':'tags','8':'vault'};
   if(navMap[e.key]){e.preventDefault();navigate(navMap[e.key]);return;}
 
   // Letter shortcuts
@@ -1764,6 +1805,307 @@ function seedIfEmpty(){
   const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);};
   S.logs.push({id:uid(),subtaskId:subIds[3],date:daysAgo(1),description:'Fiz a configuração inicial no azure repos, cadastrei e configurei a nova aplicação no argocd referente ao microserviço sap-produtor',hrs:3,createdAt:new Date().toISOString()},{id:uid(),subtaskId:subIds[1],date:daysAgo(1),description:'Implementei o endpoint de autenticação e revisei a estrutura base do serviço SAP',hrs:1.5,createdAt:new Date().toISOString()},{id:uid(),subtaskId:subIds[0],date:daysAgo(3),description:'Reunião com o time de especialistas para definir a arquitetura dos microserviços.',hrs:2,createdAt:new Date().toISOString()},{id:uid(),subtaskId:subIds[1],date:daysAgo(3),description:'Configuração inicial do projeto no Azure DevOps, setup do repositório e estrutura de pastas dos microserviços B2B',hrs:3.5,createdAt:new Date().toISOString()},{id:uid(),subtaskId:subIds[2],date:daysAgo(5),description:'Criação do arquivo de pipeline YAML base no Azure Pipelines com os stages de build e teste unitário',hrs:2,createdAt:new Date().toISOString()},{id:uid(),subtaskId:subIds[5],date:daysAgo(5),description:'Levantamento completo dos endpoints existentes da API Gateway, identificação de gargalos e documentação das dependências',hrs:3,createdAt:new Date().toISOString()},{id:uid(),subtaskId:subIds[5],date:daysAgo(7),description:'Reunião de alinhamento com o time de backend para entender os requisitos da refatoração',hrs:1.5,createdAt:new Date().toISOString()});
   save();
+}
+
+
+// ══════════════════════════════════════════════
+// ── VAULT — Cofre de credenciais criptografado
+// ══════════════════════════════════════════════
+const VK  = 'workdash_vault_v1';   // credenciais cifradas
+const VMK = 'workdash_vault_meta'; // salt + iv + verificador
+
+let _vaultKey   = null; // CryptoKey em memória (nunca persistida)
+let _vaultData  = [];   // credenciais decifradas (só enquanto desbloqueado)
+let _vaultSearch= '';
+let _vaultFilter= '';   // 'personal' | 'corporate' | ''
+let _revealed   = {};   // { credId: true } senhas temporariamente visíveis
+
+// ── Crypto helpers (Web Crypto API — nativa, sem biblioteca) ──
+async function vDeriveKey(password, salt){
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt, iterations:310000, hash:'SHA-256'},
+    base,
+    {name:'AES-GCM', length:256},
+    false, ['encrypt','decrypt']
+  );
+}
+async function vEncrypt(key, plaintext){
+  const iv  = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder();
+  const ct  = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc.encode(plaintext));
+  return {iv: Array.from(iv), ct: Array.from(new Uint8Array(ct))};
+}
+async function vDecrypt(key, {iv, ct}){
+  const dec = await crypto.subtle.decrypt(
+    {name:'AES-GCM', iv: new Uint8Array(iv)},
+    key,
+    new Uint8Array(ct)
+  );
+  return new TextDecoder().decode(dec);
+}
+
+// ── Vault storage ──
+function vLoadRaw(){try{return JSON.parse(localStorage.getItem(VK)||'[]');}catch(e){return[];}}
+function vSaveRaw(rows){localStorage.setItem(VK, JSON.stringify(rows));}
+function vLoadMeta(){try{return JSON.parse(localStorage.getItem(VMK)||'null');}catch(e){return null;}}
+function vSaveMeta(meta){localStorage.setItem(VMK, JSON.stringify(meta));}
+function vIsSetup(){return !!vLoadMeta();}
+function vIsUnlocked(){return !!_vaultKey;}
+function vLock(){_vaultKey=null;_vaultData=[];_revealed={};renderVault();}
+
+// ── Setup: create master password ──
+async function vSetupMaster(pw, pw2, hint=''){
+  if(!pw||pw.length<6){toast('Senha mínima de 6 caracteres','er');return;}
+  if(pw!==pw2){toast('As senhas não coincidem','er');return;}
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const key  = await vDeriveKey(pw, salt);
+  const {iv,ct} = await vEncrypt(key, '__vault_ok__');
+  vSaveMeta({salt:Array.from(salt), verifier:{iv,ct}, hint:hint.trim()});
+  _vaultKey  = key;
+  _vaultData = [];
+  toast('Cofre criado com sucesso!','ok');
+  renderVault();
+}
+
+// ── Unlock ──
+async function vUnlock(pw){
+  const meta = vLoadMeta();
+  if(!meta){toast('Cofre não configurado','er');return;}
+  try{
+    const key = await vDeriveKey(pw, new Uint8Array(meta.salt));
+    const check = await vDecrypt(key, meta.verifier);
+    if(check!=='__vault_ok__'){toast('Senha incorreta','er');return;}
+    _vaultKey = key;
+    // Decrypt all credentials
+    const raw = vLoadRaw();
+    _vaultData = await Promise.all(raw.map(async r=>{
+      try{
+        const pw = await vDecrypt(_vaultKey, r.encPw);
+        return {...r, password:pw};
+      }catch(e){return {...r, password:'[erro ao decifrar]'};}
+    }));
+    _revealed={};
+    renderVault();
+  }catch(e){toast('Senha incorreta','er');}
+}
+
+// ── Encrypt & save a credential ──
+async function vSaveCred(cred){
+  if(!_vaultKey){toast('Cofre bloqueado','er');return;}
+  const encPw = await vEncrypt(_vaultKey, cred.password);
+  const raw   = vLoadRaw();
+  const idx   = raw.findIndex(r=>r.id===cred.id);
+  const record= {id:cred.id,name:cred.name,username:cred.username,url:cred.url,type:cred.type,notes:cred.notes,createdAt:cred.createdAt,updatedAt:new Date().toISOString(),encPw};
+  if(idx>-1) raw[idx]=record; else raw.push(record);
+  vSaveRaw(raw);
+  // Update in-memory
+  const memIdx = _vaultData.findIndex(r=>r.id===cred.id);
+  const memRec = {...record, password:cred.password};
+  if(memIdx>-1) _vaultData[memIdx]=memRec; else _vaultData.push(memRec);
+}
+async function vDeleteCred(id){
+  const raw = vLoadRaw().filter(r=>r.id!==id);
+  vSaveRaw(raw);
+  _vaultData = _vaultData.filter(r=>r.id!==id);
+}
+
+// ── CRUD modals ──
+function vOpenAdd(){
+  openModal('Nova Credencial',`
+    <div class="fg"><label class="fl2">Nome / Serviço *</label><input class="fin" id="vc-name" placeholder="Ex: GitHub, Azure, Gmail" autofocus></div>
+    <div class="frow">
+      <div class="fg"><label class="fl2">Usuário / E-mail</label><input class="fin" id="vc-user" placeholder="usuario@email.com"></div>
+      <div class="fg"><label class="fl2">Tipo</label>
+        <select class="fin" id="vc-type">
+          <option value="personal">👤 Pessoal</option>
+          <option value="corporate">🏢 Corporativo</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl2">Senha *</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="fin" id="vc-pw" type="password" placeholder="••••••••" style="flex:1">
+        <button class="btn bs" style="padding:8px 10px;flex-shrink:0" onclick="vTogglePwVis('vc-pw',this)" title="Mostrar/ocultar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="fg"><label class="fl2">Site / URL</label><input class="fin" id="vc-url" placeholder="https://github.com"></div>
+    <div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="vc-notes" rows="2" placeholder="Informações adicionais…" style="font-size:12px"></textarea></div>`,
+  `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="vSaveForm()">Salvar</button>`);
+}
+function vOpenEdit(id){
+  const c = _vaultData.find(r=>r.id===id);
+  if(!c)return;
+  openModal('Editar Credencial',`
+    <div class="fg"><label class="fl2">Nome / Serviço *</label><input class="fin" id="vc-name" value="${esc(c.name)}" autofocus></div>
+    <div class="frow">
+      <div class="fg"><label class="fl2">Usuário / E-mail</label><input class="fin" id="vc-user" value="${esc(c.username||'')}"></div>
+      <div class="fg"><label class="fl2">Tipo</label>
+        <select class="fin" id="vc-type">
+          <option value="personal" ${c.type==='personal'?'selected':''}>👤 Pessoal</option>
+          <option value="corporate" ${c.type==='corporate'?'selected':''}>🏢 Corporativo</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl2">Senha *</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="fin" id="vc-pw" type="password" value="${esc(c.password||'')}" style="flex:1">
+        <button class="btn bs" style="padding:8px 10px;flex-shrink:0" onclick="vTogglePwVis('vc-pw',this)" title="Mostrar/ocultar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="fg"><label class="fl2">Site / URL</label><input class="fin" id="vc-url" value="${esc(c.url||'')}"></div>
+    <div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="vc-notes" rows="2" style="font-size:12px">${esc(c.notes||'')}</textarea></div>`,
+  `<button class="btn bd" style="margin-right:auto" onclick="vConfirmDelete('${id}')">Excluir</button>
+   <button class="btn bs" onclick="closeModal()">Cancelar</button>
+   <button class="btn bp" onclick="vSaveForm('${id}')">Salvar</button>`);
+}
+function vTogglePwVis(inputId, btn){
+  const inp=document.getElementById(inputId);
+  if(!inp)return;
+  inp.type=inp.type==='password'?'text':'password';
+  btn.style.color=inp.type==='text'?'var(--cy)':'';
+}
+async function vSaveForm(existingId){
+  const name  = document.getElementById('vc-name')?.value.trim();
+  const user  = document.getElementById('vc-user')?.value.trim()||'';
+  const pw    = document.getElementById('vc-pw')?.value||'';
+  const type  = document.getElementById('vc-type')?.value||'personal';
+  const url   = document.getElementById('vc-url')?.value.trim()||'';
+  const notes = document.getElementById('vc-notes')?.value.trim()||'';
+  if(!name){toast('Informe o nome do serviço','er');return;}
+  if(!pw){toast('Informe a senha','er');return;}
+  const cred={id:existingId||uid(),name,username:user,password:pw,type,url,notes,createdAt:existingId?(_vaultData.find(r=>r.id===existingId)?.createdAt||new Date().toISOString()):new Date().toISOString()};
+  await vSaveCred(cred);
+  closeModal();
+  toast(existingId?'Credencial atualizada!':'Credencial salva!','ok');
+  renderVault();
+}
+function vConfirmDelete(id){
+  const c=_vaultData.find(r=>r.id===id);
+  confirmAction(`Excluir credencial "${c?.name||id}"? Esta ação não pode ser desfeita.`,async()=>{
+    await vDeleteCred(id);closeModal();toast('Credencial excluída');renderVault();
+  });
+}
+function vToggleReveal(id){
+  _revealed[id]=!_revealed[id];
+  // Only re-render the password field of this card
+  const el=document.getElementById('vpw-'+id);
+  const btn=document.getElementById('vrev-'+id);
+  const c=_vaultData.find(r=>r.id===id);
+  if(!el||!c)return;
+  if(_revealed[id]){
+    el.textContent=c.password;el.classList.remove('masked');
+    if(btn)btn.title='Ocultar senha';
+  }else{
+    el.textContent='••••••••';el.classList.add('masked');
+    if(btn)btn.title='Revelar senha';
+  }
+}
+function vCopy(text,label){
+  navigator.clipboard.writeText(text).then(()=>toast(`${label} copiado!`,'ok')).catch(()=>toast('Não foi possível copiar','er'));
+}
+function vGetIcon(name,url){
+  if(url){try{const u=new URL(url.startsWith('http')?url:'https://'+url);return`<img src="https://www.google.com/s2/favicons?sz=32&domain=${u.hostname}" onerror="this.style.display='none';this.nextSibling.style.display='flex'" style="width:20px;height:20px;border-radius:3px"><span style="display:none;font-size:16px">${name.charAt(0).toUpperCase()}</span>`;}catch(e){}}
+  return`<span style="font-size:16px">${name.charAt(0).toUpperCase()}</span>`;
+}
+
+// ── Render ──
+function renderVault(){
+  const el=document.getElementById('view-vault');
+  if(!el)return;
+
+  // ── LOCKED / SETUP ──
+  if(!vIsUnlocked()){
+    const isSetup=vIsSetup();
+    el.innerHTML=`
+      <div class="ph"><div><div class="pt">Cofre</div><div class="ps">Credenciais criptografadas com AES-256</div></div></div>
+      <div class="vault-lock">
+        <div class="vault-lock-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg></div>
+        <div class="vault-lock-title">${isSetup?'Cofre bloqueado':'Criar senha mestra'}</div>
+        <div class="vault-lock-sub">${isSetup?'Digite a senha mestra para acessar suas credenciais.':'Defina uma senha mestra para proteger seu cofre. Ela <strong>não pode ser recuperada</strong> — guarde-a com cuidado.'}</div>
+        ${isSetup?`
+          <div class="vault-pin-row">
+            <input class="vault-pin-inp" id="v-pw" type="password" placeholder="Senha mestra" onkeydown="if(event.key==='Enter')vUnlock(this.value)" autofocus>
+            <button class="btn bp" onclick="vUnlock(document.getElementById('v-pw').value)">Desbloquear</button>
+          </div>
+          ${(()=>{const m=vLoadMeta();return m?.hint?`<div style="font-size:12px;color:var(--t3);background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:var(--r);padding:8px 14px;max-width:300px">💡 Dica: ${esc(m.hint)}</div>`:'';})()}`:`
+          <div style="display:flex;flex-direction:column;gap:10px;width:300px">
+            <input class="vault-pin-inp" id="v-pw" type="password" placeholder="Criar senha mestra" autofocus>
+            <input class="vault-pin-inp" id="v-pw2" type="password" placeholder="Confirmar senha" onkeydown="if(event.key==='Enter')vSetupMaster(document.getElementById('v-pw').value,this.value,document.getElementById('v-hint').value)">
+            <input class="vault-pin-inp" id="v-hint" type="text" placeholder="Dica para lembrar a senha (opcional)" style="font-size:12px;letter-spacing:0;text-align:left">
+            <button class="btn bp" style="width:100%;justify-content:center" onclick="vSetupMaster(document.getElementById('v-pw').value,document.getElementById('v-pw2').value,document.getElementById('v-hint').value)">Criar cofre</button>
+          </div>`}
+        <div style="font-size:11px;color:var(--t3);max-width:300px">Sua senha mestra não pode ser recuperada. A dica que você definiu pode ajudar.</div>
+      </div>`;
+    setTimeout(()=>document.getElementById('v-pw')?.focus(),80);
+    return;
+  }
+
+  // ── UNLOCKED ──
+  let creds=_vaultData.slice();
+  if(_vaultSearch) creds=creds.filter(c=>[c.name,c.username,c.url,c.notes].join(' ').toLowerCase().includes(_vaultSearch.toLowerCase()));
+  if(_vaultFilter) creds=creds.filter(c=>c.type===_vaultFilter);
+  creds.sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+
+  const emptyHtml=`<div class="empty" style="min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h3>${_vaultSearch||_vaultFilter?'Nenhuma credencial encontrada':'Cofre vazio'}</h3><p>${_vaultSearch||_vaultFilter?'Ajuste os filtros ou a busca':'Adicione sua primeira credencial com "+ Nova"'}</p></div>`;
+  const cards=creds.map(c=>`
+    <div class="cred-card ${c.type||'personal'}">
+      <div class="cred-card-head">
+        <div class="cred-card-icon">${vGetIcon(c.name,c.url)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="cred-card-name">${esc(c.name)}</div>
+          ${c.url?`<a class="cred-card-url" href="${esc(c.url.startsWith('http')?c.url:'https://'+c.url)}" target="_blank" title="${esc(c.url)}">${esc(c.url.replace(/^https?:\/\//,'').split('/')[0])}</a>`:''}
+        </div>
+        <span class="cred-type-badge ${c.type||'personal'}">${c.type==='corporate'?'Corporativo':'Pessoal'}</span>
+      </div>
+      ${c.username?`<div class="cred-field">
+        <div class="cred-field-label">Usuário / E-mail</div>
+        <div class="cred-field-val">
+          <span class="cred-field-text">${esc(c.username)}</span>
+          <button class="cred-copy" onclick="vCopy('${esc(c.username)}','Usuário')" title="Copiar usuário"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>`:''}
+      <div class="cred-field">
+        <div class="cred-field-label">Senha</div>
+        <div class="cred-field-val">
+          <span class="cred-field-text masked" id="vpw-${c.id}">••••••••</span>
+          <button class="cred-reveal" id="vrev-${c.id}" onclick="vToggleReveal('${c.id}')" title="Revelar senha"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="cred-copy" onclick="vCopy(document.getElementById('vpw-${c.id}').textContent==='••••••••'?_vaultData.find(r=>r.id==='${c.id}')?.password||'':document.getElementById('vpw-${c.id}').textContent,'Senha')" title="Copiar senha"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>
+      ${c.notes?`<div class="cred-field"><div class="cred-field-label">Notas</div><div style="font-size:11px;color:var(--t3);line-height:1.5">${esc(c.notes)}</div></div>`:''}
+      <div class="cred-card-footer">
+        <button class="bi" onclick="vOpenEdit('${c.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="bi er" onclick="vConfirmDelete('${c.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+        <span style="margin-left:auto;font-size:10px;color:var(--t3)">${c.updatedAt?'Atualizado '+fmtDate(c.updatedAt.slice(0,10)):'Criado '+fmtDate(c.createdAt?.slice(0,10)||'')}</span>
+      </div>
+    </div>`).join('');
+  const gridOrEmpty=cards?`<div class="cred-grid">${cards}</div>`:emptyHtml;
+
+  el.innerHTML=`
+    <div class="ph">
+      <div><div class="pt">Cofre</div><div class="ps">${_vaultData.length} credencial${_vaultData.length!==1?'s':''} · AES-256-GCM</div></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="vault-lock-badge" onclick="vLock()" title="Bloquear cofre">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Desbloqueado — clique para bloquear
+        </button>
+        <button class="btn bp" onclick="vOpenAdd()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova</button>
+      </div>
+    </div>
+    <div class="fb">
+      <span class="fl">Filtros</span>
+      <input class="fi" type="text" placeholder="Buscar por nome, usuário, URL…" value="${esc(_vaultSearch)}" oninput="_vaultSearch=this.value;renderVault()" style="min-width:220px">
+      <button class="tag-filter-btn ${_vaultFilter===''?'active':''}" onclick="_vaultFilter='';renderVault()">Todos</button>
+      <button class="tag-filter-btn ${_vaultFilter==='personal'?'active':''}" style="color:var(--cy);border-color:${_vaultFilter==='personal'?'var(--cy)':'transparent'}" onclick="_vaultFilter='personal';renderVault()">👤 Pessoal</button>
+      <button class="tag-filter-btn ${_vaultFilter==='corporate'?'active':''}" style="color:var(--vi2);border-color:${_vaultFilter==='corporate'?'var(--vi2)':'transparent'}" onclick="_vaultFilter='corporate';renderVault()">🏢 Corporativo</button>
+      ${_vaultSearch||_vaultFilter?`<button class="fc" onclick="_vaultSearch='';_vaultFilter='';renderVault()">Limpar</button>`:''}
+    </div>
+    ${gridOrEmpty}`;
 }
 
 function init(){load();seedIfEmpty();autoBackup();rebuildSearch();updateSidebar();navigate('dashboard');}
