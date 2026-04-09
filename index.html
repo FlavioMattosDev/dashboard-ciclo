@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WorkDash — Gerenciador de Demandas</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%231f2937'/><rect x='20' y='55' width='10' height='25' fill='%2334d399'/><rect x='38' y='45' width='10' height='35' fill='%2360a5fa'/><rect x='56' y='35' width='10' height='45' fill='%23fbbf24'/><rect x='74' y='25' width='10' height='55' fill='%23f87171'/><polyline points='20,55 43,45 61,35 79,25' fill='none' stroke='%23ffffff' stroke-width='3'/><circle cx='20' cy='55' r='2' fill='%23ffffff'/><circle cx='43' cy='45' r='2' fill='%23ffffff'/><circle cx='61' cy='35' r='2' fill='%23ffffff'/><circle cx='79' cy='25' r='2' fill='%23ffffff'/></svg>"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
@@ -665,7 +669,220 @@
         margin-top: 4px;
       }
 
-      /* BUTTONS */
+      /* ── CALENDAR ── */
+      .cal-nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .cal-nav-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--r);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--t2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        flex-shrink: 0;
+      }
+      .cal-nav-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--t);
+      }
+      .cal-nav-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .cal-month-label {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--t);
+        min-width: 160px;
+        text-align: center;
+        letter-spacing: -0.3px;
+      }
+      .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .cal-dow {
+        text-align: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--t3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 6px 0;
+      }
+      .cal-cell {
+        min-height: 100px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--rl);
+        padding: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .cal-cell:hover {
+        border-color: rgba(34, 211, 238, 0.3);
+        background: rgba(34, 211, 238, 0.04);
+      }
+      .cal-cell.empty {
+        background: rgba(255, 255, 255, 0.01);
+        border-color: rgba(255, 255, 255, 0.04);
+        cursor: default;
+        pointer-events: none;
+      }
+      .cal-cell.today {
+        border-color: rgba(34, 211, 238, 0.55);
+        box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18) inset;
+      }
+      .cal-cell.has-logs {
+        border-color: rgba(34, 211, 238, 0.22);
+      }
+      .cal-cell.selected {
+        border-color: var(--cy);
+        background: rgba(34, 211, 238, 0.07);
+        box-shadow: 0 0 14px rgba(34, 211, 238, 0.1);
+      }
+      .cal-day-num {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--t3);
+        line-height: 1;
+      }
+      .cal-cell.today .cal-day-num {
+        color: var(--cy);
+        font-weight: 700;
+      }
+      .cal-cell.has-logs .cal-day-num {
+        color: var(--t2);
+      }
+      .cal-chip {
+        font-size: 10px;
+        font-weight: 500;
+        padding: 2px 6px;
+        border-radius: 5px;
+        background: rgba(34, 211, 238, 0.1);
+        color: var(--cy);
+        border: 1px solid rgba(34, 211, 238, 0.2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        line-height: 1.4;
+      }
+      .cal-chip.more {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--t3);
+        border-color: transparent;
+      }
+      .cal-hrs-badge {
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--cy2);
+        font-family: var(--mono);
+        margin-top: auto;
+        padding-top: 2px;
+      }
+
+      .cal-detail {
+        background: var(--card-bg);
+        border: 1px solid rgba(34, 211, 238, 0.25);
+        border-radius: var(--rxl);
+        padding: 20px 24px;
+        margin-top: 4px;
+        animation: fadeIn 0.18s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .cal-detail-hd {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .cal-detail-date {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--t);
+        letter-spacing: -0.3px;
+      }
+      .cal-detail-meta {
+        font-size: 12px;
+        color: var(--t3);
+      }
+      .cal-log-item {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--r);
+        margin-bottom: 7px;
+        transition: border-color 0.15s;
+      }
+      .cal-log-item:hover {
+        border-color: rgba(34, 211, 238, 0.2);
+      }
+      .cal-log-item:last-child {
+        margin-bottom: 0;
+      }
+      .cal-log-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .cal-log-sub {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--t);
+      }
+      .cal-log-act {
+        font-size: 11px;
+        color: var(--t3);
+      }
+      .cal-log-desc {
+        font-size: 12px;
+        color: var(--t2);
+        line-height: 1.55;
+        margin-top: 2px;
+      }
+      .cal-log-actions {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+      .cal-empty-day {
+        text-align: center;
+        padding: 28px 0;
+        color: var(--t3);
+        font-size: 13px;
+      }
+
       .btn {
         display: inline-flex;
         align-items: center;
@@ -3010,6 +3227,23 @@
           <line x1="6" y1="20" x2="6" y2="14" /></svg
         >Relatórios
       </div>
+      <div class="sb-item" data-view="calendar" onclick="navigate('calendar')">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+          <rect x="7" y="14" width="3" height="3" rx="0.5" />
+          <rect x="14" y="14" width="3" height="3" rx="0.5" /></svg
+        >Calendário
+      </div>
       <hr class="sb-hr" />
       <div class="sb-item" data-view="tags" onclick="navigate('tags')">
         <svg
@@ -3080,6 +3314,7 @@
       <div id="view-kanban" class="view"></div>
       <div id="view-timeline" class="view"></div>
       <div id="view-reports" class="view"></div>
+      <div id="view-calendar" class="view"></div>
       <div id="view-tags" class="view"></div>
       <div id="view-vault" class="view"></div>
     </main>
@@ -3322,6 +3557,7 @@
               subtasks: S.subtasks,
               logs: S.logs,
               tags: S.tags,
+              kanbanStatus: S.kanbanStatus,
             }),
           };
           const updated = [snapshot, ...backups].slice(0, BK_MAX);
@@ -3768,6 +4004,7 @@
         else if (v === "kanban") renderKanban();
         else if (v === "timeline") renderTimeline();
         else if (v === "reports") renderReports();
+        else if (v === "calendar") renderCalendar();
         else if (v === "tags") renderTags();
         else if (v === "vault") renderVault();
       }
@@ -5507,8 +5744,10 @@
       <div style="display:flex;flex-direction:column;gap:7px">
         <button class="btn bp" onclick="exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar JSON completo</button>
         <button class="btn bs" onclick="exportCSV('activities')">Exportar Demandas (CSV)</button>
-        <button class="btn bs" onclick="exportCSV('subtasks')">Exportar Subtarefas (CSV)</button>
-        <button class="btn bs" onclick="exportCSV('logs')">Exportar Subtarefas (CSV)</button>
+        <button class="btn bs" onclick="exportCSV('subtasks')">Exportar Tarefas (CSV)</button>
+        <button class="btn bs" onclick="exportCSV('logs')">Exportar Registros Diários (CSV)</button>
+      </div>
+      <p style="font-size:11px;color:var(--t3);margin-top:10px;padding:8px 10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:var(--r)">⚠️ O <strong style="color:var(--wn)">Cofre de credenciais</strong> não é incluído no backup — ele usa criptografia própria e deve ser gerenciado separadamente.</p>
       </div>
     </div>
     <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:16px;margin-bottom:16px">
@@ -5532,6 +5771,7 @@
             subtasks: S.subtasks,
             logs: S.logs,
             tags: S.tags,
+            kanbanStatus: S.kanbanStatus,
           },
           null,
           2,
@@ -5597,12 +5837,13 @@
               if (!d.activities || !d.subtasks || !d.logs)
                 throw new Error("Formato inválido");
               confirmAction(
-                `Importar ${d.activities.length} demandas, ${d.subtasks.length} tarefas e ${d.logs.length} subtarefas? Os dados atuais serão substituídos.`,
+                `Importar ${d.activities.length} demandas, ${d.subtasks.length} tarefas e ${d.logs.length} registros? Os dados atuais serão substituídos.`,
                 () => {
                   S.activities = d.activities;
                   S.subtasks = d.subtasks;
                   S.logs = d.logs;
                   S.tags = d.tags || [];
+                  S.kanbanStatus = d.kanbanStatus || {};
                   save();
                   rebuildSearch();
                   updateSidebar();
@@ -5742,8 +5983,9 @@
           4: "kanban",
           5: "timeline",
           6: "reports",
-          7: "tags",
-          8: "vault",
+          7: "calendar",
+          8: "tags",
+          9: "vault",
         };
         if (navMap[e.key]) {
           e.preventDefault();
@@ -6410,7 +6652,241 @@
       }
 
       // ══════════════════════════════════════════════
-      // ── GERAÇÃO DE RELATÓRIO PDF
+      // ── CALENDÁRIO
+      // ══════════════════════════════════════════════
+      let _calYear = 0,
+        _calMonth = 0,
+        _calSelectedDate = "",
+        _calFilterActId = "";
+
+      function renderCalendar() {
+        // Inicializa mês/ano com o mês atual na primeira visita
+        if (!_calYear) {
+          const n = nowBRT();
+          _calYear = n.getFullYear();
+          _calMonth = n.getMonth(); // 0-based
+        }
+
+        const today = todayStr();
+        const firstDay = new Date(_calYear, _calMonth, 1);
+        const lastDay = new Date(_calYear, _calMonth + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        // Domingo=0 → queremos segunda=0 para layout PT-BR
+        const startDow = (firstDay.getDay() + 6) % 7; // 0=seg … 6=dom
+        const monthLabel = MONTHS_FULL[_calMonth] + " " + _calYear;
+
+        // Mapeia date string → logs do mês
+        const byDate = {};
+        S.logs.forEach((l) => {
+          if (!l.date) return;
+          const [ly, lm] = l.date.split("-").map(Number);
+          if (ly === _calYear && lm - 1 === _calMonth) {
+            byDate[l.date] = (byDate[l.date] || []).concat(l);
+          }
+        });
+
+        // Filtro por demanda
+        const actOpts = S.activities
+          .map(
+            (a) =>
+              `<option value="${a.id}" ${_calFilterActId === a.id ? "selected" : ""}>${esc(a.title)}</option>`,
+          )
+          .join("");
+
+        // Cabeçalho dias da semana
+        const DOWS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+        const dowHtml = DOWS.map((d) => `<div class="cal-dow">${d}</div>`).join(
+          "",
+        );
+
+        // Células
+        let cells = "";
+        // Células vazias antes do dia 1
+        for (let i = 0; i < startDow; i++)
+          cells += `<div class="cal-cell empty"></div>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = `${_calYear}-${String(_calMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          let logs = byDate[dateStr] || [];
+          if (_calFilterActId)
+            logs = logs.filter((l) => {
+              const s = subById(l.subtaskId);
+              return s?.activityId === _calFilterActId;
+            });
+
+          const isToday = dateStr === today;
+          const hasLogs = logs.length > 0;
+          const isSelected = dateStr === _calSelectedDate;
+          const totalHrs = logs.reduce((s, l) => s + (l.hrs || 0), 0);
+
+          // Chips: mostra até 2 nomes de tarefas únicas
+          const uniqueSubs = [
+            ...new Set(
+              logs
+                .map((l) => subById(l.subtaskId)?.title || "")
+                .filter(Boolean),
+            ),
+          ];
+          const chips = uniqueSubs
+            .slice(0, 2)
+            .map(
+              (t) => `<div class="cal-chip" title="${esc(t)}">${esc(t)}</div>`,
+            )
+            .join("");
+          const extra =
+            uniqueSubs.length > 2
+              ? `<div class="cal-chip more">+${uniqueSubs.length - 2} mais</div>`
+              : "";
+          const hrsBadge =
+            hasLogs && totalHrs
+              ? `<div class="cal-hrs-badge">${hrsDisplay(totalHrs)}</div>`
+              : "";
+
+          cells += `<div class="cal-cell ${isToday ? "today" : ""} ${hasLogs ? "has-logs" : ""} ${isSelected ? "selected" : ""}"
+      onclick="calSelectDay('${dateStr}')"
+      id="cal-cell-${dateStr}">
+      <div class="cal-day-num">${d}</div>
+      ${chips}${extra}
+      ${hrsBadge}
+    </div>`;
+        }
+
+        // Detalhe do dia selecionado
+        const detailHtml = _calSelectedDate ? _calDayDetail() : "";
+
+        document.getElementById("view-calendar").innerHTML = `
+    <div class="ph">
+      <div><div class="pt">Calendário</div><div class="ps">Registros diários por mês</div></div>
+      <div class="nb-acts" style="gap:8px">
+        <select class="fs" style="max-width:220px" onchange="_calFilterActId=this.value;renderCalendar()">
+          <option value="" ${!_calFilterActId ? "selected" : ""}>Todas as demandas</option>
+          ${actOpts}
+        </select>
+        <button class="btn bs" onclick="calGoToToday()">Hoje</button>
+        <button class="btn bp" onclick="openAddLogModal(null,'${today}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar hoje
+        </button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px">
+      <button class="cal-nav-btn" onclick="calPrevMonth()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="cal-month-label">${monthLabel}</div>
+      <button class="cal-nav-btn" onclick="calNextMonth()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+
+    <div class="cal-grid">${dowHtml}${cells}</div>
+
+    <div id="cal-detail-area" style="margin-top:18px">${detailHtml}</div>`;
+      }
+
+      function calSelectDay(date) {
+        _calSelectedDate = _calSelectedDate === date ? "" : date;
+        // Atualiza células selecionadas sem re-renderizar tudo
+        document
+          .querySelectorAll(".cal-cell")
+          .forEach((el) => el.classList.remove("selected"));
+        if (_calSelectedDate)
+          document
+            .getElementById("cal-cell-" + _calSelectedDate)
+            ?.classList.add("selected");
+        document.getElementById("cal-detail-area").innerHTML = _calSelectedDate
+          ? _calDayDetail()
+          : "";
+      }
+
+      function _calDayDetail() {
+        const date = _calSelectedDate;
+        let logs = S.logs.filter((l) => l.date === date);
+        if (_calFilterActId)
+          logs = logs.filter((l) => {
+            const s = subById(l.subtaskId);
+            return s?.activityId === _calFilterActId;
+          });
+        logs.sort((a, b) =>
+          (a.subtaskId || "").localeCompare(b.subtaskId || ""),
+        );
+
+        const [y, m, d] = date.split("-");
+        const dateLabel = `${d} de ${MONTHS_FULL[parseInt(m) - 1]} de ${y}`;
+        const isToday = date === todayStr();
+        const totalHrs = logs.reduce((s, l) => s + (l.hrs || 0), 0);
+        const metaStr = `${logs.length} registro${logs.length !== 1 ? "s" : ""}${totalHrs ? " · " + hrsDisplay(totalHrs) : ""}`;
+
+        const logsHtml = logs.length
+          ? logs
+              .map((l) => {
+                const sub = subById(l.subtaskId);
+                const act = sub ? actById(sub.activityId) : null;
+                return `<div class="cal-log-item">
+      <div class="cal-log-top">
+        <span class="cal-log-sub">${esc(sub?.title || "—")}</span>
+        <span class="cal-log-act">/ ${esc(act?.title || "—")}</span>
+        ${l.hrs ? `<span class="hr-badge" style="margin-left:4px">${hrsDisplay(l.hrs)}</span>` : ""}
+        <div class="cal-log-actions">
+          <button class="bi" onclick="openEditLogModal('${l.id}')" title="Editar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="bi er" onclick="confirmDeleteLog('${l.id}')" title="Excluir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="cal-log-desc">${esc(l.description)}</div>
+    </div>`;
+              })
+              .join("")
+          : `<div class="cal-empty-day">Nenhum registro neste dia.<br><button class="btn bp" style="margin-top:10px" onclick="openAddLogModal(null,'${date}')">+ Registrar</button></div>`;
+
+        return `<div class="cal-detail">
+    <div class="cal-detail-hd">
+      <div>
+        <div class="cal-detail-date">${dateLabel}${isToday ? ' <span style="font-size:11px;color:var(--cy);font-weight:500;margin-left:6px">Hoje</span>' : ""}</div>
+        <div class="cal-detail-meta">${metaStr}</div>
+      </div>
+      <button class="btn bp" onclick="openAddLogModal(null,'${date}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>+ Registro
+      </button>
+    </div>
+    ${logsHtml}
+  </div>`;
+      }
+
+      function calPrevMonth() {
+        if (_calMonth === 0) {
+          _calMonth = 11;
+          _calYear--;
+        } else _calMonth--;
+        _calSelectedDate = "";
+        renderCalendar();
+      }
+      function calNextMonth() {
+        if (_calMonth === 11) {
+          _calMonth = 0;
+          _calYear++;
+        } else _calMonth++;
+        _calSelectedDate = "";
+        renderCalendar();
+      }
+      function calGoToToday() {
+        const n = nowBRT();
+        _calYear = n.getFullYear();
+        _calMonth = n.getMonth();
+        _calSelectedDate = todayStr();
+        renderCalendar();
+        setTimeout(
+          () =>
+            document
+              .getElementById("cal-detail-area")
+              ?.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          120,
+        );
+      }
+
       // ══════════════════════════════════════════════
       function generatePDF() {
         if (typeof window.jspdf === "undefined") {
