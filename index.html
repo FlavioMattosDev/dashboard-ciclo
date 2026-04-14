@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WorkDash — Gerenciador de Demandas</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%231f2937'/><rect x='20' y='55' width='10' height='25' fill='%2334d399'/><rect x='38' y='45' width='10' height='35' fill='%2360a5fa'/><rect x='56' y='35' width='10' height='45' fill='%23fbbf24'/><rect x='74' y='25' width='10' height='55' fill='%23f87171'/><polyline points='20,55 43,45 61,35 79,25' fill='none' stroke='%23ffffff' stroke-width='3'/><circle cx='20' cy='55' r='2' fill='%23ffffff'/><circle cx='43' cy='45' r='2' fill='%23ffffff'/><circle cx='61' cy='35' r='2' fill='%23ffffff'/><circle cx='79' cy='25' r='2' fill='%23ffffff'/></svg>"
-    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
@@ -669,12 +665,141 @@
         margin-top: 4px;
       }
 
-      /* ── CALENDAR ── */
-      .cal-nav {
+      /* ── HOURS BUDGET ── */
+      .hb {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .hb svg {
+        width: 10px;
+        height: 10px;
+        flex-shrink: 0;
+      }
+      .hb.over {
+        background: rgba(239, 68, 68, 0.14);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .hb.risk {
+        background: rgba(245, 158, 11, 0.13);
+        color: #fcd34d;
+        border: 1px solid rgba(245, 158, 11, 0.28);
+      }
+      .hb.ok {
+        background: rgba(16, 185, 129, 0.1);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.22);
+      }
+      .hb.under {
+        background: rgba(34, 211, 238, 0.09);
+        color: var(--cy);
+        border: 1px solid rgba(34, 211, 238, 0.22);
+      }
+      .hb.noest {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--t3);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      /* Alert panel */
+      .alert-panel {
+        background: rgba(239, 68, 68, 0.06);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: var(--rxl);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+      }
+      .alert-panel.warn {
+        background: rgba(245, 158, 11, 0.06);
+        border-color: rgba(245, 158, 11, 0.2);
+      }
+      .alert-panel-hd {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .alert-panel-hd svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+      .alert-panel-hd.er svg {
+        color: var(--er-t);
+      }
+      .alert-panel-hd.wn svg {
+        color: var(--wn);
+      }
+      .alert-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--t);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .alert-count {
+        font-size: 11px;
+        color: var(--t3);
+        margin-left: auto;
+      }
+      .alert-row {
         display: flex;
         align-items: center;
         gap: 10px;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--r);
+        margin-bottom: 5px;
+        cursor: pointer;
+        transition: all 0.15s;
       }
+      .alert-row:last-child {
+        margin-bottom: 0;
+      }
+      .alert-row:hover {
+        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .alert-row-type {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--t3);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        min-width: 52px;
+      }
+      .alert-row-title {
+        font-size: 12px;
+        color: var(--t);
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .alert-row-detail {
+        font-size: 11px;
+        font-family: var(--mono);
+        flex-shrink: 0;
+      }
+      .alert-row-detail.over {
+        color: var(--er-t);
+      }
+      .alert-row-detail.risk {
+        color: var(--wn);
+      }
+      .alert-row-detail.under {
+        color: var(--cy);
+      }
+
       .cal-nav-btn {
         width: 32px;
         height: 32px;
@@ -701,15 +826,16 @@
         font-size: 16px;
         font-weight: 700;
         color: var(--t);
-        min-width: 160px;
+        min-width: 180px;
         text-align: center;
         letter-spacing: -0.3px;
       }
+      /* Grid: minmax(0,1fr) garante que todas as colunas sejam iguais e nunca transbordem */
       .cal-grid {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 6px;
-        margin-top: 4px;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
+        width: 100%;
       }
       .cal-dow {
         text-align: center;
@@ -717,97 +843,121 @@
         font-weight: 700;
         color: var(--t3);
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        padding: 6px 0;
+        letter-spacing: 0.06em;
+        padding: 5px 2px;
+        overflow: hidden;
       }
+      /* Altura fixa garante uniformidade entre todas as células */
       .cal-cell {
-        min-height: 100px;
+        height: 90px;
         background: var(--card-bg);
         border: 1px solid var(--card-border);
-        border-radius: var(--rl);
-        padding: 8px;
+        border-radius: var(--r);
+        padding: 7px 6px 5px;
         cursor: pointer;
-        transition: all 0.2s;
-        position: relative;
+        transition:
+          border-color 0.18s,
+          background 0.18s;
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 3px;
+        overflow: hidden;
+        min-width: 0;
       }
       .cal-cell:hover {
         border-color: rgba(34, 211, 238, 0.3);
         background: rgba(34, 211, 238, 0.04);
       }
       .cal-cell.empty {
-        background: rgba(255, 255, 255, 0.01);
+        height: 90px;
+        background: rgba(255, 255, 255, 0.015);
         border-color: rgba(255, 255, 255, 0.04);
         cursor: default;
         pointer-events: none;
       }
       .cal-cell.today {
-        border-color: rgba(34, 211, 238, 0.55);
-        box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18) inset;
+        border-color: rgba(34, 211, 238, 0.5);
+        box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.12);
       }
       .cal-cell.has-logs {
-        border-color: rgba(34, 211, 238, 0.22);
+        border-color: rgba(34, 211, 238, 0.2);
       }
       .cal-cell.selected {
         border-color: var(--cy);
         background: rgba(34, 211, 238, 0.07);
-        box-shadow: 0 0 14px rgba(34, 211, 238, 0.1);
+        box-shadow: 0 0 12px rgba(34, 211, 238, 0.1);
       }
+      /* Número do dia + badge de horas na mesma linha */
       .cal-day-num {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
         color: var(--t3);
         line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2px;
+        flex-shrink: 0;
+        min-width: 0;
       }
       .cal-cell.today .cal-day-num {
         color: var(--cy);
-        font-weight: 700;
+        font-weight: 800;
       }
       .cal-cell.has-logs .cal-day-num {
         color: var(--t2);
       }
-      .cal-chip {
-        font-size: 10px;
-        font-weight: 500;
-        padding: 2px 6px;
-        border-radius: 5px;
-        background: rgba(34, 211, 238, 0.1);
-        color: var(--cy);
-        border: 1px solid rgba(34, 211, 238, 0.2);
+      .cal-day-hrs {
+        font-size: 9px;
+        font-family: var(--mono);
+        font-weight: 600;
+        color: var(--cy2);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 100%;
-        line-height: 1.4;
+        max-width: 55%;
+      }
+      /* Área de chips — não cresce além do espaço disponível */
+      .cal-chips {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        overflow: hidden;
+        flex: 1;
+        min-height: 0;
+      }
+      .cal-chip {
+        font-size: 9px;
+        font-weight: 500;
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: rgba(34, 211, 238, 0.09);
+        color: var(--cy);
+        border: 1px solid rgba(34, 211, 238, 0.17);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.55;
+        flex-shrink: 0;
       }
       .cal-chip.more {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.04);
         color: var(--t3);
-        border-color: transparent;
+        border-color: rgba(255, 255, 255, 0.07);
       }
-      .cal-hrs-badge {
-        font-size: 9px;
-        font-weight: 600;
-        color: var(--cy2);
-        font-family: var(--mono);
-        margin-top: auto;
-        padding-top: 2px;
-      }
-
+      /* Painel de detalhe */
       .cal-detail {
         background: var(--card-bg);
-        border: 1px solid rgba(34, 211, 238, 0.25);
+        border: 1px solid rgba(34, 211, 238, 0.22);
         border-radius: var(--rxl);
-        padding: 20px 24px;
-        margin-top: 4px;
-        animation: fadeIn 0.18s ease;
+        padding: 20px 22px;
+        margin-top: 12px;
+        animation: calFadeIn 0.18s ease;
       }
-      @keyframes fadeIn {
+      @keyframes calFadeIn {
         from {
           opacity: 0;
-          transform: translateY(-6px);
+          transform: translateY(-4px);
         }
         to {
           opacity: 1;
@@ -820,27 +970,28 @@
         justify-content: space-between;
         margin-bottom: 16px;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 10px;
       }
       .cal-detail-date {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
         color: var(--t);
         letter-spacing: -0.3px;
       }
       .cal-detail-meta {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--t3);
+        margin-top: 2px;
       }
       .cal-log-item {
         display: flex;
         flex-direction: column;
-        gap: 3px;
-        padding: 12px 14px;
+        gap: 4px;
+        padding: 11px 14px;
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: var(--r);
-        margin-bottom: 7px;
+        margin-bottom: 6px;
         transition: border-color 0.15s;
       }
       .cal-log-item:hover {
@@ -851,7 +1002,7 @@
       }
       .cal-log-top {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 8px;
         flex-wrap: wrap;
       }
@@ -868,19 +1019,78 @@
         font-size: 12px;
         color: var(--t2);
         line-height: 1.55;
-        margin-top: 2px;
       }
       .cal-log-actions {
         display: flex;
-        gap: 4px;
+        gap: 3px;
         margin-left: auto;
         flex-shrink: 0;
+        align-self: flex-start;
       }
       .cal-empty-day {
         text-align: center;
-        padding: 28px 0;
+        padding: 32px 0;
         color: var(--t3);
         font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      /* Notebook */
+      @media (max-width: 1280px) {
+        .cal-cell,
+        .cal-cell.empty {
+          height: 82px;
+        }
+        .cal-chip {
+          font-size: 9px;
+        }
+      }
+      /* Tablet */
+      @media (max-width: 960px) {
+        .cal-cell,
+        .cal-cell.empty {
+          height: 70px;
+          padding: 5px 4px;
+        }
+        .cal-dow {
+          font-size: 9px;
+          padding: 4px 2px;
+        }
+        .cal-day-num {
+          font-size: 10px;
+        }
+        .cal-month-label {
+          min-width: 140px;
+          font-size: 14px;
+        }
+      }
+      /* Mobile */
+      @media (max-width: 600px) {
+        .cal-grid {
+          gap: 2px;
+        }
+        .cal-cell,
+        .cal-cell.empty {
+          height: 52px;
+          padding: 4px 3px;
+        }
+        .cal-dow {
+          font-size: 8px;
+          letter-spacing: 0;
+        }
+        .cal-chips {
+          display: none;
+        }
+        .cal-cell.has-logs .cal-day-num::after {
+          content: "·";
+          color: var(--cy);
+          margin-left: 3px;
+        }
+        .cal-detail {
+          padding: 14px;
+        }
       }
 
       .btn {
@@ -3804,7 +4014,100 @@
         return `<a class="${extraClass}" href="${esc(href)}" target="_blank" title="${esc(a.devopsLink)}" onclick="event.stopPropagation()">${esc(name)}</a>`;
       }
 
-      // ── CRUD ──
+      // ── HOURS BUDGET ──────────────────────────────
+      // Retorna o status orçamentário de uma demanda ou tarefa
+      // type: 'activity' | 'subtask'
+      function getHoursBudget(id, type) {
+        const est =
+          type === "activity"
+            ? actById(id)?.estimatedHours || 0
+            : subById(id)?.estimatedHours || 0;
+        const spent =
+          type === "activity" ? getActHoursSpent(id) : getSubHoursSpent(id);
+        const done =
+          type === "activity"
+            ? getActCompletion(id) === 100
+            : subById(id)?.done || false;
+        if (!est)
+          return { status: "noest", est, spent, pct: 0, excess: 0, saved: 0 };
+        const pct = (spent / est) * 100;
+        const excess = +(spent - est).toFixed(1);
+        const saved = +(est - spent).toFixed(1);
+        let status;
+        if (pct > 100) status = "over";
+        else if (pct >= 80) status = "risk";
+        else if (done && pct < 80) status = "under";
+        else status = "ok";
+        return { status, est, spent, pct: +pct.toFixed(1), excess, saved };
+      }
+
+      // Renderiza o badge colorido de orçamento de horas
+      function renderHoursBadge(id, type) {
+        const b = getHoursBudget(id, type);
+        const icon = {
+          over: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+          risk: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+          ok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+          under: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+          noest: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+        }[b.status];
+        let label;
+        if (b.status === "over")
+          label = `+${hrsDisplay(b.excess)} ultrapassadas`;
+        else if (b.status === "risk")
+          label = `${b.pct.toFixed(0)}% — próximo do estimado`;
+        else if (b.status === "under")
+          label = `${hrsDisplay(b.saved)} abaixo do estimado`;
+        else if (b.status === "ok" && b.est > 0 && b.pct >= 95)
+          label = `Perfeitamente estimado`;
+        else if (b.status === "ok")
+          label = `${hrsDisplay(b.spent)} / ${hrsDisplay(b.est)}`;
+        else label = `${hrsDisplay(b.spent)} — sem est.`;
+        return `<span class="hb ${b.status}" title="${hrsDisplay(b.spent)} gastas de ${hrsDisplay(b.est)} estimadas (${b.pct.toFixed(0)}%)">${icon}${label}</span>`;
+      }
+
+      // Verifica se ao registrar horas houve cruzamento de 80% ou 100% e notifica
+      function checkHoursBudgetAlert(subtaskId, prevSpent) {
+        const sub = subById(subtaskId);
+        if (!sub) return;
+        const act = actById(sub.activityId);
+        // ── nível TAREFA ──
+        if (sub.estimatedHours > 0) {
+          const nowSpent = getSubHoursSpent(subtaskId);
+          const prevPct = (prevSpent / sub.estimatedHours) * 100;
+          const nowPct = (nowSpent / sub.estimatedHours) * 100;
+          if (nowPct > 100 && prevPct <= 100)
+            toast(
+              `🚨 Tarefa "${sub.title}" ultrapassou as horas estimadas! (${hrsDisplay(nowSpent)} de ${hrsDisplay(sub.estimatedHours)})`,
+              "er",
+            );
+          else if (nowPct >= 80 && prevPct < 80)
+            toast(
+              `⚠️ Tarefa "${sub.title}" está próxima do estimado (${nowPct.toFixed(0)}% consumido).`,
+              "wn",
+            );
+        }
+        // ── nível DEMANDA ──
+        if (act && (act.estimatedHours || 0) > 0) {
+          const prevActSpent =
+            getActHoursSpent(act.id) -
+            (getSubHoursSpent(subtaskId) - prevSpent);
+          const nowActSpent = getActHoursSpent(act.id);
+          const prevPct = (prevActSpent / act.estimatedHours) * 100;
+          const nowPct = (nowActSpent / act.estimatedHours) * 100;
+          if (nowPct > 100 && prevPct <= 100)
+            toast(
+              `🚨 Demanda "${act.title}" ultrapassou as horas estimadas! (${hrsDisplay(nowActSpent)} de ${hrsDisplay(act.estimatedHours)})`,
+              "er",
+            );
+          else if (nowPct >= 80 && prevPct < 80)
+            toast(
+              `⚠️ Demanda "${act.title}" está próxima do estimado (${nowPct.toFixed(0)}% consumido).`,
+              "wn",
+            );
+        }
+      }
+
       function addActivity(d) {
         S.activities.push({
           id: uid(),
@@ -4063,7 +4366,99 @@
         renderView(S.currentView);
       }
 
-      // ── DASHBOARD ──
+      // ── BUDGET ALERT PANEL (Dashboard) ────────────
+      function renderBudgetAlertPanel(acts) {
+        // Coleta alertas de demandas
+        const overActs = [],
+          riskActs = [],
+          underActs = [];
+        acts.forEach((a) => {
+          const b = getHoursBudget(a.id, "activity");
+          if (b.status === "over")
+            overActs.push({ ...b, title: a.title, id: a.id, kind: "Demanda" });
+          else if (b.status === "risk")
+            riskActs.push({ ...b, title: a.title, id: a.id, kind: "Demanda" });
+          else if (b.status === "under")
+            underActs.push({ ...b, title: a.title, id: a.id, kind: "Demanda" });
+          // Coleta alertas de tarefas da demanda
+          getActSubtasks(a.id).forEach((s) => {
+            const bs = getHoursBudget(s.id, "subtask");
+            if (bs.status === "over")
+              overActs.push({
+                ...bs,
+                title: s.title,
+                id: a.id,
+                kind: "Tarefa",
+              });
+            else if (bs.status === "risk")
+              riskActs.push({
+                ...bs,
+                title: s.title,
+                id: a.id,
+                kind: "Tarefa",
+              });
+            else if (bs.status === "under")
+              underActs.push({
+                ...bs,
+                title: s.title,
+                id: a.id,
+                kind: "Tarefa",
+              });
+          });
+        });
+
+        if (!overActs.length && !riskActs.length && !underActs.length)
+          return "";
+
+        const makeRow = (item, cls) => `
+    <div class="alert-row" onclick="navigate('activities')" title="Ir para Demandas">
+      <span class="alert-row-type">${item.kind}</span>
+      <span class="alert-row-title">${esc(item.title)}</span>
+      <span class="alert-row-detail ${cls}">
+        ${cls === "over" ? `${hrsDisplay(item.spent)} gastas / ${hrsDisplay(item.est)} est. (+${hrsDisplay(item.excess)})` : ""}
+        ${cls === "risk" ? `${item.pct.toFixed(0)}% consumido — ${hrsDisplay(item.est - item.spent)} restantes` : ""}
+        ${cls === "under" ? `${hrsDisplay(item.saved)} abaixo do estimado` : ""}
+      </span>
+    </div>`;
+
+        let html = "";
+
+        if (overActs.length) {
+          html += `<div class="alert-panel sec">
+      <div class="alert-panel-hd er">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span class="alert-title">Horas ultrapassadas</span>
+        <span class="alert-count">${overActs.length} item${overActs.length !== 1 ? "s" : ""}</span>
+      </div>
+      ${overActs.map((i) => makeRow(i, "over")).join("")}
+    </div>`;
+        }
+
+        if (riskActs.length) {
+          html += `<div class="alert-panel warn sec">
+      <div class="alert-panel-hd wn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span class="alert-title">Próximo do estimado — acima de 80%</span>
+        <span class="alert-count">${riskActs.length} item${riskActs.length !== 1 ? "s" : ""}</span>
+      </div>
+      ${riskActs.map((i) => makeRow(i, "risk")).join("")}
+    </div>`;
+        }
+
+        if (underActs.length) {
+          html += `<div class="alert-panel sec" style="background:rgba(34,211,238,.05);border-color:rgba(34,211,238,.18)">
+      <div class="alert-panel-hd" style="color:var(--cy)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cy)"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="alert-title">Horas abaixo do estimado</span>
+        <span class="alert-count">${underActs.length} item${underActs.length !== 1 ? "s" : ""}</span>
+      </div>
+      ${underActs.map((i) => makeRow(i, "under")).join("")}
+    </div>`;
+        }
+
+        return html;
+      }
+
       function renderDashboard() {
         const cc = getActiveCycle();
         const year = getActiveYear();
@@ -4126,10 +4521,9 @@
             .slice(0, 8)
             .map((a) => {
               const pct = getActCompletion(a.id);
-              const spent = getActHoursSpent(a.id);
               return `<div class="ar" id="dash-ar-${a.id}"><div class="ah" onclick="openActivityDetail('${a.id}')">
       <div class="at">${esc(a.title)}</div>${renderDevopsLink(a)}
-      <div class="ahrs">${hrsDisplay(spent)} / ${hrsDisplay(a.estimatedHours || 0)}</div>
+      ${renderHoursBadge(a.id, "activity")}
       <div class="apb"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <div class="ap">${pct}%</div>
       ${getLastActivityBadge(a.id)}
@@ -4167,6 +4561,7 @@
       <div class="mc"><div class="ml">${isCurrentCycle ? "Subtarefas hoje" : "Total de subtarefas"}</div><div class="mv">${isCurrentCycle ? todayLogsCount : cycleLogs.length}</div><div class="ms">${isCurrentCycle ? hrsDisplay(todayHrs) + " registradas" : hrsDisplay(cycleLogs.reduce((s, l) => s + (l.hrs || 0), 0)) + " no total"}</div></div>
     </div>
     <div class="sec"><div class="sh"><span class="st">Progresso das demandas</span><button class="sa" onclick="navigate('activities')">Ver todas →</button></div>${progRows}</div>
+    ${renderBudgetAlertPanel(acts)}
     <div class="sec"><div class="sh"><span class="st">${sectionTitle}</span><button class="sa" onclick="navigate('timeline')">Ver timeline →</button></div>${timelineHtml}</div>`;
       }
 
@@ -4198,7 +4593,22 @@
           const isSelActive = cd.id === ac.id && year === activeYear;
           const isDone =
             year < curYear || (year === curYear && cd.em < curMonth);
-          // Badge: if this card is the selected-active cycle (and differs from real current), show "Selecionado"
+          // Budget summary for this cycle
+          const overCount = acts.filter(
+            (a) => getHoursBudget(a.id, "activity").status === "over",
+          ).length;
+          const riskCount = acts.filter(
+            (a) => getHoursBudget(a.id, "activity").status === "risk",
+          ).length;
+          const budgetLine = acts.length
+            ? overCount
+              ? `<div style="font-size:10px;margin-top:6px;color:var(--er-t)">⚠ ${overCount} demanda${overCount !== 1 ? "s" : ""} com horas ultrapassadas${riskCount ? ` · ${riskCount} em risco` : ""}</div>`
+              : riskCount
+                ? `<div style="font-size:10px;margin-top:6px;color:var(--wn)">● ${riskCount} demanda${riskCount !== 1 ? "s" : ""} próxima${riskCount !== 1 ? "s" : ""} do estimado</div>`
+                : totalEst
+                  ? `<div style="font-size:10px;margin-top:6px;color:var(--ok-t)">✓ Todas as horas dentro do estimado</div>`
+                  : ""
+            : "";
           let badgeClass, badgeText;
           if (isSelActive && !isCur) {
             badgeClass = "sel";
@@ -4216,12 +4626,24 @@
           const pct = totalEst
             ? Math.round((totalSpent / totalEst) * 100)
             : avgComp;
+          const hrsColor = totalEst
+            ? pct > 100
+              ? "var(--er-t)"
+              : pct >= 80
+                ? "var(--wn)"
+                : "var(--ok-t)"
+            : "var(--t2)";
           const extraClass = isSelActive && !isCur ? "sel-active" : "";
           return `<div class="cc ${isCur ? "cur" : ""} ${extraClass}" onclick="selectCycleAndNavigate('${cd.id}','${year}')">
       <div class="ccn">Nº ${cd.n}</div><div class="ccname">${esc(cd.name)}</div><div class="ccd">${esc(cd.label)} ${year}</div>
-      <div class="ccst"><div class="ccs"><div class="ccsv">${acts.length}</div><div class="ccsl">Demandas</div></div><div class="ccs"><div class="ccsv">${hrsDisplay(totalSpent)}</div><div class="ccsl">Gastas</div></div><div class="ccs"><div class="ccsv">${hrsDisplay(totalEst)}</div><div class="ccsl">Estimadas</div></div></div>
-      <div class="ccpb"><div class="ccpf" style="width:${Math.min(pct, 100)}%;${isSelActive && !isCur ? "background:linear-gradient(90deg,#8B5CF6,#C4B5FD);" : ""}" ></div></div>
+      <div class="ccst">
+        <div class="ccs"><div class="ccsv">${acts.length}</div><div class="ccsl">Demandas</div></div>
+        <div class="ccs"><div class="ccsv" style="color:${hrsColor}">${hrsDisplay(totalSpent)}</div><div class="ccsl">Gastas</div></div>
+        <div class="ccs"><div class="ccsv">${hrsDisplay(totalEst)}</div><div class="ccsl">Estimadas</div></div>
+      </div>
+      <div class="ccpb"><div class="ccpf" style="width:${Math.min(pct, 100)}%;${isSelActive && !isCur ? "background:linear-gradient(90deg,#8B5CF6,#C4B5FD);" : pct > 100 ? "background:var(--er);" : ""}" ></div></div>
       <span class="cc-badge ${badgeClass}">${badgeText} · ${avgComp}% concluído</span>
+      ${budgetLine}
     </div>`;
         }).join("");
         document.getElementById("view-cycles").innerHTML =
@@ -4273,7 +4695,6 @@
         const pct = getActCompletion(a.id);
         const spent = getActHoursSpent(a.id);
         const est = a.estimatedHours || 0;
-        const over = est && spent > est;
         const subs = getActSubtasks(a.id);
         const doneSubs = subs.filter((s) => s.done).length;
         const lastBadge = getLastActivityBadge(a.id);
@@ -4286,8 +4707,8 @@
     <div class="kb-card-meta">
       <div class="kb-card-pbar"><div class="kb-card-pbar-f ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <span class="kb-card-pct">${pct}%</span>
-      <span class="kb-card-hrs ${over ? "over" : ""}">${hrsDisplay(spent)}${est ? "/" + hrsDisplay(est) : ""}</span>
     </div>
+    <div style="margin:4px 0">${renderHoursBadge(a.id, "activity")}</div>
     <div class="kb-card-footer">
       <span class="kb-card-subs">${doneSubs}/${subs.length} tarefas</span>
       ${renderDevopsLink(a, "kb-card-devops")}
@@ -4569,7 +4990,7 @@
       ${a.notes ? `<div class="notes-dot" title="Esta demanda tem notas"></div>` : ""}
       <span class="badge nt" style="font-size:10px">${cd ? cd.name : ""}</span>
       ${a.devopsLink ? renderDevopsLink(a, "ad") : ""}
-      <div class="ahrs">${hrsDisplay(spent)}<span style="color:var(--t3)"> / ${hrsDisplay(a.estimatedHours || 0)}</span></div>
+      ${renderHoursBadge(a.id, "activity")}
       <div class="apb"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
       <div class="ap">${pct}%</div>
       ${getLastActivityBadge(a.id)}
@@ -4585,20 +5006,11 @@
       }
       function renderSubtaskRow(s) {
         const logs = getSubLogs(s.id);
-        const hrs = getSubHoursSpent(s.id);
-        const est = s.estimatedHours || 0;
-        const pct = est ? Math.min(Math.round((hrs / est) * 100), 100) : 0;
-        const over = est && hrs > est;
-        const estHtml = est
-          ? `
-    <div class="sub-hbar" title="${hrsDisplay(hrs)} de ${hrsDisplay(est)} estimadas"><div class="sub-hbar-f ${over ? "over" : ""}" style="width:${pct}%"></div></div>
-    <span class="sub-est ${over ? "over" : ""}">${hrsDisplay(hrs)}/${hrsDisplay(est)}</span>`
-          : `${hrs ? `<span class="hr-badge">${hrsDisplay(hrs)}</span>` : ""}`;
         return `<div class="si" id="si-${s.id}">
     <div class="ck ${s.done ? "done" : ""}" onclick="toggleSubDone('${s.id}')" title="${s.done ? "Marcar pendente" : "Marcar concluída"}"></div>
     <span class="stit ${s.done ? "done" : ""}" onclick="openSubtaskDetail('${s.id}')" style="cursor:pointer" title="Ver subtarefas da tarefa">${esc(s.title)}</span>
     ${renderTagBadges(s.tags)}
-    ${estHtml}
+    ${renderHoursBadge(s.id, "subtask")}
     <span class="slc">${logs.length} sub.</span>
     <button class="slb" onclick="openAddLogModal('${s.id}',null)">+ Reg.</button>
     <button class="bi" onclick="openSubtaskDetail('${s.id}')" title="Ver subtarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
@@ -4707,7 +5119,7 @@
           `
     <div class="ad-meta">
       <span class="ad-meta-item">📁 <strong>${cd ? cd.name : "—"}</strong> ${a.year || ""}</span>
-      <span class="ad-meta-item">⏱ <strong>${hrsDisplay(spent)}</strong> / ${hrsDisplay(a.estimatedHours || 0)} estimadas</span>
+      ${renderHoursBadge(a.id, "activity")}
       <span class="ad-meta-item">✅ <strong style="color:${pct >= 75 ? "var(--ok-t)" : pct >= 40 ? "var(--cy)" : "var(--wn)"}">${pct}%</strong> concluído</span>
       ${a.devopsLink ? renderDevopsLink(a, "ad") : ""}
     </div>
@@ -5018,16 +5430,83 @@
             `<option value="${cd.id}" ${S.filterCycleId === cd.id ? "selected" : ""}>${cd.name}</option>`,
         ).join("");
         const acts = getCycleActivities(S.filterCycleId, year);
+
+        // Totais do ciclo para linha de resumo
+        const cycTotalEst = acts.reduce(
+          (s, a) => s + (a.estimatedHours || 0),
+          0,
+        );
+        const cycTotalSpent = acts.reduce(
+          (s, a) => s + getActHoursSpent(a.id),
+          0,
+        );
+        const cycOver = acts.filter(
+          (a) => getHoursBudget(a.id, "activity").status === "over",
+        ).length;
+        const cycRisk = acts.filter(
+          (a) => getHoursBudget(a.id, "activity").status === "risk",
+        ).length;
+        const cycUnder = acts.filter(
+          (a) => getHoursBudget(a.id, "activity").status === "under",
+        ).length;
+
         const tableRows =
           acts
             .map((a) => {
               const pct = getActCompletion(a.id);
-              const spent = getActHoursSpent(a.id);
-              const est = a.estimatedHours || 0;
-              return `<tr><td>${esc(a.title)}</td><td>${hrsDisplay(spent)}</td><td>${hrsDisplay(est)}</td><td><div class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>${pct}%</div></td><td>${getActSubtasks(a.id).length}</td><td>${getActSubtasks(a.id).reduce((s, sub) => s + getSubLogs(sub.id).length, 0)}</td></tr>`;
+              const b = getHoursBudget(a.id, "activity");
+              const hrsColor = {
+                over: "var(--er-t)",
+                risk: "var(--wn)",
+                ok: "var(--ok-t)",
+                under: "var(--cy)",
+                noest: "var(--t3)",
+              }[b.status];
+              const hrsDiff =
+                b.status === "over"
+                  ? `<span style="color:var(--er-t);font-size:10px;display:block">+${hrsDisplay(b.excess)} ultrapassadas</span>`
+                  : b.status === "risk"
+                    ? `<span style="color:var(--wn);font-size:10px;display:block">${b.pct.toFixed(0)}% consumido</span>`
+                    : b.status === "under"
+                      ? `<span style="color:var(--cy);font-size:10px;display:block">-${hrsDisplay(b.saved)} abaixo</span>`
+                      : b.status === "ok" && b.pct >= 95
+                        ? `<span style="color:var(--ok-t);font-size:10px;display:block">Perfeitamente estimado</span>`
+                        : "";
+              return `<tr>
+      <td>${esc(a.title)}</td>
+      <td style="font-family:var(--mono);font-weight:600;color:${hrsColor}">
+        ${hrsDisplay(b.spent)}<span style="color:var(--t3);font-weight:400"> / ${hrsDisplay(b.est)}</span>
+        ${hrsDiff}
+      </td>
+      <td><div class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>${pct}%</div></td>
+      <td style="text-align:center">${getActSubtasks(a.id).length}</td>
+      <td style="text-align:center">${getActSubtasks(a.id).reduce((s, sub) => s + getSubLogs(sub.id).length, 0)}</td>
+      <td>${renderHoursBadge(a.id, "activity")}</td>
+    </tr>`;
             })
             .join("") ||
           `<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">Nenhuma demanda neste ciclo</td></tr>`;
+
+        // Linha de totais
+        const totalPct = cycTotalEst
+          ? Math.round((cycTotalSpent / cycTotalEst) * 100)
+          : 0;
+        const totalColor =
+          totalPct > 100
+            ? "var(--er-t)"
+            : totalPct >= 80
+              ? "var(--wn)"
+              : "var(--ok-t)";
+        const summaryRow = acts.length
+          ? `<tr style="border-top:2px solid rgba(255,255,255,.1);font-weight:600;background:rgba(255,255,255,.03)">
+    <td style="color:var(--t2)">Total do ciclo</td>
+    <td style="font-family:var(--mono);color:${totalColor}">${hrsDisplay(cycTotalSpent)}<span style="color:var(--t3);font-weight:400"> / ${hrsDisplay(cycTotalEst)}</span></td>
+    <td><div class="prog-cell"><div class="prog-bar"><div class="prog-fill" style="width:${Math.min(totalPct, 100)}%;background:${totalPct > 100 ? "var(--er)" : totalPct >= 80 ? "var(--wn)" : "var(--ok)"}"></div></div>${totalPct}%</div></td>
+    <td style="text-align:center;color:var(--t3)">${acts.reduce((s, a) => s + getActSubtasks(a.id).length, 0)}</td>
+    <td style="text-align:center;color:var(--t3)">${acts.reduce((s, a) => s + getActSubtasks(a.id).reduce((ss, sub) => ss + getSubLogs(sub.id).length, 0), 0)}</td>
+    <td style="font-size:11px;color:var(--t3)">${cycOver ? `<span style="color:var(--er-t)">⚠ ${cycOver} ultrapassada${cycOver !== 1 ? "s" : ""}</span> ` : ""}${cycRisk ? `<span style="color:var(--wn)">● ${cycRisk} em risco</span> ` : ""}${cycUnder ? `<span style="color:var(--cy)">✓ ${cycUnder} abaixo</span>` : ""}${!cycOver && !cycRisk ? '<span style="color:var(--ok-t)">Tudo no prazo</span>' : ""}</td>
+  </tr>`
+          : "";
         const days30 = [];
         for (let i = 29; i >= 0; i--) {
           const d = new Date();
@@ -5049,8 +5528,8 @@
       <div class="chc" style="grid-column:1/-1"><div class="cht">Horas por demanda — últimos 30 dias</div><div class="chw" style="height:200px"><canvas id="ch-stacked"></canvas></div></div>
     </div>
     <div class="rf"><div class="cht">Detalhamento por demanda</div>
-      <table class="rtbl"><thead><tr><th>Demanda</th><th>Gastas</th><th>Estimadas</th><th>Conclusão</th><th>Tarefas</th><th>Tarefas</th></tr></thead>
-      <tbody>${tableRows}</tbody></table>
+      <table class="rtbl"><thead><tr><th>Demanda</th><th>Horas (gastas / est.)</th><th>Conclusão</th><th style="text-align:center">Tarefas</th><th style="text-align:center">Regs.</th><th>Status horas</th></tr></thead>
+      <tbody>${tableRows}${summaryRow}</tbody></table>
     </div>`;
         setTimeout(() => {
           const tc = "#64748B";
@@ -5589,7 +6068,9 @@
           toast("Informe a descrição", "er");
           return;
         }
+        const prevSpent = getSubHoursSpent(subId);
         addLog({ subtaskId: subId, date, description: desc, hrs });
+        checkHoursBudgetAlert(subId, prevSpent);
         closeModal();
         toast("Subtarefa salva!", "ok");
         S.openDays.add("tl-" + date);
@@ -5621,7 +6102,12 @@
           toast("Preencha os campos obrigatórios", "er");
           return;
         }
+        const prevSpent = getSubHoursSpent(subId);
+        const oldLog = logById(id);
+        const prevHrs = oldLog?.hrs || 0;
         updLog(id, { subtaskId: subId, date, description: desc, hrs });
+        // prevSpent já inclui as horas antigas; recalcula base correta
+        checkHoursBudgetAlert(subId, prevSpent - prevHrs);
         closeModal();
         toast("Subtarefa atualizada!", "ok");
         renderView(S.currentView);
@@ -6719,7 +7205,7 @@
           const isSelected = dateStr === _calSelectedDate;
           const totalHrs = logs.reduce((s, l) => s + (l.hrs || 0), 0);
 
-          // Chips: mostra até 2 nomes de tarefas únicas
+          // Chips: mostra até 2 nomes de tarefas únicas dentro de .cal-chips
           const uniqueSubs = [
             ...new Set(
               logs
@@ -6735,19 +7221,15 @@
             .join("");
           const extra =
             uniqueSubs.length > 2
-              ? `<div class="cal-chip more">+${uniqueSubs.length - 2} mais</div>`
+              ? `<div class="cal-chip more">+${uniqueSubs.length - 2}</div>`
               : "";
-          const hrsBadge =
-            hasLogs && totalHrs
-              ? `<div class="cal-hrs-badge">${hrsDisplay(totalHrs)}</div>`
-              : "";
+          const hrsLabel = hasLogs && totalHrs ? hrsDisplay(totalHrs) : "";
 
           cells += `<div class="cal-cell ${isToday ? "today" : ""} ${hasLogs ? "has-logs" : ""} ${isSelected ? "selected" : ""}"
       onclick="calSelectDay('${dateStr}')"
       id="cal-cell-${dateStr}">
-      <div class="cal-day-num">${d}</div>
-      ${chips}${extra}
-      ${hrsBadge}
+      <div class="cal-day-num"><span>${d}</span>${hrsLabel ? `<span class="cal-day-hrs">${hrsLabel}</span>` : ""}</div>
+      <div class="cal-chips">${chips}${extra}</div>
     </div>`;
         }
 
