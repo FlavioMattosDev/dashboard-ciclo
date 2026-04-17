@@ -1680,9 +1680,6 @@
         box-shadow: 0 0 18px rgba(34, 211, 238, 0.07);
         transform: translateY(-1px);
       }
-      .kb-card:hover::before {
-        opacity: 1;
-      }
       .kb-card.dragging {
         opacity: 0.4;
         cursor: grabbing;
@@ -2198,7 +2195,7 @@
         color: var(--t3);
       }
 
-      /* ACTIVITY DETAIL MODAL */
+      /* ACTIVITY DETAIL MODAL - REFACTORED FOR BETTER UX */
       .ad-header {
         display: flex;
         align-items: flex-start;
@@ -2230,38 +2227,48 @@
         color: var(--t2);
         font-weight: 600;
       }
+
       .ad-sub-section {
-        margin-top: 16px;
+        margin-top: 24px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--rl);
+        padding: 16px;
       }
+
       .ad-sub-title {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--t3);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--cy);
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        margin-bottom: 10px;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
+
       .ad-sub-item {
         display: flex;
         align-items: center;
         gap: 9px;
-        padding: 8px 12px;
+        padding: 10px 14px;
         border-radius: var(--r);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        margin-bottom: 6px;
-        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 8px;
+        background: rgba(0, 0, 0, 0.3);
         cursor: pointer;
         transition: all 0.15s;
       }
       .ad-sub-item:hover {
-        background: rgba(34, 211, 238, 0.04);
-        border-color: rgba(34, 211, 238, 0.18);
+        background: rgba(34, 211, 238, 0.06);
+        border-color: rgba(34, 211, 238, 0.25);
       }
       .ad-sub-item .ck {
         flex-shrink: 0;
       }
       .ad-sub-name {
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 500;
         flex: 1;
       }
@@ -2269,23 +2276,24 @@
         text-decoration: line-through;
         color: var(--t3);
       }
+
       .ad-log-day {
-        margin-top: 10px;
+        margin-top: 14px;
       }
       .ad-log-date {
         font-size: 11px;
         font-weight: 600;
-        color: var(--cy);
+        color: var(--t2);
         padding: 6px 0 4px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
       .ad-log-entry {
-        padding: 8px 12px;
+        padding: 10px 14px;
         border-radius: var(--r);
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         position: relative;
         overflow: hidden;
       }
@@ -2295,15 +2303,15 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 2px;
+        width: 3px;
         background: linear-gradient(180deg, var(--cy), var(--vi2));
-        opacity: 0.5;
+        opacity: 0.8;
       }
       .ad-log-sub {
         font-size: 11px;
         font-weight: 600;
-        color: var(--t2);
-        margin-bottom: 3px;
+        color: var(--t);
+        margin-bottom: 4px;
       }
       .ad-log-desc {
         font-size: 12px;
@@ -2316,15 +2324,16 @@
         font-family: var(--mono);
         color: var(--cy);
         background: rgba(34, 211, 238, 0.1);
-        padding: 1px 7px;
+        padding: 2px 8px;
         border-radius: 4px;
-        border: 1px solid rgba(34, 211, 238, 0.18);
+        border: 1px solid rgba(34, 211, 238, 0.2);
       }
       .ad-empty {
         font-size: 12px;
         color: var(--t3);
-        padding: 10px 0;
+        padding: 12px 0;
         font-style: italic;
+        text-align: center;
       }
       /* Notes block in activity detail */
       .notes-block {
@@ -3063,6 +3072,19 @@
         border-color: rgba(239, 68, 68, 0.2);
         color: var(--er-t);
       }
+      /* Separadores com fundo destacado */
+      select.fin option[value=""]:disabled {
+        background: linear-gradient(
+          90deg,
+          rgba(34, 211, 238, 0.15),
+          rgba(124, 58, 237, 0.1)
+        ) !important;
+        color: #f0f6ff !important;
+        font-weight: 700;
+        font-style: normal;
+        font-size: 12px;
+        padding: 8px 14px;
+      }
     </style>
   </head>
   <body>
@@ -3074,7 +3096,6 @@
     <div id="noise"></div>
     <div id="grid"></div>
 
-    <!-- NAVBAR -->
     <nav id="navbar">
       <button
         class="nb-hamburger"
@@ -3128,7 +3149,7 @@
         <input
           id="gs"
           type="text"
-          placeholder="Buscar demandas, tarefas, registros… (Ctrl+K)"
+          placeholder="Buscar demandas, tarefas, apontamentos… (Ctrl+K)"
           autocomplete="off"
         />
         <div id="sr"></div>
@@ -3185,7 +3206,6 @@
       </div>
     </nav>
 
-    <!-- SHORTCUTS MODAL -->
     <div
       id="shortcuts-mo"
       onclick="if (event.target === this) closeShortcuts();"
@@ -3208,7 +3228,6 @@
           </button>
         </div>
         <div class="sc-body">
-          <!-- Coluna esquerda -->
           <div>
             <div class="sc-section">
               <div class="sc-section-title">Navegação</div>
@@ -3229,7 +3248,7 @@
                 ><span class="sc-keys"><kbd>4</kbd></span>
               </div>
               <div class="sc-row">
-                <span class="sc-desc">Subtarefas Diárias</span
+                <span class="sc-desc">Apontamentos</span
                 ><span class="sc-keys"><kbd>5</kbd></span>
               </div>
               <div class="sc-row">
@@ -3280,7 +3299,6 @@
             </div>
           </div>
 
-          <!-- Coluna direita -->
           <div>
             <div class="sc-section">
               <div class="sc-section-title">Criação rápida</div>
@@ -3289,7 +3307,7 @@
                 ><span class="sc-keys"><kbd>N</kbd></span>
               </div>
               <div class="sc-row">
-                <span class="sc-desc">Nova subtarefa diária</span
+                <span class="sc-desc">Novo apontamento</span
                 ><span class="sc-keys"><kbd>S</kbd></span>
               </div>
               <div class="sc-row">
@@ -3328,10 +3346,8 @@
       </div>
     </div>
 
-    <!-- SIDEBAR OVERLAY (mobile) -->
     <div id="sb-overlay" onclick="toggleMobileSidebar()"></div>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar">
       <div id="sb-badge" class="sb-badge" onclick="navigate('cycles')">
         <div class="sb-cn" id="sb-cn">—</div>
@@ -3421,7 +3437,7 @@
         >
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" /></svg
-        >Subtarefas Diárias
+        >Apontamentos
       </div>
       <div class="sb-item" data-view="reports" onclick="navigate('reports')">
         <svg
@@ -3529,7 +3545,6 @@
       <div id="view-vault" class="view"></div>
     </main>
 
-    <!-- MAIN MODAL -->
     <div id="mo" onclick="if (event.target === this) closeModal();">
       <div class="modal" id="modal-box">
         <div class="mh">
@@ -3553,7 +3568,6 @@
       </div>
     </div>
 
-    <!-- CONFIRM MODAL -->
     <div id="confirm-mo">
       <div class="confirm-box">
         <div class="confirm-title" id="cm-title">Confirmar ação</div>
@@ -3805,7 +3819,7 @@
         const bk = backups.find((b) => b.ts === ts);
         if (!bk) return;
         confirmAction(
-          `Restaurar backup de ${bk.label}? Os dados atuais serão substituídos por este snapshot (${bk.activities} demandas, ${bk.logs} tarefas).`,
+          `Restaurar backup de ${bk.label}? Os dados atuais serão substituídos por este snapshot (${bk.activities} demandas, ${bk.logs} registros).`,
           () => {
             try {
               const d = JSON.parse(bk.data);
@@ -3952,7 +3966,7 @@
           return `<span class="last-act none">sem tarefas</span>`;
         const actLogs = S.logs.filter((l) => subIds.includes(l.subtaskId));
         if (!actLogs.length)
-          return `<span class="last-act none" title="Nenhum registro encontrado">sem registro</span>`;
+          return `<span class="last-act none" title="Nenhum registro encontrado">sem apontamento</span>`;
         const lastDate = actLogs.reduce(
           (max, l) => (l.date > max ? l.date : max),
           "",
@@ -3983,7 +3997,7 @@
           label = `${diffDays}d atrás`;
           icon = "⚠";
         }
-        return `<span class="last-act ${cls}" title="Último registro: ${fmtDate(lastDate)}">${icon} ${label}</span>`;
+        return `<span class="last-act ${cls}" title="Último apontamento: ${fmtDate(lastDate)}">${icon} ${label}</span>`;
       }
       function renderTagBadges(tagIds = []) {
         return (tagIds || [])
@@ -4484,9 +4498,7 @@
         const realYear = nowBRT().getFullYear();
         const isCurrentCycle = cc.id === realCc.id && year === realYear;
 
-        // Subtarefas para exibir no dashboard:
-        // - Ciclo atual → últimos 7 dias
-        // - Outro ciclo → últimos N registros do ciclo (ordenados por data decrescente)
+        // Apontamentos para exibir no dashboard:
         let displayLogs, sectionTitle;
         if (isCurrentCycle) {
           const since = nowBRT();
@@ -4495,13 +4507,13 @@
           displayLogs = cycleLogs
             .filter((l) => l.date >= sinceStr)
             .sort((a, b) => b.date.localeCompare(a.date));
-          sectionTitle = "Subtarefas recentes — últimos 7 dias";
+          sectionTitle = "Apontamentos recentes — últimos 7 dias";
         } else {
           displayLogs = cycleLogs
             .slice()
             .sort((a, b) => b.date.localeCompare(a.date))
             .slice(0, 50);
-          sectionTitle = "Últimas subtarefas do ciclo";
+          sectionTitle = "Últimos apontamentos do ciclo";
         }
         const byDate = {};
         displayLogs.forEach((l) => {
@@ -4547,18 +4559,18 @@
                   return `<div class="tli"><div class="tlh"><span class="tlsub">${esc(sub?.title || "—")}</span><span class="tlact">/ ${esc(act?.title || "—")}</span>${l.hrs ? `<span class="hr-badge" style="margin-left:auto">${hrsDisplay(l.hrs)}</span>` : ""}</div><div class="tlt">${esc(l.description)}</div></div>`;
                 })
                 .join("");
-              return `<div class="td ${isOpen ? "open" : ""}" id="dd-${date}"><div class="tdh" onclick="toggleDay('dash-${date}','dd-${date}')"><div class="tdate ${date === todayStr() ? "tod" : ""}">${fmtDate(date)}</div><div class="tmeta">${subs} subtarefa${subs !== 1 ? "s" : ""} · ${hrsDisplay(totalHrs)}</div><svg class="tex" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>${isOpen ? `<div class="tdc">${logsHtml}</div>` : ""}</div>`;
+              return `<div class="td ${isOpen ? "open" : ""}" id="dd-${date}"><div class="tdh" onclick="toggleDay('dash-${date}','dd-${date}')"><div class="tdate ${date === todayStr() ? "tod" : ""}">${fmtDate(date)}</div><div class="tmeta">${subs} tarefa${subs !== 1 ? "s" : ""} · ${hrsDisplay(totalHrs)}</div><svg class="tex" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>${isOpen ? `<div class="tdc">${logsHtml}</div>` : ""}</div>`;
             })
             .join("") ||
-          `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhuma tarefa neste ciclo</h3><p>${isCurrentCycle ? "Registre seu progresso diário nas demandas" : "Nenhuma tarefa encontrada para este ciclo"}</p></div>`;
+          `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhum apontamento neste ciclo</h3><p>${isCurrentCycle ? "Registre seu tempo diário nas tarefas" : "Nenhum apontamento encontrado para este ciclo"}</p></div>`;
         document.getElementById("view-dashboard").innerHTML = `
     <div class="ph"><div><div class="pt">Dashboard</div><div class="ps">${cc.name} — ${cc.label} ${year}</div></div>
-      <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar hoje</button></div>
+      <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo Apontamento</button></div>
     <div class="mg">
       <div class="mc"><div class="ml">Horas gastas</div><div class="mv ac">${hrsDisplay(totalSpent)}</div><div class="ms">de ${hrsDisplay(totalEst)} estimadas</div></div>
       <div class="mc"><div class="ml">Conclusão média</div><div class="mv ${avgComp >= 75 ? "ok" : avgComp >= 40 ? "ac" : "wn"}">${avgComp}%</div><div class="ms">${acts.length} demanda${acts.length !== 1 ? "s" : ""} no ciclo</div></div>
-      <div class="mc"><div class="ml">Em andamento</div><div class="mv">${active}</div><div class="ms">atividade${active !== 1 ? "s" : ""} abertas</div></div>
-      <div class="mc"><div class="ml">${isCurrentCycle ? "Subtarefas hoje" : "Total de subtarefas"}</div><div class="mv">${isCurrentCycle ? todayLogsCount : cycleLogs.length}</div><div class="ms">${isCurrentCycle ? hrsDisplay(todayHrs) + " registradas" : hrsDisplay(cycleLogs.reduce((s, l) => s + (l.hrs || 0), 0)) + " no total"}</div></div>
+      <div class="mc"><div class="ml">Em andamento</div><div class="mv">${active}</div><div class="ms">demanda${active !== 1 ? "s" : ""} abertas</div></div>
+      <div class="mc"><div class="ml">${isCurrentCycle ? "Apontamentos hoje" : "Total de apontamentos"}</div><div class="mv">${isCurrentCycle ? todayLogsCount : cycleLogs.length}</div><div class="ms">${isCurrentCycle ? hrsDisplay(todayHrs) + " registradas" : hrsDisplay(cycleLogs.reduce((s, l) => s + (l.hrs || 0), 0)) + " no total"}</div></div>
     </div>
     <div class="sec"><div class="sh"><span class="st">Progresso das demandas</span><button class="sa" onclick="navigate('activities')">Ver todas →</button></div>${progRows}</div>
     ${renderBudgetAlertPanel(acts)}
@@ -4953,7 +4965,7 @@
       ${sortBtn("conclusao", "Conclusão")}
       ${sortBtn("horas_gast", "H. gastas")}
       ${sortBtn("horas_rest", "H. restantes")}
-      ${sortBtn("ultima_ativ", "Últ. subtarefa")}
+      ${sortBtn("ultima_ativ", "Últ. apontamento")}
     </div>
     <div id="acts-list">${rows}</div>`;
       }
@@ -5008,12 +5020,12 @@
         const logs = getSubLogs(s.id);
         return `<div class="si" id="si-${s.id}">
     <div class="ck ${s.done ? "done" : ""}" onclick="toggleSubDone('${s.id}')" title="${s.done ? "Marcar pendente" : "Marcar concluída"}"></div>
-    <span class="stit ${s.done ? "done" : ""}" onclick="openSubtaskDetail('${s.id}')" style="cursor:pointer" title="Ver subtarefas da tarefa">${esc(s.title)}</span>
+    <span class="stit ${s.done ? "done" : ""}" onclick="openSubtaskDetail('${s.id}')" style="cursor:pointer" title="Ver apontamentos da tarefa">${esc(s.title)}</span>
     ${renderTagBadges(s.tags)}
     ${renderHoursBadge(s.id, "subtask")}
-    <span class="slc">${logs.length} sub.</span>
-    <button class="slb" onclick="openAddLogModal('${s.id}',null)">+ Reg.</button>
-    <button class="bi" onclick="openSubtaskDetail('${s.id}')" title="Ver subtarefas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
+    <span class="slc">${logs.length} reg.</span>
+    <button class="slb" onclick="openAddLogModal('${s.id}',null)">+ Apontar</button>
+    <button class="bi" onclick="openSubtaskDetail('${s.id}')" title="Ver detalhes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
     <button class="bi" onclick="openEditSubtaskModal('${s.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
     <button class="bi er" onclick="confirmDeleteSubtask('${s.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
   </div>`;
@@ -5084,7 +5096,7 @@
       <span class="ad-sub-name ${s.done ? "done" : ""}">${esc(s.title)}</span>
       ${renderTagBadges(s.tags)}
       ${sest ? `<span class="sub-est ${sover ? "over" : ""}" style="margin-left:auto">${hrsDisplay(shrs)}/${hrsDisplay(sest)}</span>` : `${shrs ? `<span class="hr-badge" style="margin-left:auto">${hrsDisplay(shrs)}</span>` : ""}`}
-      <span style="font-size:11px;color:var(--t3)">${slogs.length} sub.</span>
+      <span style="font-size:11px;color:var(--t3)">${slogs.length} reg.</span>
     </div>`;
             })
             .join("") ||
@@ -5112,7 +5124,7 @@
               return `<div class="ad-log-day"><div class="ad-log-date">${fmtDate(date)} — ${hrsDisplay(dayHrs)}</div>${entries}</div>`;
             })
             .join("") ||
-          '<div class="ad-empty">Nenhuma subtarefa encontrada.</div>';
+          '<div class="ad-empty">Nenhum apontamento encontrado nesta demanda.</div>';
         document.getElementById("modal-box").classList.add("wide");
         openModal(
           `${esc(a.title)}`,
@@ -5127,7 +5139,7 @@
     <div class="apb" style="width:100%;margin:12px 0 16px;height:6px"><div class="apf ${pctClass(pct)}" style="width:${pct}%"></div></div>
     ${
       a.notes
-        ? `<div class="ad-sub-section" style="margin-bottom:16px">
+        ? `<div class="ad-sub-section" style="margin-bottom:16px; padding: 0; background: none; border: none;">
       <div class="ad-sub-title" style="display:flex;align-items:center;gap:7px">
         <span>Notas</span>
         <button class="bi" onclick="openEditActivityModal('${id}')" title="Editar notas" style="width:22px;height:22px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
@@ -5137,15 +5149,18 @@
         : ""
     }
     <div class="ad-sub-section">
-      <div class="ad-sub-title">Tarefas (${subs.length}) — clique para registrar</div>
+      <div class="ad-sub-title">📌 Tarefas da Demanda (${subs.length})</div>
+      <div style="font-size: 12px; color: var(--t3); margin-bottom: 12px;">Planeje o que precisa ser feito. Clique na tarefa para registrar suas horas nela.</div>
       ${subsHtml}
+      <button class="btn bs" style="margin-top:8px; width: 100%; justify-content: center;" onclick="closeModal();openAddSubtaskModal('${id}')">+ Nova Tarefa</button>
     </div>
-    <div class="ad-sub-section" style="margin-top:20px">
-      <div class="ad-sub-title">Histórico completo (${totalLogs} subtarefas)</div>
+    <div class="ad-sub-section">
+      <div class="ad-sub-title">⏱ Histórico de Apontamentos (${totalLogs})</div>
+      <div style="font-size: 12px; color: var(--t3); margin-bottom: 12px;">Todos os registros de horas e diários de bordo desta demanda.</div>
       ${logsHtml}
     </div>`,
           `<button class="btn bs" onclick="openEditActivityModal('${id}')">Editar demanda</button>
-     <button class="btn bp" onclick="closeModal();openAddLogModal(null,null,'${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo registro</button>`,
+     <button class="btn bp" onclick="closeModal();openAddLogModal(null,null,'${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo Apontamento</button>`,
         );
       }
       function toggleSubDoneDetail(subId, actId) {
@@ -5218,20 +5233,20 @@
     </div>`;
             })
             .join("") ||
-          '<div class="ad-empty">Nenhuma subtarefa registrada nesta tarefa ainda.</div>';
+          '<div class="ad-empty">Nenhum apontamento registrado nesta tarefa ainda.</div>';
 
         document.getElementById("modal-box").classList.add("wide");
         openModal(
           esc(s.title),
           `
     <div class="ad-meta">
-      <span class="ad-meta-item" style="color:var(--t3)">Tarefa de:</span>
+      <span class="ad-meta-item" style="color:var(--t3)">Tarefa da Demanda:</span>
       <span class="ad-meta-item" style="cursor:pointer;color:var(--cy)" onclick="closeModal();openActivityDetail('${act?.id || ""}')">
         <strong>${esc(act?.title || "—")}</strong>
       </span>
     </div>
     <div class="ad-meta" style="margin-top:8px">
-      <span class="ad-meta-item">📋 <strong>${totalLogs}</strong> tarefa${totalLogs !== 1 ? "s" : ""} registrada${totalLogs !== 1 ? "s" : ""}</span>
+      <span class="ad-meta-item">📋 <strong>${totalLogs}</strong> apontamento${totalLogs !== 1 ? "s" : ""}</span>
       <span class="ad-meta-item">⏱ <strong style="color:${est && totalHrs > est ? "var(--er-t)" : "var(--cy)"}">${hrsDisplay(totalHrs)}</strong>${est ? ` / ${hrsDisplay(est)} estimadas` : " no total"}</span>
       ${est ? `<span class="ad-meta-item" style="color:${totalHrs > est ? "var(--er-t)" : "var(--t3)"}">${totalHrs > est ? `+${hrsDisplay(+(totalHrs - est).toFixed(1))} acima` : `${hrsDisplay(+(est - totalHrs).toFixed(1))} restantes`}</span>` : ""}
       <span class="ad-meta-item">📅 <strong>${daysWorked}</strong> dia${daysWorked !== 1 ? "s" : ""} trabalhado${daysWorked !== 1 ? "s" : ""}</span>
@@ -5256,14 +5271,15 @@
       <div class="ck ${s.done ? "done" : ""}" onclick="toggleSubDoneAndRefresh('${id}')" title="${s.done ? "Marcar como pendente" : "Marcar como concluída"}" style="cursor:pointer"></div>
       <span style="font-size:13px;font-weight:500;color:${s.done ? "var(--ok-t)" : "var(--t2)"}">${s.done ? "Tarefa concluída" : "Tarefa em andamento"}</span>
     </div>
-    <div class="ad-sub-section" style="margin-top:20px">
-      <div class="ad-sub-title">Histórico de subtarefas (${totalLogs})</div>
+    <div class="ad-sub-section">
+      <div class="ad-sub-title">⏱ Apontamentos de Tempo (${totalLogs})</div>
+      <div style="font-size: 12px; color: var(--t3); margin-bottom: 12px;">Detalhes do que foi feito nesta tarefa específica.</div>
       ${logsHtml}
     </div>`,
           `<button class="btn bs" onclick="openEditSubtaskModal('${id}')">Editar tarefa</button>
      <button class="btn bp" onclick="closeModal();openAddLogModal('${id}',null)">
        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-       Nova subtarefa
+       Novo Apontamento
      </button>`,
         );
       }
@@ -5380,21 +5396,21 @@
       </div>`;
                 })
                 .join("");
-              return `<div class="td ${isOpen ? "open" : ""}" id="tl-day-${date}"><div class="tdh" onclick="toggleDay('tl-${date}','tl-day-${date}')"><div class="tdate ${date === todayStr() ? "tod" : ""}">${fmtDate(date)}</div><div class="tmeta">${uniqueSubs} tar${uniqueSubs !== 1 ? "s" : ""}${totalHrs ? ` · ${hrsDisplay(totalHrs)}` : ""}</div>
-      <button class="day-quick" onclick="event.stopPropagation();openAddLogModal(null,'${date}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar</button>
+              return `<div class="td ${isOpen ? "open" : ""}" id="tl-day-${date}"><div class="tdh" onclick="toggleDay('tl-${date}','tl-day-${date}')"><div class="tdate ${date === todayStr() ? "tod" : ""}">${fmtDate(date)}</div><div class="tmeta">${uniqueSubs} tarefa${uniqueSubs !== 1 ? "s" : ""}${totalHrs ? ` · ${hrsDisplay(totalHrs)}` : ""}</div>
+      <button class="day-quick" onclick="event.stopPropagation();openAddLogModal(null,'${date}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo Apontamento</button>
       <svg class="tex" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>${isOpen ? `<div class="tdc">${logsHtml}</div>` : ""}</div>`;
             })
             .join("") ||
-          `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhuma tarefa encontrada</h3><p>Ajuste os filtros ou registre suas demandas</p></div>`;
+          `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><h3>Nenhum apontamento encontrado</h3><p>Ajuste os filtros ou registre seu tempo nas tarefas</p></div>`;
         document.getElementById("view-timeline").innerHTML = `
-    <div class="ph"><div><div class="pt">Subtarefas Diárias</div><div class="ps">${dates.length} dia${dates.length !== 1 ? "s" : ""} com tarefas</div></div>
-      <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Registrar hoje</button></div>
+    <div class="ph"><div><div class="pt">Apontamentos de Tempo</div><div class="ps">${dates.length} dia${dates.length !== 1 ? "s" : ""} com registros</div></div>
+      <button class="btn bp" onclick="openAddLogModal(null,null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo Apontamento</button></div>
     <div class="fb">
       <span class="fl">Filtros</span>
       <select class="fs" onchange="S.filterCycleId=this.value;S.filterActivityId='';S.filterSubtaskId='';renderTimeline()"><option value="">Todos os ciclos</option>${cycleOpts}</select>
       <select class="fs" onchange="S.filterActivityId=this.value;S.filterSubtaskId='';renderTimeline()" style="max-width:190px"><option value="">Todas as demandas</option>${actOpts}</select>
-      ${selAct ? `<select class="fs" onchange="S.filterSubtaskId=this.value;renderTimeline()" style="max-width:190px"><option value="">Todas as subtarefas</option>${subOpts}</select>` : ""}
+      ${selAct ? `<select class="fs" onchange="S.filterSubtaskId=this.value;renderTimeline()" style="max-width:190px"><option value="">Todas as tarefas</option>${subOpts}</select>` : ""}
       <input class="fi" type="date" value="${S.filterDateFrom || ""}" onchange="S.filterDateFrom=this.value;renderTimeline()">
       <input class="fi" type="date" value="${S.filterDateTo || ""}" onchange="S.filterDateTo=this.value;renderTimeline()">
       <select class="fs" style="width:80px" onchange="S.filterYear=this.value;renderTimeline()">${[year - 1, year, year + 1].map((y) => `<option value="${y}" ${y === year ? "selected" : ""}>${y}</option>`).join("")}</select>
@@ -5528,7 +5544,7 @@
       <div class="chc" style="grid-column:1/-1"><div class="cht">Horas por demanda — últimos 30 dias</div><div class="chw" style="height:200px"><canvas id="ch-stacked"></canvas></div></div>
     </div>
     <div class="rf"><div class="cht">Detalhamento por demanda</div>
-      <table class="rtbl"><thead><tr><th>Demanda</th><th>Horas (gastas / est.)</th><th>Conclusão</th><th style="text-align:center">Tarefas</th><th style="text-align:center">Regs.</th><th>Status horas</th></tr></thead>
+      <table class="rtbl"><thead><tr><th>Demanda</th><th>Horas (gastas / est.)</th><th>Conclusão</th><th style="text-align:center">Tarefas</th><th style="text-align:center">Apontamentos</th><th>Status horas</th></tr></thead>
       <tbody>${tableRows}${summaryRow}</tbody></table>
     </div>`;
         setTimeout(() => {
@@ -5793,7 +5809,7 @@
         document.getElementById("modal-box").classList.remove("wide");
         openModal(
           "Nova Demanda",
-          `<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" placeholder="Ex: Implantação de microserviços B2B" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" max="9999" placeholder="Ex: 80"></div><div class="frow"><div class="fg" style="flex:2"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" placeholder="https://dev.azure.com/… ou #289712"></div><div class="fg"><label class="fl2">Nome de exibição</label><input class="fin" id="m-devops-name" placeholder="Ex: AB#289712"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px"></textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
+          `<div class="fg"><label class="fl2">Título da Demanda *</label><input class="fin" id="m-title" placeholder="Ex: Implantação de microserviços B2B" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="fg"><label class="fl2">Horas estimadas (Total) *</label><input class="fin" id="m-hrs" type="number" min="1" max="9999" placeholder="Ex: 80"></div><div class="frow"><div class="fg" style="flex:2"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" placeholder="https://dev.azure.com/… ou #289712"></div><div class="fg"><label class="fl2">Nome de exibição</label><input class="fin" id="m-devops-name" placeholder="Ex: AB#289712"></div></div><div class="fg"><label class="fl2">Notas / Contexto</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px"></textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
           `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddActivity()">Criar demanda</button>`,
         );
       }
@@ -5849,7 +5865,7 @@
         document.getElementById("modal-box").classList.remove("wide");
         openModal(
           "Editar Demanda",
-          `<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-title" value="${esc(a.title)}" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="fg"><label class="fl2">Horas estimadas *</label><input class="fin" id="m-hrs" type="number" min="1" value="${a.estimatedHours || 0}"></div><div class="frow"><div class="fg" style="flex:2"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" value="${esc(a.devopsLink || "")}" placeholder="https://dev.azure.com/… ou #289712"></div><div class="fg"><label class="fl2">Nome de exibição</label><input class="fin" id="m-devops-name" value="${esc(a.devopsLinkName || "")}" placeholder="Ex: AB#289712"></div></div><div class="fg"><label class="fl2">Notas</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px">${esc(a.notes || "")}</textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(a.tags || [])}</div>`,
+          `<div class="fg"><label class="fl2">Título da Demanda *</label><input class="fin" id="m-title" value="${esc(a.title)}" autofocus></div><div class="frow"><div class="fg"><label class="fl2">Ciclo *</label><select class="fin" id="m-cycle">${cycleOpts}</select></div><div class="fg"><label class="fl2">Ano</label><select class="fin" id="m-year">${yearOpts}</select></div></div><div class="fg"><label class="fl2">Horas estimadas (Total) *</label><input class="fin" id="m-hrs" type="number" min="1" value="${a.estimatedHours || 0}"></div><div class="frow"><div class="fg" style="flex:2"><label class="fl2">Link DevOps</label><input class="fin" id="m-devops" value="${esc(a.devopsLink || "")}" placeholder="https://dev.azure.com/… ou #289712"></div><div class="fg"><label class="fl2">Nome de exibição</label><input class="fin" id="m-devops-name" value="${esc(a.devopsLinkName || "")}" placeholder="Ex: AB#289712"></div></div><div class="fg"><label class="fl2">Notas / Contexto</label><textarea class="fin" id="m-notes" rows="3" placeholder="Contexto, links importantes, decisões técnicas, pessoas envolvidas…" style="font-size:12px">${esc(a.notes || "")}</textarea></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(a.tags || [])}</div>`,
           `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditActivity('${id}')">Salvar</button>`,
         );
       }
@@ -5890,7 +5906,7 @@
         const a = actById(id);
         if (!a) return;
         confirmAction(
-          `Excluir "${a.title}" e todas as suas tarefas e subtarefas? Esta ação não pode ser desfeita.`,
+          `Excluir demanda "${a.title}" e todas as suas tarefas e apontamentos? Esta ação não pode ser desfeita.`,
           () => {
             delActivity(id);
             toast("Demanda excluída");
@@ -5900,7 +5916,7 @@
         );
       }
 
-      // ── MODAL SUBTASK ──
+      // ── MODAL SUBTASK (Agora "Tarefa") ──
       function openAddSubtaskModal(activityId) {
         document.getElementById("modal-box").classList.remove("wide");
         const actOpts = S.activities
@@ -5911,7 +5927,7 @@
           .join("");
         openModal(
           "Nova Tarefa",
-          `<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" placeholder="Ex: Desenvolvimento do argoCD" autofocus oninput="suggestAct(this.value)"><div class="sug" id="m-sug">💡 Sugestão: <strong id="m-sug-name"></strong> — <a href="#" onclick="event.preventDefault();acceptSug()">usar esta atividade</a></div></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
+          `<div class="fg"><label class="fl2">O que precisa ser feito? *</label><input class="fin" id="m-stitle" placeholder="Ex: Desenvolver endpoint de login" autofocus oninput="suggestAct(this.value)"><div class="sug" id="m-sug">💡 Sugestão: <strong id="m-sug-name"></strong> — <a href="#" onclick="event.preventDefault();acceptSug()">usar esta demanda</a></div></div><div class="fg"><label class="fl2">Pertence a qual demanda? *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas para esta tarefa</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml()}</div>`,
           `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddSubtask()">Criar tarefa</button>`,
         );
       }
@@ -5939,11 +5955,11 @@
         const title = document.getElementById("m-stitle")?.value.trim();
         const actId = document.getElementById("m-act")?.value;
         if (!title) {
-          toast("Informe o título", "er");
+          toast("Informe o título da tarefa", "er");
           return;
         }
         if (!actId) {
-          toast("Selecione a atividade", "er");
+          toast("Selecione a demanda", "er");
           return;
         }
         const estimatedHours =
@@ -5968,7 +5984,7 @@
           .join("");
         openModal(
           "Editar Tarefa",
-          `<div class="fg"><label class="fl2">Título *</label><input class="fin" id="m-stitle" value="${esc(s.title)}" autofocus></div><div class="fg"><label class="fl2">Demanda *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" value="${s.estimatedHours || ""}" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(s.tags || [])}</div>`,
+          `<div class="fg"><label class="fl2">O que precisa ser feito? *</label><input class="fin" id="m-stitle" value="${esc(s.title)}" autofocus></div><div class="fg"><label class="fl2">Pertence a qual demanda? *</label><select class="fin" id="m-act">${actOpts}</select></div><div class="fg"><label class="fl2">Horas estimadas para esta tarefa</label><input class="fin" id="m-shrs" type="number" min="0" step="0.5" value="${s.estimatedHours || ""}" placeholder="Ex: 8 (opcional)"></div><div class="fg"><label class="fl2">Tags</label>${tagSelHtml(s.tags || [])}</div>`,
           `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditSubtask('${id}')">Salvar</button>`,
         );
       }
@@ -5976,7 +5992,7 @@
         const title = document.getElementById("m-stitle")?.value.trim();
         const actId = document.getElementById("m-act")?.value;
         if (!title) {
-          toast("Informe o título", "er");
+          toast("Informe o título da tarefa", "er");
           return;
         }
         const estimatedHours =
@@ -5984,18 +6000,18 @@
         const tags = getSelectedTags(".mb");
         updSubtask(id, { title, activityId: actId, estimatedHours, tags });
         closeModal();
-        toast("Subtarefa atualizada!", "ok");
+        toast("Tarefa atualizada!", "ok");
         renderView(S.currentView);
       }
       function confirmDeleteSubtask(id) {
         const s = subById(id);
         if (!s) return;
         confirmAction(
-          `Excluir tarefa "${s.title}" e todas as suas subtarefas?`,
+          `Excluir tarefa "${s.title}" e todos os seus apontamentos de tempo?`,
           () => {
             const actId = s.activityId;
             delSubtask(id);
-            toast("Subtarefa excluída");
+            toast("Tarefa excluída");
             S.openActivities.add(actId);
             renderView(S.currentView);
             updateSidebar();
@@ -6003,7 +6019,7 @@
         );
       }
 
-      // ── MODAL LOG ──
+      // ── MODAL LOG (Agora "Apontamento") ──
       // Filter subtasks to active cycle's activities (sidebar badge cycle)
       function getSubOptsForCurrentCycle(selectedSubId) {
         const ac = getActiveCycle();
@@ -6016,12 +6032,42 @@
         // Exclui tarefas concluídas, exceto a atualmente selecionada (para não quebrar edições)
         subs = subs.filter((s) => !s.done || s.id === selectedSubId);
         if (!subs.length) return "";
-        return subs
-          .map((s) => {
-            const a = actById(s.activityId);
-            return `<option value="${s.id}" ${s.id === selectedSubId ? "selected" : ""}>${esc(a?.title || "?")} — ${esc(s.title)}</option>`;
-          })
-          .join("");
+
+        // ── AGRUPAMENTO POR DEMANDA COM SEPARADORES VISUAIS ──
+        // 1. Agrupar subtasks por activityId
+        const grouped = {};
+        subs.forEach((s) => {
+          const actId = s.activityId || "none";
+          if (!grouped[actId]) grouped[actId] = [];
+          grouped[actId].push(s);
+        });
+
+        // 2. Obter informações das demandas e ordenar alfabeticamente
+        const activityIds = Object.keys(grouped).sort((a, b) => {
+          const actA = actById(a);
+          const actB = actById(b);
+          return (actA?.title || "").localeCompare(actB?.title || "", "pt-BR");
+        });
+
+        // 3. Construir options com separadores visuais
+        let optionsHtml = "";
+        activityIds.forEach((actId) => {
+          const act = actById(actId);
+          const actTitle = act?.title || "Sem demanda";
+          const tasks = grouped[actId].sort((a, b) =>
+            a.title.localeCompare(b.title, "pt-BR"),
+          );
+
+          // Adicionar separador visual (disabled option como "header")
+          optionsHtml += `<option value="" disabled>━━━ ${esc(actTitle)} ━━━</option>`;
+
+          // Adicionar tarefas desta demanda
+          tasks.forEach((s) => {
+            optionsHtml += `<option value="${s.id}" ${s.id === selectedSubId ? "selected" : ""} style="padding-left:16px">${esc(s.title)}</option>`;
+          });
+        });
+
+        return optionsHtml;
       }
       function openAddLogModal(subtaskId, date, activityIdHint) {
         document.getElementById("modal-box").classList.remove("wide");
@@ -6040,15 +6086,16 @@
                   `<option value="${s.id}" ${s.id === subtaskId ? "selected" : ""}>${esc(a?.title || "?")} — ${esc(s.title)}</option>`,
               )
               .join("") ||
-            '<option value="">Todas as subtarefas estão concluídas</option>';
+            '<option value="">Todas as tarefas desta demanda estão concluídas</option>';
         } else
           subOpts =
             getSubOptsForCurrentCycle(subtaskId) ||
-            '<option value="">Crie subtarefas primeiro</option>';
+            '<option value="">Crie tarefas primeiro (na aba Demandas)</option>';
+
         openModal(
-          "Nova Subtarefa Diária",
-          `<div class="fg"><label class="fl2">Tarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${date || today}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" placeholder="Ex: 2.5"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" placeholder="Descreva o que foi feito…" autofocus></textarea></div>`,
-          `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddLog()">Salvar subtarefa</button>`,
+          "Novo Apontamento (Registro Diário)",
+          `<div class="fg"><label class="fl2">Em qual Tarefa você trabalhou? *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${date || today}"></div><div class="fg"><label class="fl2">Tempo gasto (Horas)</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" placeholder="Ex: 2.5"></div></div><div class="fg"><label class="fl2">Diário de bordo / O que foi feito? *</label><textarea class="fin" id="m-desc" rows="4" placeholder="Descreva brevemente o que você executou hoje nesta tarefa..." autofocus></textarea></div>`,
+          `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveAddLog()">Salvar Apontamento</button>`,
         );
       }
       function saveAddLog() {
@@ -6057,7 +6104,7 @@
         const desc = document.getElementById("m-desc")?.value.trim();
         const hrs = parseFloat(document.getElementById("m-lhrs")?.value) || 0;
         if (!subId) {
-          toast("Selecione a subtarefa", "er");
+          toast("Selecione a tarefa", "er");
           return;
         }
         if (!date) {
@@ -6065,14 +6112,14 @@
           return;
         }
         if (!desc) {
-          toast("Informe a descrição", "er");
+          toast("Descreva o que foi feito", "er");
           return;
         }
         const prevSpent = getSubHoursSpent(subId);
         addLog({ subtaskId: subId, date, description: desc, hrs });
         checkHoursBudgetAlert(subId, prevSpent);
         closeModal();
-        toast("Subtarefa salva!", "ok");
+        toast("Apontamento salvo!", "ok");
         S.openDays.add("tl-" + date);
         renderView(S.currentView);
         updateSidebar();
@@ -6081,15 +6128,18 @@
         document.getElementById("modal-box").classList.remove("wide");
         const l = logById(id);
         if (!l) return;
-        const subOpts = S.subtasks
-          .map((s) => {
-            const a = actById(s.activityId);
-            return `<option value="${s.id}" ${s.id === l.subtaskId ? "selected" : ""}>${esc(a?.title || "?")} — ${esc(s.title)}</option>`;
-          })
-          .join("");
+        // Reusar a função de agrupamento para manter consistência visual
+        const subOpts =
+          getSubOptsForCurrentCycle(l.subtaskId) ||
+          S.subtasks
+            .map((s) => {
+              const a = actById(s.activityId);
+              return `<option value="${s.id}" ${s.id === l.subtaskId ? "selected" : ""}>${esc(a?.title || "?")} — ${esc(s.title)}</option>`;
+            })
+            .join("");
         openModal(
-          "Editar Subtarefa",
-          `<div class="fg"><label class="fl2">Tarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${l.date}"></div><div class="fg"><label class="fl2">Horas gastas</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" value="${l.hrs || ""}"></div></div><div class="fg"><label class="fl2">Descrição *</label><textarea class="fin" id="m-desc" rows="4" autofocus>${esc(l.description)}</textarea></div>`,
+          "Editar Apontamento",
+          `<div class="fg"><label class="fl2">Tarefa *</label><select class="fin" id="m-sub">${subOpts}</select></div><div class="frow"><div class="fg"><label class="fl2">Data *</label><input class="fin" id="m-date" type="date" value="${l.date}"></div><div class="fg"><label class="fl2">Tempo gasto (Horas)</label><input class="fin" id="m-lhrs" type="number" min="0" max="24" step="0.25" value="${l.hrs || ""}"></div></div><div class="fg"><label class="fl2">Diário de bordo *</label><textarea class="fin" id="m-desc" rows="4" autofocus>${esc(l.description)}</textarea></div>`,
           `<button class="btn bs" onclick="closeModal()">Cancelar</button><button class="btn bp" onclick="saveEditLog('${id}')">Salvar</button>`,
         );
       }
@@ -6109,7 +6159,7 @@
         // prevSpent já inclui as horas antigas; recalcula base correta
         checkHoursBudgetAlert(subId, prevSpent - prevHrs);
         closeModal();
-        toast("Subtarefa atualizada!", "ok");
+        toast("Apontamento atualizado!", "ok");
         renderView(S.currentView);
         updateSidebar();
       }
@@ -6117,10 +6167,10 @@
         const l = logById(id);
         if (!l) return;
         confirmAction(
-          "Excluir esta subtarefa? Esta ação não pode ser desfeita.",
+          "Excluir este apontamento de horas? Esta ação não pode ser desfeita.",
           () => {
             delLog(id);
-            toast("Subtarefa excluída");
+            toast("Apontamento excluído");
             renderView(S.currentView);
             updateSidebar();
           },
@@ -6215,7 +6265,7 @@
     <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);margin-bottom:6px">
       <div style="flex:1">
         <div style="font-size:12px;font-weight:500;color:var(--t)">${b.label}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:2px">${b.activities} demandas · ${b.subtasks} tarefas · ${b.logs} tarefas</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">${b.activities} demandas · ${b.subtasks} tarefas · ${b.logs} apontamentos</div>
       </div>
       <button class="btn bs" style="padding:4px 10px;font-size:11px" onclick="restoreBackup(${b.ts})">Restaurar</button>
     </div>`,
@@ -6231,7 +6281,7 @@
         <button class="btn bp" onclick="exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar JSON completo</button>
         <button class="btn bs" onclick="exportCSV('activities')">Exportar Demandas (CSV)</button>
         <button class="btn bs" onclick="exportCSV('subtasks')">Exportar Tarefas (CSV)</button>
-        <button class="btn bs" onclick="exportCSV('logs')">Exportar Registros Diários (CSV)</button>
+        <button class="btn bs" onclick="exportCSV('logs')">Exportar Apontamentos (CSV)</button>
       </div>
       <p style="font-size:11px;color:var(--t3);margin-top:10px;padding:8px 10px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:var(--r)">⚠️ O <strong style="color:var(--wn)">Cofre de credenciais</strong> não é incluído no backup — ele usa criptografia própria e deve ser gerenciado separadamente.</p>
       </div>
@@ -6278,14 +6328,14 @@
           });
           fn = "demandas.csv";
         } else if (type === "subtasks") {
-          csv = "id,titulo,demanda,concluida,horas_gastas,subtarefas,tags\n";
+          csv = "id,titulo,demanda,concluida,horas_gastas,apontamentos,tags\n";
           S.subtasks.forEach((s) => {
             const a = actById(s.activityId);
             csv += `"${s.id}","${esc2(s.title)}","${esc2(a?.title || "")}","${s.done ? "sim" : "nao"}","${getSubHoursSpent(s.id).toFixed(1)}","${getSubLogs(s.id).length}","${(s.tags || []).map((t) => tagById(t)?.name || "").join(";")}"\n`;
           });
           fn = "tarefas.csv";
         } else {
-          csv = "id,data,subtarefa,atividade,horas,descricao\n";
+          csv = "id,data,tarefa,demanda,horas,descricao\n";
           S.logs
             .sort((a, b) => b.date.localeCompare(a.date))
             .forEach((l) => {
@@ -6293,7 +6343,7 @@
                 a = s ? actById(s.activityId) : null;
               csv += `"${l.id}","${l.date}","${esc2(s?.title || "")}","${esc2(a?.title || "")}","${l.hrs || 0}","${esc2(l.description)}"\n`;
             });
-          fn = "subtarefas.csv";
+          fn = "apontamentos.csv";
         }
         download(fn, "text/csv;charset=utf-8", "\uFEFF" + csv);
         toast(`${fn} exportado!`, "ok");
@@ -6323,7 +6373,7 @@
               if (!d.activities || !d.subtasks || !d.logs)
                 throw new Error("Formato inválido");
               confirmAction(
-                `Importar ${d.activities.length} demandas, ${d.subtasks.length} tarefas e ${d.logs.length} registros? Os dados atuais serão substituídos.`,
+                `Importar ${d.activities.length} demandas, ${d.subtasks.length} tarefas e ${d.logs.length} apontamentos? Os dados atuais serão substituídos.`,
                 () => {
                   S.activities = d.activities;
                   S.subtasks = d.subtasks;
@@ -6384,7 +6434,7 @@
             const label = {
               demanda: "Demandas",
               tarefa: "Tarefas",
-              subtarefa: "Subtarefas",
+              subtarefa: "Apontamentos",
               tag: "Tags",
             }[type];
             html += `<div class="sr-group">${label}</div>`;
@@ -7238,7 +7288,7 @@
 
         document.getElementById("view-calendar").innerHTML = `
     <div class="ph">
-      <div><div class="pt">Calendário</div><div class="ps">Registros diários por mês</div></div>
+      <div><div class="pt">Calendário</div><div class="ps">Apontamentos diários por mês</div></div>
       <div class="nb-acts" style="gap:8px">
         <select class="fs" style="max-width:220px" onchange="_calFilterActId=this.value;renderCalendar()">
           <option value="" ${!_calFilterActId ? "selected" : ""}>Todas as demandas</option>
@@ -7297,7 +7347,7 @@
         const dateLabel = `${d} de ${MONTHS_FULL[parseInt(m) - 1]} de ${y}`;
         const isToday = date === todayStr();
         const totalHrs = logs.reduce((s, l) => s + (l.hrs || 0), 0);
-        const metaStr = `${logs.length} registro${logs.length !== 1 ? "s" : ""}${totalHrs ? " · " + hrsDisplay(totalHrs) : ""}`;
+        const metaStr = `${logs.length} apontamento${logs.length !== 1 ? "s" : ""}${totalHrs ? " · " + hrsDisplay(totalHrs) : ""}`;
 
         const logsHtml = logs.length
           ? logs
@@ -7322,7 +7372,7 @@
     </div>`;
               })
               .join("")
-          : `<div class="cal-empty-day">Nenhum registro neste dia.<br><button class="btn bp" style="margin-top:10px" onclick="openAddLogModal(null,'${date}')">+ Registrar</button></div>`;
+          : `<div class="cal-empty-day">Nenhum apontamento neste dia.<br><button class="btn bp" style="margin-top:10px" onclick="openAddLogModal(null,'${date}')">+ Novo Apontamento</button></div>`;
 
         return `<div class="cal-detail">
     <div class="cal-detail-hd">
@@ -7331,7 +7381,7 @@
         <div class="cal-detail-meta">${metaStr}</div>
       </div>
       <button class="btn bp" onclick="openAddLogModal(null,'${date}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>+ Registro
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>+ Apontamento
       </button>
     </div>
     ${logsHtml}
@@ -7496,7 +7546,7 @@
             color: VI,
           },
           {
-            label: "Total de registros",
+            label: "Total de Apontamentos",
             value: String(cycleLogs.length),
             sub: hrsDisplay(totalLogHrs) + " registradas",
             color: OK,
@@ -7712,7 +7762,7 @@
               });
               doc.autoTable({
                 startY: y,
-                head: [["Tarefa", "Status", "Horas", "Regs."]],
+                head: [["Tarefa", "Status", "Horas", "Apontamentos"]],
                 body: subData,
                 theme: "plain",
                 styles: {
@@ -7733,7 +7783,7 @@
                   0: { cellWidth: "auto" },
                   1: { cellWidth: 22 },
                   2: { cellWidth: 20, halign: "center" },
-                  3: { cellWidth: 12, halign: "center" },
+                  3: { cellWidth: 22, halign: "center" },
                 },
                 alternateRowStyles: { fillColor: [250, 252, 255] },
                 didDrawCell: (data) => {
@@ -7758,7 +7808,7 @@
         }
 
         // ─────────────────────────────────────────────
-        // PÁGINA 3 — HISTÓRICO DE REGISTROS DIÁRIOS
+        // PÁGINA 3 — HISTÓRICO DE APONTAMENTOS DIÁRIOS
         // ─────────────────────────────────────────────
         if (cycleLogs.length) {
           doc.addPage();
@@ -7768,13 +7818,13 @@
           doc.setFontSize(13);
           doc.setFont("helvetica", "bold");
           doc.setTextColor(...TEXT);
-          doc.text("Histórico de Registros Diários", ML, y);
+          doc.text("Histórico de Apontamentos Diários", ML, y);
 
           doc.setFontSize(8);
           doc.setFont("helvetica", "normal");
           doc.setTextColor(...TEXT2);
           doc.text(
-            `${cycleLogs.length} registros · ${hrsDisplay(totalLogHrs)} no total`,
+            `${cycleLogs.length} apontamentos · ${hrsDisplay(totalLogHrs)} no total`,
             ML,
             y + 6,
           );
@@ -7794,7 +7844,7 @@
 
           doc.autoTable({
             startY: y,
-            head: [["Data", "Demanda", "Tarefa", "Horas", "Descricao"]],
+            head: [["Data", "Demanda", "Tarefa", "Horas", "Descricao (Bordo)"]],
             body: logData,
             theme: "grid",
             styles: {
@@ -7828,7 +7878,7 @@
             doc.setFont("helvetica", "italic");
             doc.setTextColor(...TEXT2);
             doc.text(
-              `… e mais ${cycleLogs.length - 200} registros (exporte CSV para ver todos).`,
+              `… e mais ${cycleLogs.length - 200} apontamentos (exporte CSV para ver todos).`,
               ML,
               y,
             );
